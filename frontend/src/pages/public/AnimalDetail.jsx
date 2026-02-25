@@ -8,8 +8,8 @@ import AdoptionForm from '../../components/features/forms/AdoptionForm';
 const AnimalDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { animals } = useAnimals();
-  const animal = animals.find((a) => a.id === parseInt(id));
+  const { getAnimalById } = useAnimals();
+  const animal = getAnimalById(id);
 
   if (!animal) {
     return <div className="max-w-3xl mx-auto p-6">Animal introuvable.</div>;

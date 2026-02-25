@@ -22,16 +22,16 @@ export const AnimalsProvider = ({ children }) => {
 
   const updateAnimal = (id, updatedData) => {
     setAnimals(
-      animals.map((a) => (a.id === id ? { ...a, ...updatedData } : a))
+      animals.map((a) => (String(a.id) === String(id) ? { ...a, ...updatedData } : a))
     );
   };
 
   const deleteAnimal = (id) => {
-    setAnimals(animals.filter((a) => a.id !== id));
+    setAnimals(animals.filter((a) => String(a.id) !== String(id)));
   };
 
   const getAnimalById = (id) => {
-    return animals.find((a) => a.id === parseInt(id));
+    return animals.find((a) => String(a.id) === String(id));
   };
 
   return (

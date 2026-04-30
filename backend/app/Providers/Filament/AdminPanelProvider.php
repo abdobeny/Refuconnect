@@ -2,6 +2,11 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Resources\Adoptions\AdoptionResource;
+use App\Filament\Resources\Animals\AnimalResource;
+use App\Filament\Resources\Donations\DonationResource;
+use App\Filament\Resources\GroomingReservations\GroomingReservationResource;
+use App\Filament\Resources\RaceCouplings\RaceCouplingResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -31,15 +36,21 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
+            ->resources([
+                AnimalResource::class,
+                AdoptionResource::class,
+                DonationResource::class,
+                GroomingReservationResource::class,
+                RaceCouplingResource::class,
+            ])
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
+                \App\Filament\Widgets\StatsOverview::class,
+                \App\Filament\Widgets\RecentAdoptions::class,
             ])
             ->middleware([
                 EncryptCookies::class,

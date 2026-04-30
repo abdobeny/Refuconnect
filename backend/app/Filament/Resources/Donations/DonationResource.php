@@ -2,47 +2,199 @@
 
 namespace App\Filament\Resources\Donations;
 
-use App\Filament\Resources\Donations\Pages\CreateDonation;
-use App\Filament\Resources\Donations\Pages\EditDonation;
-use App\Filament\Resources\Donations\Pages\ListDonations;
-use App\Filament\Resources\Donations\Schemas\DonationForm;
-use App\Filament\Resources\Donations\Tables\DonationsTable;
+use App\Filament\Resources\Donations\Pages;
 use App\Models\Donation;
-use BackedEnum;
-use Filament\Resources\Resource;
+use Filament\Forms;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
+use Filament\Resources\Resource;
+use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use BackedEnum;
 
 class DonationResource extends Resource
 {
     protected static ?string $model = Donation::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
+    protected static ?string $navigationLabel = 'Dons';
+    protected static ?string $pluralLabel = 'Historique des dons';
+    protected static ?string $label = 'Don';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Schema $form): Schema
     {
-        return DonationForm::configure($schema);
+        return $form
+            ->schema([
+                Forms\Components\Select::make('user_id')
+                    ->label('Donateur')
+                    ->relationship('user', 'name')
+                    ->required()
+                    ->searchable()
+                    ->preload(),
+
+                Forms\Components\TextInput::make('amount')
+                    ->label('Montant (DH)')
+                    ->numeric()
+                    ->required()
+                    ->prefix('DH')
+                    ->minValue(1),
+
+                Forms\Components\Select::make('payment_method')
+                    ->label('Mode de paiement')
+                    ->options([
+                        'cash'       => 'Espèces',
+                        'card'       => 'Carte bancaire',
+                        'bank_transfer' => 'Virement',
+                        'paypal'     => 'PayPal',
+                        'other'      => 'Autre',
+                    ])
+                    ->required(),
+
+                Forms\Components\Select::make('type')
+                    ->label('Type de don')
+                    ->options([
+                        'one_time' => 'Don unique',
+                        'monthly'  => 'Don mensuel',
+                        'in_kind'  => 'Don en nature',
+                    ])
+                    ->default('one_time')
+                    ->required(),
+
+                Forms\Components\Select::make('status')
+                    ->label('Statut')
+                    ->options([
+                        'pending'   => 'En attente',
+                        'completed' => 'Complété',
+                        'failed'    => 'Échoué',
+                        'refunded'  => 'Remboursé',
+                    ])
+                    ->default('completed')
+                    ->required()
+                    ->live(),
+
+                Forms\Components\DatePicker::make('donation_date')
+                    ->label('Date du don')
+                    ->default(now())
+                    ->required(),
+
+                Forms\Components\Textarea::make('message')
+                    ->label('Message du donateur (optionnel)')
+                    ->columnSpanFull()
+                    ->rows(3),
+
+                Forms\Components\Textarea::make('admin_notes')
+                    ->label('Notes administratives (interne)')
+                    ->columnSpanFull(),
+            ])
+            ->columns(1);
     }
 
     public static function table(Table $table): Table
     {
-        return DonationsTable::configure($table);
-    }
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Donateur')
+                    ->searchable()
+                    ->placeholder('Anonyme'),
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
+                Tables\Columns\TextColumn::make('amount')
+                    ->label('Montant')
+                    ->money('MAD')
+                    ->alignRight()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('payment_method')
+                    ->label('Paiement')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'cash' => 'Espèces',
+                        'card' => 'Carte',
+                        'bank_transfer' => 'Virement',
+                        'paypal' => 'PayPal',
+                        default => 'Autre',
+                    }),
+
+                Tables\Columns\TextColumn::make('type')
+                    ->label('Type')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'one_time' => 'info',
+                        'monthly' => 'success',
+                        'in_kind' => 'warning',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'one_time' => 'Unique',
+                        'monthly' => 'Mensuel',
+                        'in_kind' => 'En nature',
+                        default => $state,
+                    }),
+
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Statut')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'completed' => 'success',
+                        'failed' => 'danger',
+                        'refunded' => 'gray',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'pending' => 'En attente',
+                        'completed' => 'Complété',
+                        'failed' => 'Échoué',
+                        'refunded' => 'Remboursé',
+                        default => $state,
+                    }),
+
+                Tables\Columns\TextColumn::make('donation_date')
+                    ->label('Date')
+                    ->date('d/m/Y')
+                    ->sortable(),
+            ])
+            ->defaultSort('donation_date', 'desc')
+            ->filters([
+                Tables\Filters\SelectFilter::make('status'),
+                Tables\Filters\SelectFilter::make('type'),
+                Tables\Filters\Filter::make('donation_date')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from'),
+                        Forms\Components\DatePicker::make('created_until'),
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query
+                            ->when(
+                                $data['created_from'] ?? null,
+                                fn ($query, $date) => $query->whereDate('donation_date', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'] ?? null,
+                                fn ($query, $date) => $query->whereDate('donation_date', '<=', $date),
+                            );
+                    }),
+            ])
+            ->actions([
+                EditAction::make(),
+                ViewAction::make(),
+            ])
+            ->bulkActions([
+                \Filament\Actions\BulkActionGroup::make([
+                    \Filament\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ListDonations::route('/'),
-            'create' => CreateDonation::route('/create'),
-            'edit' => EditDonation::route('/{record}/edit'),
+            'index' => Pages\ListDonations::route('/'),
+            'create' => Pages\CreateDonation::route('/create'),
+            'edit' => Pages\EditDonation::route('/{record}/edit'),
         ];
     }
 }

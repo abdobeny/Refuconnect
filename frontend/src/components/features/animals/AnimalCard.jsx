@@ -5,7 +5,10 @@ import Badge from '../../ui/Badge';
 
 const AnimalCard = ({ animal = {}, onView }) => {
   const { id, name, age, ageUnit, breed, sex, images = [] } = animal;
-  const image = images[0] || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1000&auto=format&fit=crop';
+  // Use image from public folder if no image is provided
+  const publicImages = ['dog1.jpg', 'dog3.webp', 'dog4.webp', 'dog44.webp', 'dog5.webp'];
+  const randomPublicImage = `/` + publicImages[Math.floor(Math.random() * publicImages.length)];
+  const image = images[0] || randomPublicImage;
 
   return (
     <Card className="group">

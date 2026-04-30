@@ -34,24 +34,23 @@ const Home = () => {
 
   return (
     <div>
-      <section className="max-w-7xl mx-auto px-6 py-16 flex flex-col md:flex-row items-center gap-12">
-        <div className="flex-1 space-y-6">
-          <h1 className="font-serif text-6xl font-bold leading-tight">
-            Offrez une <span className="text-primary">seconde chance</span><br />à un animal
-          </h1>
-          <p className="text-muted text-lg max-w-lg">Bienvenue chez RefuConnect, le refuge animalier qui relie des animaux abandonnés avec de nouvelles familles aimantes.</p>
-          <div className="flex gap-4">
-            <Button variant="primary" onClick={() => navigate('/animaux')}>Voir les animaux</Button>
-            <Button variant="white" className="border border-gray-200" onClick={() => navigate('/dons')}>Faire un don</Button>
+      {/* Hero Section */}
+      <section className="w-full flex items-center bg-cover bg-center py-32" style={{ backgroundImage: 'url(/dog1.jpg)' }}>
+        <div className="flex w-full items-center justify-center px-0">
+          <div className="flex flex-col justify-center w-full max-w-screen-xl mx-auto px-20">
+            <h1 className="text-7xl font-extrabold mb-10 text-white drop-shadow-2xl">Bienvenue sur Refuconnect</h1>
+            <p className="text-3xl mb-12 text-white drop-shadow-2xl">Adoptez un animal, changez une vie.</p>
+            <div className="flex gap-8">
+              <Button variant="primary" size="lg" onClick={() => navigate('/animaux')}>Voir les animaux</Button>
+              <Button variant="white" size="lg" className="border border-gray-200" onClick={() => navigate('/dons')}>Faire un don</Button>
+            </div>
           </div>
-        </div>
-        <div className="flex-1">
-          <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1" className="rounded-3xl shadow-2xl w-full h-[400px] object-cover" />
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 pb-20">
-        <h2 className="font-serif text-3xl text-center mb-10">Nos Animaux à Adopter</h2>
+      {/* Animals Section */}
+      <section className="max-w-7xl mx-auto py-12 px-4">
+        <h2 className="text-3xl font-bold mb-8 text-center">Nos animaux à adopter</h2>
         <AnimalGrid animals={animals} onView={handleView} />
       </section>
     </div>

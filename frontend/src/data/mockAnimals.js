@@ -7,7 +7,7 @@ const mockAnimals = [
     breed: 'Berger Allemand',
     sex: 'Male',
     vaccinated: true,
-    images: ['https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=1000&auto=format&fit=crop'],
+    images: ['/dog1.jpg'],
     description: 'Chien affectueux et sportif, adapté à une famille active.',
     veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
   },
@@ -31,7 +31,7 @@ const mockAnimals = [
     breed: 'Labrador',
     sex: 'Male',
     vaccinated: true,
-    images: ['https://images.unsplash.com/photo-1552053831-71594a27632d?q=80&w=1000&auto=format&fit=crop'],
+    images: ['/dog3.webp'],
     description: 'Calme et sociable, habitué aux autres animaux.',
     veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
   },

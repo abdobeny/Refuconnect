@@ -8,21 +8,28 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#E67E22',
-          hover: '#D35400',
+          DEFAULT: '#2D5A27',
+          hover: '#234A1E',
+          light: '#4A7C42',
+          dark: '#1E3D1A',
         },
-        secondary: '#F5B041',
+        secondary: '#8B7355',
+        accent: '#D4A574',
         // Keep background as an object so we can provide paper/DEFAULT variants
         background: {
-          DEFAULT: '#FDF8F5',
-          paper: '#FFFFFF'
+          DEFAULT: '#F5F1E8',
+          paper: '#FFFFFF',
+          cream: '#FAF6F0',
+          beige: '#F0EAD6'
         },
         // shorthand alias used across design
-        bg: '#FDF8F5',
+        bg: '#F5F1E8',
         text: {
-          main: '#2C3E50'
+          main: '#2C3E50',
+          dark: '#1A1A1A',
+          light: '#5A5A5A'
         },
-        muted: '#7F8C8D'
+        muted: '#6B7280'
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

@@ -16,6 +16,9 @@ const AnimalDetail = () => {
   }
 
   const { name, images, breed, sex, age, ageUnit, vaccinated, description, veterinaryInfo } = animal;
+  // Use image from public folder if no image is provided
+  const publicImages = ['dog1.jpg', 'dog3.webp', 'dog4.webp', 'dog44.webp', 'dog5.webp'];
+  const randomPublicImage = `/` + publicImages[Math.floor(Math.random() * publicImages.length)];
 
   const [showForm, setShowForm] = useState(false);
 
@@ -23,7 +26,7 @@ const AnimalDetail = () => {
     <div className="max-w-5xl mx-auto px-6 py-12">
       <div className="bg-white p-8 rounded-3xl shadow-lg flex flex-col md:flex-row gap-10">
         <div className="md:w-1/3">
-          <img src={images[0] || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1'} alt={name} className="rounded-2xl w-full h-96 object-cover shadow-md" />
+          <img src={images[0] || randomPublicImage} alt={name} className="rounded-2xl w-full h-96 object-cover shadow-md" />
         </div>
         <div className="md:w-2/3 space-y-6">
           <div className="flex justify-between items-center">

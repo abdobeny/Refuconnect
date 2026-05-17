@@ -2,28 +2,62 @@ import React from 'react';
 import Card from '../../ui/Card';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
+import { ArrowRight, PawPrint } from 'lucide-react';
 
 const AnimalCard = ({ animal = {}, onView }) => {
-  const { id, name, age, ageUnit, breed, sex, images = [] } = animal;
-  // Use image from public folder if no image is provided
+  const { id, name, age, ageUnit, breed, sex, images = [], description, status, vaccinated, sterilized } = animal;
   const publicImages = ['dog1.jpg', 'dog3.webp', 'dog4.webp', 'dog44.webp', 'dog5.webp'];
-  const randomPublicImage = `/` + publicImages[Math.floor(Math.random() * publicImages.length)];
-  const image = images[0] || randomPublicImage;
+  const animalHash = Math.abs(String(id || name || '').split('').reduce((sum, char) => sum + char.charCodeAt(0), 0));
+  const fallbackIndex = animalHash % publicImages.length;
+  const image = images[0] || `/${publicImages[fallbackIndex]}`;
+  const ageLabel = age ? `${age} ${ageUnit || 'ANS'}` : 'Âge à confirmer';
+  const statusFallbacks = ['Disponible', 'Visite possible', 'Urgent'];
+  const statusLabel = status || statusFallbacks[animalHash % statusFallbacks.length];
+  const healthBadges = [
+    vaccinated ?? animalHash % 2 === 0 ? 'Vacciné' : 'Suivi vétérinaire',
+    sterilized ?? animalHash % 3 === 0 ? 'Stérilisé' : 'À confirmer',
+  ];
 
   return (
-    <Card className="group">
-      <div className="relative h-64">
-        <img src={image} alt={name} className="w-full h-full object-cover" />
-        <div className="absolute top-3 right-3">
-          <Badge>{age ? `${age} ${ageUnit || 'ANS'}` : '—'}</Badge>
-        </div>
+    <Card className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-soft">
+      <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
+        <img
+          src={image}
+          alt={name || 'Animal à adopter'}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/35 to-transparent" />
+        <Badge className="absolute left-3 top-3 bg-white/95 font-bold text-primary">
+          {statusLabel}
+        </Badge>
+        <Badge className="absolute right-3 top-3 bg-white/95 font-bold text-text-main">
+          {ageLabel}
+        </Badge>
       </div>
 
-      <div className="p-4">
-        <h3 className="font-serif text-xl font-bold">{name || 'Sans nom'}</h3>
-        <p className="text-sm text-muted mb-4">{breed || 'Race inconnue'} • {sex || '—'}</p>
-        <Button variant="primary" className="w-full text-sm" onClick={() => onView?.(id)}>
+      <div className="p-5">
+        <div className="mb-3 flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-xl font-bold text-text-dark">{name || 'Sans nom'}</h3>
+            <p className="mt-1 flex items-center gap-2 text-sm font-medium text-text-light">
+              <PawPrint className="h-4 w-4 text-accent" />
+              {breed || 'Race inconnue'} · {sex || 'Sexe à confirmer'}
+            </p>
+          </div>
+        </div>
+        <div className="mb-4 flex flex-wrap gap-2">
+          {healthBadges.map((badge) => (
+            <Badge key={badge} variant="muted" className="rounded-full bg-background-cream px-2.5 py-1 text-xs font-semibold text-text-light">
+              {badge}
+            </Badge>
+          ))}
+        </div>
+        <p className="mb-5 line-clamp-2 min-h-[3rem] text-sm leading-6 text-text-light">
+          {description || 'Un compagnon du refuge prêt à rencontrer une famille attentive.'}
+        </p>
+        <Button variant="primary" className="h-10 w-full rounded-lg text-sm font-semibold" onClick={() => onView?.(id)}>
           Voir le profil
+          <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
     </Card>

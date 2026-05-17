@@ -8,28 +8,28 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#2D5A27',
-          hover: '#234A1E',
-          light: '#4A7C42',
-          dark: '#1E3D1A',
+          DEFAULT: '#2F3634',
+          hover: '#242B29',
+          light: '#EFE9E1',
+          dark: '#1D2321',
         },
-        secondary: '#8B7355',
-        accent: '#D4A574',
+        secondary: '#786D64',
+        accent: '#A9795F',
         // Keep background as an object so we can provide paper/DEFAULT variants
         background: {
-          DEFAULT: '#F5F1E8',
-          paper: '#FFFFFF',
-          cream: '#FAF6F0',
-          beige: '#F0EAD6'
+          DEFAULT: '#F3EEE7',
+          paper: '#FFFDF9',
+          cream: '#F7F1EA',
+          beige: '#E8DED2'
         },
         // shorthand alias used across design
-        bg: '#F5F1E8',
+        bg: '#F3EEE7',
         text: {
-          main: '#2C3E50',
-          dark: '#1A1A1A',
-          light: '#5A5A5A'
+          main: '#343B39',
+          dark: '#1F2523',
+          light: '#6E706C'
         },
-        muted: '#6B7280'
+        muted: '#7C7D78'
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
@@ -37,7 +37,7 @@ export default {
       }
       ,
       boxShadow: {
-        soft: '0 6px 18px rgba(44,62,80,0.08)'
+        soft: '0 8px 24px rgba(32,42,37,0.08)'
       },
     },
   },

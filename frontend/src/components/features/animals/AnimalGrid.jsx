@@ -7,7 +7,7 @@ const AnimalGrid = ({ animals = [], onView }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {animals.map((a) => (
         <div key={a.id || a._id} className="w-full">
           <AnimalCard animal={a} onView={onView} />

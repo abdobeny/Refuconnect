@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AnimalGrid from '../../components/features/animals/AnimalGrid';
 import { useAnimals } from '../../context/AnimalsContext';
 import { useNavigate } from 'react-router-dom';
@@ -6,11 +6,18 @@ import { Search, Filter, X, Heart, PawPrint, CheckCircle2 } from 'lucide-react';
 
 const Animals = () => {
   const navigate = useNavigate();
-  const { animals } = useAnimals();
+  const { animals, loading, error, fetchAnimals } = useAnimals();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('all');
   const [selectedBreed, setSelectedBreed] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchAnimals({ type: selectedType, search: searchTerm || undefined });
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [selectedType, searchTerm, fetchAnimals]);
 
   const handleView = (id) => navigate(`/animaux/${id}`);
 
@@ -195,9 +202,15 @@ const Animals = () => {
           </div>
         </div>
 
-        {filteredAnimals.length > 0 ? (
+        {loading && (
+          <p className="py-12 text-center text-muted">Chargement des animaux...</p>
+        )}
+        {error && !loading && (
+          <p className="py-12 text-center text-red-600">{error}</p>
+        )}
+        {!loading && !error && filteredAnimals.length > 0 ? (
           <AnimalGrid animals={filteredAnimals} onView={handleView} />
-        ) : (
+        ) : !loading && !error ? (
           <div className="rounded-2xl border border-background-beige bg-white px-6 py-16 text-center shadow-soft">
             <p className="mb-4 text-lg text-text-light">
               Aucun animal ne correspond à vos critères de recherche.
@@ -213,7 +226,7 @@ const Animals = () => {
               Voir tous les animaux
             </button>
           </div>
-        )}
+        ) : null}
       </section>
     </div>
   );

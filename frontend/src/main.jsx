@@ -17,14 +17,15 @@ function renderApp() {
   )
 }
 
-// Start MSW in development for a mocked backend
-if (import.meta.env.DEV) {
+const useMsw = import.meta.env.VITE_USE_MSW === 'true'
+
+if (import.meta.env.DEV && useMsw) {
   import('./mocks/browser').then(({ worker }) => {
-    worker.start({ onUnhandledRequest: 'bypass' }).then(renderApp);
+    worker.start({ onUnhandledRequest: 'bypass' }).then(renderApp)
   }).catch((err) => {
-    console.error('MSW failed to start', err);
-    renderApp();
-  });
+    console.error('MSW failed to start', err)
+    renderApp()
+  })
 } else {
-  renderApp();
+  renderApp()
 }

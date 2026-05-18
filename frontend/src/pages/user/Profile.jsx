@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
@@ -9,12 +9,22 @@ const Profile = () => {
   const { user, logout } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: 'Abdel Beny',
+    fullName: user?.name || '',
     email: user?.email || '',
-    phone: '+212 6 12 34 56 78',
-    city: 'Casablanca',
-    address: '123 Rue de la Paix',
+    phone: '',
+    city: '',
+    address: '',
   });
+
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        fullName: user.name || '',
+        email: user.email || '',
+      }));
+    }
+  }, [user]);
 
   const handleChange = (key) => (e) => {
     setFormData((prev) => ({ ...prev, [key]: e.target.value }));

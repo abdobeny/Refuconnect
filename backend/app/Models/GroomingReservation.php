@@ -9,14 +9,12 @@ class GroomingReservation extends Model
 {
     protected $fillable = [
         'user_id',
-        'animal_id',
         'service_type',
         'reservation_date',
+        'pet_name',
+        'pet_type',
         'status',
         'notes',
-        'animal_name',
-        'type_soin',
-        'statut',
     ];
 
     protected $casts = [
@@ -26,10 +24,5 @@ class GroomingReservation extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function animal(): BelongsTo
-    {
-        return $this->belongsTo(Animal::class);
     }
 }

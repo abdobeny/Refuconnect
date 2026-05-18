@@ -7,7 +7,7 @@ import AnimalGrid from '../../components/features/animals/AnimalGrid';
 
 const Home = () => {
   const navigate = useNavigate();
-  const { animals } = useAnimals();
+  const { animals, loading } = useAnimals();
   const animalCount = animals.length;
   const featuredAnimals = animals.slice(0, 3);
   const animalCountLabel = animalCount > 1
@@ -235,7 +235,11 @@ const Home = () => {
             </Button>
           </div>
         </div>
-        <AnimalGrid animals={featuredAnimals} onView={handleView} />
+        {loading ? (
+          <p className="text-center text-muted">Chargement des animaux...</p>
+        ) : (
+          <AnimalGrid animals={featuredAnimals} onView={handleView} />
+        )}
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-14">

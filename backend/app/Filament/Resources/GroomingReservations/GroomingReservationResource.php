@@ -19,7 +19,11 @@ class GroomingReservationResource extends Resource
     protected static ?string $model = GroomingReservation::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-scissors';
-    protected static ?string $navigationLabel = 'Réservations Toilettage';
+    protected static ?string $navigationLabel = 'Toilettage';
+
+    protected static string | \UnitEnum | null $navigationGroup = 'Demandes';
+
+    protected static ?int $navigationSort = 3;
     protected static ?string $pluralLabel = 'Réservations de toilettage';
     protected static ?string $label = 'Réservation de toilettage';
 
@@ -34,21 +38,29 @@ class GroomingReservationResource extends Resource
                     ->searchable()
                     ->preload(),
 
-                Forms\Components\Select::make('animal_id')
-                    ->label('Animal')
-                    ->relationship('animal', 'name')
+                Forms\Components\TextInput::make('pet_name')
+                    ->label('Nom de l\'animal')
                     ->required()
-                    ->searchable()
-                    ->preload(),
+                    ->maxLength(255),
+
+                Forms\Components\Select::make('pet_type')
+                    ->label('Type d\'animal')
+                    ->options([
+                        'dog'   => 'Chien',
+                        'cat'   => 'Chat',
+                        'other' => 'Autre',
+                    ])
+                    ->required()
+                    ->default('dog'),
 
                 Forms\Components\Select::make('service_type')
                     ->label('Type de service')
                     ->options([
-                        'bain'        => 'Bain',
-                        'tonte'       => 'Tonte',
-                        'nettoyage'   => 'Nettoyage complet',
-                        'bain_tonte'  => 'Bain + Tonte',
-                        'autre'       => 'Autre',
+                        'bath'        => 'Bain',
+                        'haircut'       => 'Tonte',
+                        'full_grooming'   => 'Nettoyage complet',
+                        'nail_trim'  => 'Coupe de griffes',
+                        'other'       => 'Autre',
                     ])
                     ->required(),
 
@@ -60,13 +72,13 @@ class GroomingReservationResource extends Resource
                 Forms\Components\Select::make('status')
                     ->label('Statut')
                     ->options([
-                        'en_attente' => 'En attente',
-                        'confirmée'  => 'Confirmée',
-                        'terminée'   => 'Terminée',
-                        'annulée'    => 'Annulée',
+                        'pending' => 'En attente',
+                        'confirmed' => 'Confirmée',
+                        'cancelled' => 'Annulée',
+                        'completed' => 'Terminée',
                     ])
                     ->required()
-                    ->default('en_attente')
+                    ->default('pending')
                     ->live(),
 
                 Forms\Components\Textarea::make('notes')
@@ -84,9 +96,13 @@ class GroomingReservationResource extends Resource
                     ->label('Client')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('animal.name')
+                Tables\Columns\TextColumn::make('pet_name')
                     ->label('Animal')
                     ->searchable(),
+
+                Tables\Columns\TextColumn::make('pet_type')
+                    ->label('Type')
+                    ->badge(),
 
                 Tables\Columns\TextColumn::make('service_type')
                     ->label('Service')
@@ -101,11 +117,11 @@ class GroomingReservationResource extends Resource
                     ->label('Statut')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'en_attente' => 'warning',
-                        'confirmée'  => 'success',
-                        'terminée'   => 'info',
-                        'annulée'    => 'danger',
-                        default      => 'gray',
+                        'pending' => 'warning',
+                        'confirmed' => 'success',
+                        'completed' => 'info',
+                        'cancelled' => 'danger',
+                        default => 'gray',
                     }),
             ])
             ->defaultSort('reservation_date', 'desc')

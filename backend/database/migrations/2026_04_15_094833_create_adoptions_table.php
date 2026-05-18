@@ -13,10 +13,19 @@ return new class extends Migration
     {
         Schema::create('adoptions', function (Blueprint $table) {
             $table->id();
+            
+            // Relationships
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('animal_id')->constrained()->onDelete('cascade');
-            $table->date('date_demande');
-            $table->enum('statut', ['en attente', 'validée', 'refusée'])->default('en attente');
+            
+            // Status and dates
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->timestamp('requested_at')->useCurrent();  // When they requested
+            
+            // Application details
+            $table->text('motivation')->nullable();  // Why they want to adopt
+            $table->text('notes')->nullable();     // Admin internal notes
+            
             $table->timestamps();
         });
     }

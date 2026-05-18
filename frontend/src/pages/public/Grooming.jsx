@@ -1,10 +1,83 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axiosClient from '../../api/axiosClient';
+import { useAuth } from '../../context/AuthContext';
 import { CalendarCheck, Clock, Droplets, HeartPulse, MessageCircle, Scissors, ShieldCheck, Sparkles, Stars, Syringe } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 
+const SERVICE_MAP = {
+  'Bain complet - dès 80 DH': 'bath',
+  'Coupe hygiénique - dès 120 DH': 'haircut',
+  'Griffes & oreilles - dès 40 DH': 'nail_trim',
+  'Soin sensible - dès 150 DH': 'other',
+};
+
+const mapPetType = (value) => {
+  const v = value.toLowerCase();
+  if (v.includes('chat')) return 'cat';
+  if (v.includes('chien')) return 'dog';
+  return 'other';
+};
+
 const Grooming = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const [form, setForm] = useState({
+    petName: '',
+    petType: '',
+    service: 'Bain complet - dès 80 DH',
+    date: '',
+    time: '',
+    notes: '',
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const update = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (!isAuthenticated) {
+      navigate('/connexion?redirect=/toilettage');
+      return;
+    }
+
+    if (!form.date) {
+      setError('Choisissez une date.');
+      return;
+    }
+
+    const reservationDate = form.time
+      ? `${form.date}T${form.time}:00`
+      : `${form.date}T10:00:00`;
+
+    setSubmitting(true);
+    try {
+      await axiosClient.post('/grooming', {
+        pet_name: form.petName,
+        pet_type: mapPetType(form.petType),
+        service_type: SERVICE_MAP[form.service] || 'other',
+        reservation_date: reservationDate,
+        notes: form.notes || undefined,
+      });
+      setSuccess(true);
+      setForm({ petName: '', petType: '', service: 'Bain complet - dès 80 DH', date: '', time: '', notes: '' });
+    } catch (err) {
+      setError(
+        err.response?.data?.message
+        || Object.values(err.response?.data?.errors || {}).flat().join(' ')
+        || 'Impossible d\'envoyer la demande.'
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const services = [
     {
       icon: Droplets,
@@ -148,25 +221,36 @@ const Grooming = () => {
           <h2 className="mt-2 text-3xl font-bold text-text-dark">Demander un créneau</h2>
           <p className="mt-2 text-sm leading-6 text-text-light">Remplissez les informations principales. L’équipe vous confirme le rendez-vous.</p>
 
-          <form className="mt-6 grid gap-4 sm:grid-cols-2">
-            <Input id="ownerName" label="Nom complet" placeholder="Ex: Sara Benali" />
-            <Input id="phone" label="Téléphone" placeholder="Ex: 06 12 34 56 78" />
-            <Input id="animalType" label="Type d’animal" placeholder="Chien, chat..." />
-            <Input id="animalName" label="Nom de l’animal" placeholder="Ex: Max" />
-            <div className="w-full">
+          {success && (
+            <div className="mt-4 rounded-xl border border-green-200 bg-green-50 p-4 text-green-800">
+              Demande envoyée. L&apos;équipe vous confirmera le créneau.
+            </div>
+          )}
+          {error && (
+            <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">{error}</div>
+          )}
+
+          <form className="mt-6 grid gap-4 sm:grid-cols-2" onSubmit={handleSubmit}>
+            <Input id="animalType" label="Type d’animal" placeholder="Chien, chat..." value={form.petType} onChange={update('petType')} required />
+            <Input id="animalName" label="Nom de l’animal" placeholder="Ex: Max" value={form.petName} onChange={update('petName')} required />
+            <div className="w-full sm:col-span-2">
               <label htmlFor="service" className="mb-2 block text-sm font-medium text-text-main">Service souhaité</label>
-              <select id="service" className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all duration-200 hover:bg-white focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary">
-                <option>Bain complet - dès 80 DH</option>
-                <option>Coupe hygiénique - dès 120 DH</option>
-                <option>Griffes & oreilles - dès 40 DH</option>
-                <option>Soin sensible - dès 150 DH</option>
+              <select
+                id="service"
+                value={form.service}
+                onChange={update('service')}
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all duration-200 hover:bg-white focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                {Object.keys(SERVICE_MAP).map((label) => (
+                  <option key={label} value={label}>{label}</option>
+                ))}
               </select>
             </div>
-            <Input id="date" label="Date souhaitée" type="date" />
-            <Input id="time" label="Heure préférée" type="time" />
-            <Input id="message" label="Message" as="textarea" className="sm:col-span-2" placeholder="Taille, comportement, allergies, poils emmêlés..." />
-            <Button type="button" variant="primary" className="h-12 rounded-xl font-bold sm:col-span-2">
-              Envoyer la demande
+            <Input id="date" label="Date souhaitée" type="date" value={form.date} onChange={update('date')} required />
+            <Input id="time" label="Heure préférée" type="time" value={form.time} onChange={update('time')} />
+            <Input id="message" label="Message" as="textarea" className="sm:col-span-2" placeholder="Taille, comportement, allergies..." value={form.notes} onChange={update('notes')} />
+            <Button type="submit" variant="primary" className="h-12 rounded-xl font-bold sm:col-span-2" disabled={submitting}>
+              {submitting ? 'Envoi...' : 'Envoyer la demande'}
             </Button>
           </form>
         </Card>

@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axiosClient from '../../api/axiosClient';
+import { useAuth } from '../../context/AuthContext';
 import {
   AlertTriangle,
   BadgeCheck,
@@ -17,7 +20,28 @@ import {
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 
+const mapSpecies = (value) => {
+  const v = value.toLowerCase();
+  if (v.includes('chat')) return 'cat';
+  if (v.includes('chien')) return 'dog';
+  return null;
+};
+
+const mapSex = (value) => (value === 'Mâle' ? 'male' : value === 'Femelle' ? 'female' : null);
+
+const mapVaccinated = (value) => {
+  if (value === 'Oui') return 'yes';
+  if (value === 'Non') return 'no';
+  if (value === 'À confirmer') return 'unknown';
+  return null;
+};
+
 const Couplage = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   const [form, setForm] = useState({
     fullName: '',
     phone: '',
@@ -35,21 +59,59 @@ const Couplage = () => {
     setForm((current) => ({ ...current, [field]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Demande de couplage envoyée (mock). L’équipe vous contactera après vérification.');
-    setForm({
-      fullName: '',
-      phone: '',
-      animalType: '',
-      breed: '',
-      sex: '',
-      age: '',
-      vaccinated: '',
-      healthStatus: '',
-      preferredBreed: '',
-      message: '',
-    });
+    setError('');
+
+    if (!isAuthenticated) {
+      navigate('/connexion?redirect=/couplage');
+      return;
+    }
+
+    const petSpecies = mapSpecies(form.animalType);
+    const petSex = mapSex(form.sex);
+    const vaccinated = mapVaccinated(form.vaccinated);
+
+    if (!petSpecies || !petSex || !vaccinated) {
+      setError('Vérifiez le type d\'animal, le sexe et les vaccins.');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await axiosClient.post('/coupling-requests', {
+        contact_phone: form.phone,
+        pet_species: petSpecies,
+        pet_breed: form.breed,
+        pet_sex: petSex,
+        pet_age: form.age,
+        vaccinated,
+        health_status: form.healthStatus || undefined,
+        preferred_breed: form.preferredBreed || undefined,
+        message: [form.fullName && `Contact: ${form.fullName}`, form.message].filter(Boolean).join('\n') || undefined,
+      });
+      setSuccess(true);
+      setForm({
+        fullName: '',
+        phone: '',
+        animalType: '',
+        breed: '',
+        sex: '',
+        age: '',
+        vaccinated: '',
+        healthStatus: '',
+        preferredBreed: '',
+        message: '',
+      });
+    } catch (err) {
+      setError(
+        err.response?.data?.message
+        || Object.values(err.response?.data?.errors || {}).flat().join(' ')
+        || 'Impossible d\'envoyer le dossier.'
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const prices = [
@@ -194,6 +256,15 @@ const Couplage = () => {
             </div>
           </div>
 
+          {success && (
+            <div className="mx-6 mt-4 rounded-xl border border-green-200 bg-green-50 p-4 text-green-800 md:mx-8">
+              Dossier envoyé. L&apos;équipe vous contactera sous 24–48h.
+            </div>
+          )}
+          {error && (
+            <div className="mx-6 mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700 md:mx-8">{error}</div>
+          )}
+
           <form className="grid gap-4 p-6 md:grid-cols-2 md:p-8" onSubmit={handleSubmit}>
             <Input id="fullName" label="Nom complet" placeholder="Ex: Sara Benali" value={form.fullName} onChange={(e) => updateField('fullName', e.target.value)} required />
             <Input id="phone" label="Téléphone" placeholder="Ex: 06 12 34 56 78" value={form.phone} onChange={(e) => updateField('phone', e.target.value)} required />
@@ -224,8 +295,8 @@ const Couplage = () => {
               <p className="max-w-xl text-sm leading-6 text-text-light">
                 En envoyant la demande, vous acceptez qu’elle soit refusée si elle ne respecte pas les critères de bien-être animal.
               </p>
-              <Button type="submit" variant="primary" className="h-12 rounded-xl px-7 font-bold">
-                Envoyer le dossier
+              <Button type="submit" variant="primary" className="h-12 rounded-xl px-7 font-bold" disabled={submitting}>
+                {submitting ? 'Envoi...' : 'Envoyer le dossier'}
               </Button>
             </div>
           </form>

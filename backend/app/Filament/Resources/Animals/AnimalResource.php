@@ -18,8 +18,13 @@ class AnimalResource extends Resource
 {
     protected static ?string $model = Animal::class;
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-home'; // 🐾 icon
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-home';
+
     protected static ?string $navigationLabel = 'Animaux';
+
+    protected static string | \UnitEnum | null $navigationGroup = 'Refuge';
+
+    protected static ?int $navigationSort = 1;
     protected static ?string $pluralLabel = 'Animaux';
     protected static ?string $label = 'Animal';
     protected static ?string $modelLabel = 'Animal';
@@ -35,7 +40,7 @@ class AnimalResource extends Resource
 
                 Forms\Components\Select::make('species')
                     ->label('Espèce')
-                    ->options(['Chien' => 'Chien', 'Chat' => 'Chat'])
+                    ->options(['dog' => 'Chien', 'cat' => 'Chat'])
                     ->required(),
 
                 Forms\Components\TextInput::make('breed')
@@ -49,14 +54,31 @@ class AnimalResource extends Resource
 
                 Forms\Components\Select::make('sex')
                     ->label('Sexe')
-                    ->options(['Male' => 'Mâle', 'Female' => 'Femelle'])
+                    ->options(['male' => 'Mâle', 'female' => 'Femelle'])
                     ->required(),
 
-                Forms\Components\TextInput::make('size')
-                    ->label('Taille'),
+                Forms\Components\Select::make('size')
+                    ->label('Taille')
+                    ->options([
+                        'small' => 'Petit',
+                        'medium' => 'Moyen',
+                        'large' => 'Grand',
+                    ]),
 
                 Forms\Components\Toggle::make('vaccinated')
                     ->label('Vacciné'),
+
+                Forms\Components\Toggle::make('sterilized')
+                    ->label('Stérilisé'),
+
+                Forms\Components\Select::make('health_status')
+                    ->label('État de santé')
+                    ->options([
+                        'good' => 'Bon',
+                        'fair' => 'Moyen',
+                        'critical' => 'Critique',
+                    ])
+                    ->default('good'),
 
                 Forms\Components\Textarea::make('description')
                     ->label('Description')
@@ -65,13 +87,12 @@ class AnimalResource extends Resource
                 Forms\Components\Select::make('status')
                     ->label('Statut')
                     ->options([
-                        'Disponible' => 'Disponible',
-                        'Adopté' => 'Adopté',
-                        'En soins' => 'En soins',
-                        'Réservé' => 'Réservé',
+                        'available' => 'Disponible',
+                        'adopted' => 'Adopté',
+                        'in_care' => 'En soins',
                     ])
                     ->required()
-                    ->default('Disponible'),
+                    ->default('available'),
 
                 Forms\Components\FileUpload::make('photos')
                     ->label('Photos')
@@ -100,9 +121,9 @@ class AnimalResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'Disponible' => 'success',
-                        'Adopté' => 'info',
-                        'En soins' => 'warning',
+                        'available' => 'success',
+                        'adopted' => 'info',
+                        'in_care' => 'warning',
                         default => 'gray',
                     }),
             ])

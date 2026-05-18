@@ -51,6 +51,11 @@ class User extends Authenticatable
         return $this->hasMany(RaceCoupling::class);
     }
 
+    public function testimonials(): HasMany
+    {
+        return $this->hasMany(Testimonial::class);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';

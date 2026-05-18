@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AnimalController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DonationController;
 use App\Http\Controllers\Api\GroomingReservationController;
+use App\Http\Controllers\Api\TestimonialController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +27,9 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/animals', [AnimalController::class, 'index']);
 Route::get('/animals/{animal}', [AnimalController::class, 'show']);
 
+// Homepage social proof
+Route::get('/testimonials', [TestimonialController::class, 'index']);
+
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
@@ -40,4 +44,6 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::get('/my-grooming', [GroomingReservationController::class, 'myReservations']);
     Route::post('/grooming', [GroomingReservationController::class, 'store']);
+
+    Route::post('/testimonials', [TestimonialController::class, 'store']);
 });

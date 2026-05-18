@@ -1,13 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, ClipboardCheck, HeartHandshake, LockKeyhole, MessageCircle, SearchCheck, ShieldCheck, Sparkles, Stethoscope, UserCheck } from 'lucide-react';
+import {
+  ArrowRight,
+  BadgeCheck,
+  CalendarHeart,
+  ClipboardCheck,
+  HandCoins,
+  HeartHandshake,
+  LockKeyhole,
+  MessageCircle,
+  Quote,
+  SearchCheck,
+  Sparkles,
+  UserCheck,
+  UsersRound,
+} from 'lucide-react';
 import { useAnimals } from '../../context/AnimalsContext';
+import axiosClient from '../../api/axiosClient';
 import Button from '../../components/ui/Button';
 import AnimalGrid from '../../components/features/animals/AnimalGrid';
 
 const Home = () => {
   const navigate = useNavigate();
   const { animals } = useAnimals();
+  const [apiTestimonials, setApiTestimonials] = useState([]);
   const animalCount = animals.length;
   const featuredAnimals = animals.slice(0, 3);
   const animalCountLabel = animalCount > 1
@@ -34,39 +50,26 @@ const Home = () => {
     },
   ];
 
-  const trustItems = [
+  const supportActions = [
     {
-      icon: ShieldCheck,
-      title: 'Adoptions suivies',
-      text: 'Chaque demande est vérifiée pour protéger l’animal et préparer une arrivée stable.',
+      icon: HandCoins,
+      eyebrow: 'Soutenir',
+      title: 'Faire un don',
+      text: 'Aider à financer les repas, les vaccins et les urgences vétérinaires.',
+      meta: 'Utile dès aujourd’hui',
+      action: 'Participer aux soins',
+      href: '/dons',
+      featured: true,
     },
     {
-      icon: Stethoscope,
-      title: 'Informations utiles',
-      text: 'Les fiches regroupent l’âge, la race, le caractère et les informations de suivi.',
-    },
-    {
-      icon: HeartHandshake,
-      title: 'Accompagnement humain',
-      text: 'Le refuge reste présent avant la décision, pendant la rencontre et après l’adoption.',
-    },
-  ];
-
-  const testimonials = [
-    {
-      quote: 'La fiche de Nala était claire et l’équipe nous a guidés avant la rencontre. On savait exactement à quoi s’attendre.',
-      name: 'Salma R.',
-      role: 'Adoptante',
-    },
-    {
-      quote: 'Les demandes sont bien organisées. Pour le refuge, ça aide à répondre plus vite et à mieux suivre chaque adoption.',
-      name: 'Yassine B.',
-      role: 'Bénévole',
-    },
-    {
-      quote: 'Même sans adopter, j’ai pu aider avec un don et suivre les besoins du refuge de manière simple.',
-      name: 'Mina L.',
-      role: 'Donatrice',
+      icon: UsersRound,
+      eyebrow: 'Donner du temps',
+      title: 'Devenir bénévole',
+      text: 'Accompagner les sorties, les soins simples, les photos et les rencontres.',
+      meta: 'Selon vos disponibilités',
+      action: 'Rejoindre l’équipe',
+      href: '/bénévolat',
+      featured: false,
     },
   ];
 
@@ -92,126 +95,155 @@ const Home = () => {
     navigate(`/animaux/${id}`);
   };
 
+  useEffect(() => {
+    let isMounted = true;
+
+    axiosClient
+      .get('/testimonials')
+      .then((response) => {
+        if (isMounted && Array.isArray(response.data)) {
+          setApiTestimonials(response.data);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setApiTestimonials([]);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const featuredTestimonial = apiTestimonials[0];
+  const supportingTestimonials = apiTestimonials.slice(1, 3);
+
   return (
     <div>
-      <section
-        className="relative h-[calc(100svh-4rem)] min-h-[420px] max-h-[620px] w-full overflow-hidden bg-cover bg-center lg:h-[calc(100svh-5rem)]"
-        style={{ backgroundImage: 'url(/dog1.jpg)', backgroundPosition: 'center 38%' }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/48 to-black/18" />
-        <div className="absolute inset-0 bg-black/10" />
-        <div className="relative flex h-full w-full items-center px-6">
-          <div className="mx-auto flex w-full max-w-screen-xl flex-col justify-center">
-            <h1 className="max-w-3xl text-5xl font-extrabold leading-tight text-white drop-shadow-lg md:text-6xl">
-              Bienvenue sur RefuConnect
-            </h1>
-            <p className="mt-5 max-w-2xl text-2xl leading-9 text-white/90 drop-shadow">
-              Adoptez un animal, changez une vie.
+      <section className="relative h-[calc(100svh-7.5rem)] min-h-[520px] overflow-hidden bg-[#1b1714]">
+        <img
+          src="/hero.png"
+          alt="Chat et chien du refuge reposant ensemble"
+          className="absolute inset-0 h-full w-full object-cover object-[center_48%]"
+        />
+        <div className="absolute inset-0 bg-black/35" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(27,23,20,0.2)_45%,rgba(27,23,20,0.82)_100%)]" />
+
+        <div className="relative mx-auto flex h-full max-w-7xl items-center justify-center px-6 py-12 text-center text-white">
+          <div className="max-w-5xl">
+            <p className="mx-auto w-fit border-y border-white/35 px-6 py-3 text-xs font-bold uppercase tracking-[0.32em] text-white/78">
+              Refuge • Adoption • Solidarité
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Button variant="primary" className="rounded-xl px-8 py-3 text-base font-bold" onClick={() => navigate('/animaux')}>
+            <h1 className="mt-8 text-5xl font-extrabold leading-[0.98] tracking-normal md:text-7xl lg:text-7xl">
+              Nous vivons pour les animaux.
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/82 md:text-xl">
+              Trouvez un compagnon, soutenez le refuge et donnez une vraie chance à ceux qui attendent une famille.
+            </p>
+            <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button
+                variant="white"
+                className="h-14 rounded-full border-0 px-9 text-base font-extrabold text-[#1b1714] shadow-lg"
+                onClick={() => navigate('/animaux')}
+              >
                 Voir les animaux
               </Button>
-              <Button variant="white" className="rounded-xl border border-white/30 bg-white/95 px-8 py-3 text-base font-bold" onClick={() => navigate('/dons')}>
-                Faire un don
-              </Button>
+              <button
+                type="button"
+                className="inline-flex h-14 items-center gap-2 rounded-full border border-white/45 px-7 text-sm font-bold text-white transition hover:border-white hover:bg-white/10"
+                onClick={() => navigate('/dons')}
+              >
+                Aider le refuge
+                <ArrowRight className="h-4 w-4" />
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-10">
-        <div className="grid overflow-hidden rounded-3xl border border-background-beige bg-background-paper shadow-soft lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="relative min-h-[430px] overflow-hidden bg-primary p-7 text-white lg:p-9">
-            <div className="absolute inset-x-0 top-0 h-1 bg-accent" />
-            <div className="relative flex h-full flex-col justify-between gap-8">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-wide text-white/70">Parcours d’adoption</p>
-                <h2 className="mt-3 max-w-md text-3xl font-bold leading-tight md:text-4xl">
-                  Simple à comprendre, encadré par le refuge.
-                </h2>
-                <p className="mt-4 max-w-lg leading-7 text-white/78">
-                  Chaque demande passe par un parcours clair pour protéger l’animal, aider la famille à se préparer et garder un vrai échange avec l’équipe.
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <div className="rounded-2xl border border-white/15 bg-white/10 p-4">
-                  <p className="text-sm font-semibold uppercase tracking-wide text-white/60">Dossier refuge</p>
-                  <p className="mt-2 text-sm leading-6 text-white/78">
-                    Une demande complète permet de mieux comprendre le foyer, le rythme de vie et les besoins de l’animal.
-                  </p>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-2xl border border-white/15 bg-white/10 p-4">
-                  <p className="text-3xl font-extrabold">{animalCount}</p>
-                  <p className="mt-1 text-sm text-white/72">profils disponibles</p>
-                  </div>
-                  <div className="rounded-2xl border border-white/15 bg-white/10 p-4">
-                    <p className="text-3xl font-extrabold">3</p>
-                    <p className="mt-1 text-sm text-white/72">étapes avant la rencontre</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <section className="mx-auto max-w-7xl px-4 py-14">
+        <div className="mb-9 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-wide text-accent">Parcours d’adoption</p>
+            <h2 className="mt-3 max-w-3xl text-4xl font-bold leading-tight text-text-dark md:text-5xl">
+              Simple pour la famille, sérieux pour le refuge.
+            </h2>
           </div>
-
-          <div className="p-6 lg:p-9">
-            <div className="grid gap-4">
-              {adoptionSteps.map((step, index) => {
-                const Icon = step.icon;
-                return (
-                  <article key={step.title} className="grid gap-4 rounded-2xl border border-background-beige bg-white p-5 shadow-sm sm:grid-cols-[auto_1fr]">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-white">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-accent">Étape {index + 1}</p>
-                      <h3 className="mt-1 text-xl font-bold text-text-dark">{step.title}</h3>
-                      <p className="mt-2 text-sm leading-6 text-text-light">{step.text}</p>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-
-            <div className="mt-5 grid gap-3 sm:grid-cols-3">
-              {trustItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <div key={item.title} className="rounded-2xl bg-background-cream p-4">
-                    <Icon className="h-5 w-5 text-primary" />
-                    <h3 className="mt-3 text-sm font-bold text-text-dark">{item.title}</h3>
-                    <p className="mt-1 text-xs leading-5 text-text-light">{item.text}</p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 pb-14">
-        <div className="mb-7 max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-wide text-accent">Pourquoi nous choisir ?</p>
-          <h2 className="mt-2 text-3xl font-bold text-text-dark">Une plateforme pensée pour le refuge et les familles.</h2>
-          <p className="mt-3 leading-7 text-text-light">
-            RefuConnect ne se limite pas à afficher des animaux. Le parcours aide à clarifier les demandes et à créer un lien plus sérieux entre le refuge et les adoptants.
+          <p className="max-w-md text-base leading-7 text-text-light">
+            Chaque étape clarifie la demande avant la rencontre. Le refuge garde le contrôle, l’adoptant comprend quoi faire.
           </p>
         </div>
-        <div className="grid gap-4 md:grid-cols-3">
-          {reasons.map((reason) => {
-            const Icon = reason.icon;
+
+        <div className="relative grid gap-4 md:grid-cols-3">
+          <div className="absolute left-[16%] right-[16%] top-10 hidden h-px bg-[#DCC7B7] md:block" />
+          {adoptionSteps.map((step, index) => {
+            const Icon = step.icon;
             return (
-              <article key={reason.title} className="rounded-2xl border border-background-beige bg-background-paper p-6 shadow-sm">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-white">
-                  <Icon className="h-5 w-5" />
+              <article key={step.title} className="relative rounded-[1.5rem] border border-background-beige bg-background-paper p-6 shadow-sm">
+                <div className="mb-8 flex items-center justify-between">
+                  <div className="z-10 flex h-14 w-14 items-center justify-center rounded-full bg-[#B77A5C] text-white shadow-sm">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <span className="text-5xl font-extrabold leading-none text-background-beige">0{index + 1}</span>
                 </div>
-                <h3 className="mt-5 text-lg font-bold text-text-dark">{reason.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-text-light">{reason.text}</p>
+                <h3 className="text-2xl font-bold text-text-dark">{step.title}</h3>
+                <p className="mt-3 min-h-[4.5rem] leading-7 text-text-light">{step.text}</p>
               </article>
             );
           })}
+        </div>
+
+        <div className="mt-6 grid gap-3 rounded-2xl border border-background-beige bg-[#FBF7F1] p-5 sm:grid-cols-3">
+          <p className="text-sm font-semibold uppercase tracking-wide text-accent">En bref</p>
+          <p className="text-sm leading-6 text-text-light"><strong className="text-text-dark">{animalCount}</strong> profils disponibles actuellement</p>
+          <p className="text-sm leading-6 text-text-light"><strong className="text-text-dark">3</strong> étapes avant une rencontre encadrée</p>
+        </div>
+      </section>
+
+      <section className="bg-[#FBF7F1] py-14">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wide text-accent">Nos engagements</p>
+              <h2 className="mt-3 max-w-2xl text-3xl font-bold leading-tight text-text-dark md:text-4xl">
+                Une plateforme pensée pour un vrai refuge.
+              </h2>
+            </div>
+            <p className="max-w-xl leading-7 text-text-light">
+              RefuConnect aide à clarifier les demandes, sécuriser les informations et valoriser toutes les façons d’aider.
+            </p>
+          </div>
+
+          <div className="grid overflow-hidden rounded-[1.75rem] border border-background-beige bg-background-paper shadow-sm lg:grid-cols-[0.75fr_1.25fr]">
+            <div className="bg-[#EFE4DA] p-7 md:p-8">
+              <LockKeyhole className="h-8 w-8 text-[#A85F45]" />
+              <h3 className="mt-5 text-2xl font-bold text-text-dark">Demandes mieux cadrées</h3>
+              <p className="mt-3 leading-7 text-text-light">
+                Un compte utilisateur permet au refuge de suivre les dossiers proprement, sans perdre les informations importantes.
+              </p>
+              <Button variant="white" className="mt-7 rounded-full px-6 py-3 font-bold" onClick={() => navigate('/connexion')}>
+                Se connecter
+              </Button>
+            </div>
+
+            <div className="divide-y divide-background-beige px-6 md:px-8">
+            {reasons.map((reason) => {
+              const Icon = reason.icon;
+              return (
+                <article key={reason.title} className="grid gap-4 py-6 sm:grid-cols-[auto_1fr]">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-primary shadow-sm">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-text-dark">{reason.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-text-light">{reason.text}</p>
+                  </div>
+                </article>
+              );
+            })}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -239,63 +271,168 @@ const Home = () => {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-14">
-        <div className="grid gap-5 rounded-2xl border border-background-beige bg-background-paper p-6 shadow-sm md:grid-cols-[auto_1fr_auto] md:items-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-background-cream text-primary">
-            <LockKeyhole className="h-6 w-6" />
-          </div>
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="text-xl font-bold text-text-dark">Processus sécurisé pour les demandes</h2>
-            <p className="mt-1 leading-7 text-text-light">
-              Les demandes d’adoption et les informations personnelles passent par un compte utilisateur, afin que le refuge puisse suivre chaque dossier proprement.
-            </p>
+            <p className="text-sm font-semibold uppercase tracking-wide text-accent">Retours vérifiés</p>
+            <h2 className="mt-3 max-w-3xl text-3xl font-bold leading-tight text-text-dark md:text-4xl">
+              Des histoires publiées après validation du refuge.
+            </h2>
           </div>
-          <Button variant="white" className="h-11 rounded-xl px-5 text-sm font-bold" onClick={() => navigate('/connexion')}>
-            Se connecter
-          </Button>
+          <p className="max-w-md leading-7 text-text-light">
+            Cette zone affiche uniquement des témoignages approuvés depuis l’administration.
+          </p>
         </div>
-      </section>
 
-      <section className="mx-auto max-w-7xl px-4 pb-14">
-        <div className="mb-7">
-          <p className="text-sm font-semibold uppercase tracking-wide text-accent">Témoignages</p>
-          <h2 className="mt-2 text-3xl font-bold text-text-dark">Des parcours suivis avec confiance.</h2>
-        </div>
-        <div className="grid gap-4 md:grid-cols-3">
-          {testimonials.map((testimonial) => (
-            <article key={testimonial.name} className="rounded-2xl border border-background-beige bg-background-paper p-6 shadow-sm">
-              <p className="text-sm leading-7 text-text-light">“{testimonial.quote}”</p>
-              <div className="mt-5 border-t border-background-beige pt-4">
-                <p className="font-bold text-text-dark">{testimonial.name}</p>
-                <p className="text-sm text-accent">{testimonial.role}</p>
+        {featuredTestimonial ? (
+          <div className="grid overflow-hidden rounded-[1.75rem] border border-background-beige bg-background-paper shadow-soft lg:grid-cols-[1.15fr_0.85fr]">
+            <article className="relative min-h-[24rem] bg-[#F7F1EA] p-7 md:p-9">
+              <div className="absolute right-8 top-8 text-8xl font-extrabold leading-none text-[#E7DED4]">01</div>
+              <div className="relative max-w-2xl">
+                <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#A85F45] shadow-sm">
+                  <Quote className="h-6 w-6" />
+                </div>
+                <p className="text-2xl font-semibold leading-10 text-text-dark">
+                  “{featuredTestimonial.quote}”
+                </p>
+                <div className="mt-8 flex flex-wrap items-center gap-3 border-t border-[#DED1C4] pt-6">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#A85F45] text-sm font-extrabold text-white">
+                    {featuredTestimonial.name?.slice(0, 1) ?? 'R'}
+                  </div>
+                  <div>
+                    <p className="font-bold text-text-dark">{featuredTestimonial.name}</p>
+                    <p className="text-sm font-semibold text-accent">{featuredTestimonial.role}</p>
+                  </div>
+                  <span className="inline-flex items-center gap-1 rounded-full border border-[#D7B39F] bg-white px-3 py-1 text-xs font-bold text-[#8F4E39]">
+                    <BadgeCheck className="h-3.5 w-3.5" />
+                    Validé
+                  </span>
+                </div>
+                {featuredTestimonial.detail && (
+                  <p className="mt-4 text-sm leading-6 text-text-light">{featuredTestimonial.detail}</p>
+                )}
               </div>
             </article>
-          ))}
-        </div>
+
+            <div className="divide-y divide-background-beige p-6 md:p-8">
+              <p className="mb-3 text-sm font-bold uppercase tracking-wide text-accent">Autres retours publiés</p>
+              {supportingTestimonials.length > 0 ? (
+                supportingTestimonials.map((testimonial) => (
+                  <article key={testimonial.id ?? testimonial.name} className="py-6 first:pt-3">
+                    <p className="text-base leading-7 text-text-light">“{testimonial.quote}”</p>
+                    <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
+                      <span className="font-bold text-text-dark">{testimonial.name}</span>
+                      <span className="h-1 w-1 rounded-full bg-[#C9B6A6]" />
+                      <span className="font-semibold text-accent">{testimonial.role}</span>
+                    </div>
+                    {testimonial.detail && <p className="mt-2 text-sm text-text-light">{testimonial.detail}</p>}
+                  </article>
+                ))
+              ) : (
+                <div className="rounded-2xl border border-dashed border-[#D7B39F] bg-white p-5 text-sm leading-6 text-text-light">
+                  Les prochains témoignages approuvés apparaîtront ici automatiquement.
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="grid overflow-hidden rounded-[1.75rem] border border-background-beige bg-background-paper shadow-soft md:grid-cols-[0.85fr_1.15fr]">
+            <div className="bg-[#F7F1EA] p-7 md:p-9">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#A85F45] shadow-sm">
+                <BadgeCheck className="h-6 w-6" />
+              </div>
+              <h3 className="mt-6 text-2xl font-bold text-text-dark">Aucun témoignage publié pour le moment.</h3>
+              <p className="mt-3 leading-7 text-text-light">
+                Le site attend des retours réels validés par l’équipe du refuge. Pas de faux avis, pas de contenu inventé.
+              </p>
+            </div>
+            <div className="p-7 md:p-9">
+              <p className="text-sm font-bold uppercase tracking-wide text-accent">Fonctionnement réel</p>
+              <div className="mt-5 grid gap-4 sm:grid-cols-3">
+                {[
+                  ['1', 'Un utilisateur partage son expérience.'],
+                  ['2', 'Le refuge vérifie et approuve le message.'],
+                  ['3', 'Le témoignage apparaît ici automatiquement.'],
+                ].map(([step, text]) => (
+                  <div key={step} className="rounded-2xl border border-background-beige bg-[#FBF7F1] p-4">
+                    <p className="text-2xl font-extrabold text-[#A85F45]">{step}</p>
+                    <p className="mt-3 text-sm leading-6 text-text-light">{text}</p>
+                  </div>
+                ))}
+              </div>
+              <Button variant="white" className="mt-6 rounded-full px-5 py-3 text-sm font-bold" onClick={() => navigate('/connexion')}>
+                Partager une expérience
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-16">
-        <div className="overflow-hidden rounded-3xl bg-primary p-7 text-white shadow-soft md:p-10">
-          <div className="grid gap-7 md:grid-cols-[1.2fr_0.8fr] md:items-center">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-wide text-white/70">Agir avec le refuge</p>
-              <h2 className="mt-3 max-w-2xl text-3xl font-bold leading-tight md:text-4xl">
-                Vous ne pouvez pas adopter aujourd’hui ? Vous pouvez quand même aider.
-              </h2>
-              <p className="mt-4 max-w-2xl leading-7 text-white/78">
-                RefuConnect met en avant plusieurs façons de soutenir les animaux: découvrir les profils, faire un don ou rejoindre l’équipe bénévole.
-              </p>
+        <div className="relative overflow-hidden rounded-[1.75rem] border border-[#D7B39F] bg-[#8F4E39] text-white shadow-[0_22px_60px_rgba(88,54,38,0.18)]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.16),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.12),transparent_42%)]" />
+          <div className="relative grid lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="flex flex-col justify-between gap-8 p-7 md:p-10">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-wide text-white/75">Agir avec le refuge</p>
+                <h2 className="mt-3 max-w-xl text-3xl font-bold leading-tight md:text-4xl">
+                  Même sans adopter, vous pouvez changer une journée.
+                </h2>
+                <p className="mt-4 max-w-xl leading-7 text-white/82">
+                  Un don, une heure libre ou une présence régulière aide le refuge à nourrir, soigner et rassurer les animaux qui attendent.
+                </p>
+              </div>
+              <div className="grid gap-3 text-sm sm:grid-cols-2">
+                <div className="rounded-2xl border border-white/18 bg-white/10 p-4">
+                  <CalendarHeart className="h-5 w-5 text-white/75" />
+                  <p className="mt-3 font-bold">Aide concrète</p>
+                  <p className="mt-1 text-white/70">Repas, soins, sorties et suivi quotidien.</p>
+                </div>
+                <div className="rounded-2xl border border-white/18 bg-white/10 p-4">
+                  <HeartHandshake className="h-5 w-5 text-white/75" />
+                  <p className="mt-3 font-bold">Impact local</p>
+                  <p className="mt-1 text-white/70">Chaque geste reste lié aux besoins du refuge.</p>
+                </div>
+              </div>
             </div>
-            <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
-              <Button variant="white" className="rounded-xl px-6 py-3 font-bold" onClick={() => navigate('/animaux')}>
-                Voir les animaux
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-              <Button variant="white" className="rounded-xl px-6 py-3 font-bold" onClick={() => navigate('/dons')}>
-                Faire un don
-              </Button>
-              <Button variant="outline" className="rounded-xl border-white/50 px-6 py-3 font-bold text-white hover:bg-white/10" onClick={() => navigate('/bénévolat')}>
-                Devenir bénévole
-              </Button>
+            <div className="grid gap-4 border-t border-white/15 bg-white/10 p-5 sm:grid-cols-2 md:p-7 lg:border-l lg:border-t-0">
+              {supportActions.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.title}
+                    type="button"
+                    className={`group flex min-h-[18rem] flex-col justify-between rounded-[1.4rem] p-6 text-left transition duration-300 hover:-translate-y-1 ${
+                      item.featured
+                        ? 'bg-background-paper text-[#713724] shadow-[0_18px_42px_rgba(42,27,19,0.18)]'
+                        : 'border border-white/30 bg-white/10 text-white hover:bg-white/20'
+                    }`}
+                    onClick={() => navigate(item.href)}
+                  >
+                    <span>
+                      <span className={`flex h-12 w-12 items-center justify-center rounded-full ${item.featured ? 'bg-[#F3E7DC] text-[#A85F45]' : 'bg-white/15 text-white'}`}>
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <span className={`mt-6 block text-sm font-bold uppercase tracking-wide ${item.featured ? 'text-[#A85F45]' : 'text-white/70'}`}>
+                        {item.eyebrow}
+                      </span>
+                      <span className="mt-2 block text-2xl font-extrabold">{item.title}</span>
+                      <span className={`mt-4 block text-sm leading-6 ${item.featured ? 'text-[#73584E]' : 'text-white/75'}`}>
+                        {item.text}
+                      </span>
+                    </span>
+                    <span>
+                      <span className={`mb-4 block rounded-full px-3 py-2 text-xs font-bold ${item.featured ? 'bg-[#F3E7DC] text-[#8F4E39]' : 'bg-white/10 text-white/75'}`}>
+                        {item.meta}
+                      </span>
+                      <span className="inline-flex items-center gap-2 text-sm font-bold">
+                        {item.action}
+                        <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

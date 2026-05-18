@@ -8,7 +8,7 @@ const mockAnimals = [
     sex: 'Male',
     vaccinated: true,
     images: ['/dog1.jpg'],
-    description: 'Chien affectueux et sportif, adapté à une famille active.',
+    description: 'Chien intelligent, protecteur et très fidèle. Il aime jouer et rester proche de sa famille.',
     veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
   },
   {
@@ -19,8 +19,8 @@ const mockAnimals = [
     breed: 'Chaton',
     sex: 'Femelle',
     vaccinated: false,
-    images: ['https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=1000&auto=format&fit=crop'],
-    description: "Chatonne joueuse, très sociable avec les enfants.",
+    images: ['/cat1.jfif'],
+    description: 'Petite chatonne calme et curieuse, avec un regard doux et affectueux.',
     veterinaryInfo: ['Carnet de santé : En cours', 'Suivi vétérinaire : Non']
   },
   {
@@ -32,21 +32,215 @@ const mockAnimals = [
     sex: 'Male',
     vaccinated: true,
     images: ['/dog3.webp'],
-    description: 'Calme et sociable, habitué aux autres animaux.',
+    description: 'Chien sociable et énergique, adore les promenades et jouer à l’extérieur.',
     veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
   },
   {
     id: '4',
     name: 'Milo',
-    age: 1,
+    age: 4,
     ageUnit: 'ANS',
     breed: 'Bouledogue',
     sex: 'Male',
     vaccinated: true,
-    images: [],
-    description: 'Petit gabarit, adore les câlins.',
+    images: ['/dog2.webp'],
+    description: 'Petit chien calme et affectueux, aime les câlins et les moments de détente.',
     veterinaryInfo: ['Carnet de santé : Disponible']
-  }
+  },
+  {
+    id: '5',
+    name: 'Luna',
+    age: 1,
+    ageUnit: 'ANS',
+    breed: 'Chat Persan',
+    sex: 'Femelle',
+    vaccinated: true,
+    images: ['/cat2.jfif'],
+    description: 'Chatte élégante et douce, très calme et parfaite pour une maison tranquille.',
+    veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+  },
+  {
+    id: '6',
+    name: 'Rocky',
+    age: 4,
+    ageUnit: 'ANS',
+    breed: 'Pitbull',
+    sex: 'Male',
+    vaccinated: true,
+    images: ['/dog4.webp'],
+    description: 'Chien fort et loyal, très attaché à son maître et plein d’énergie.',
+    veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+  },
+  {
+    id: '7',
+    name: 'Mittens',
+    age: 1,
+    ageUnit: 'ANS',
+    breed: 'Chat Roux',
+    sex: 'Male',
+    vaccinated: true,
+    images: ['/cat3.jfif'],
+    description: 'Petit chat joueur et curieux, adore explorer et attirer l’attention.',
+    veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+  },
+  {
+    id: '8',
+    name: 'Bailey',
+    age: 5,
+    ageUnit: 'ANS',
+    breed: 'Golden Retriever',
+    sex: 'Femelle',
+    vaccinated: true,
+    images: ['/dog5.webp'],
+    description: 'Chienne douce et patiente, idéale pour les familles et très amicale.',
+    veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+  },
+
+  {
+  id: '9',
+  name: 'Shadow',
+  age: 3,
+  ageUnit: 'ANS',
+  breed: 'Chat Noir',
+  sex: 'Male',
+  vaccinated: true,
+  images: ['/cat4.jfif'],
+  description: 'Chat élégant et discret, très affectueux avec les personnes qu’il connaît bien.',
+  veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+},
+{
+  id: '10',
+  name: 'Buddy',
+  age: 1,
+  ageUnit: 'ANS',
+  breed: 'Beagle',
+  sex: 'Male',
+  vaccinated: true,
+  images: ['/dog6.jfif'],
+  description: 'Chien joueur et curieux, adore explorer et passer du temps avec les humains.',
+  veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+},
+{
+  id: '11',
+  name: 'Whiskers',
+  age: 2,
+  ageUnit: 'ANS',
+  breed: 'Chat Blanc',
+  sex: 'Femelle',
+  vaccinated: true,
+  images: ['/cat5.jfif'],
+  description: 'Minette calme et douce, aime les endroits tranquilles et les câlins.',
+  veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+},
+{
+  id: '12',
+  name: 'Charlie',
+  age: 7,
+  ageUnit: 'MOIS',
+  breed: 'Poodle',
+  sex: 'Male',
+  vaccinated: true,
+  images: ['/dog8.jfif'],
+  description: 'Petit chiot intelligent et très affectueux, plein d’énergie et facile à dresser.',
+  veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+},
+{
+  id: '13',
+  name: 'Daisy',
+  age: 3,
+  ageUnit: 'ANS',
+  breed: 'Cocker Spaniel',
+  sex: 'Femelle',
+  vaccinated: false,
+  images: ['/dog9.jfif'],
+  description: 'Chienne sociable et adorable, aime jouer et recevoir de l’attention.',
+  veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+},
+{
+  id: '14',
+  name: 'Pepper',
+  age: 4,
+  ageUnit: 'ANS',
+  breed: 'Schnauzer',
+  sex: 'Male',
+  vaccinated: true,
+  images: ['/dog10.jfif'],
+  description: 'Petit chien courageux et énergique, très attaché à son maître.',
+  veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+},
+{
+  id: '15',
+  name: 'Rex',
+  age: 5,
+  ageUnit: 'ANS',
+  breed: 'Rottweiler',
+  sex: 'Male',
+  vaccinated: true,
+  images: ['/dog11.webp'],
+  description: 'Grand chien calme et puissant, protecteur mais très gentil avec sa famille.',
+  veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+},
+{
+  id: '16',
+  name: 'Bruno',
+  age: 6,
+  ageUnit: 'ANS',
+  breed: 'Rottweiler',
+  sex: 'Male',
+  vaccinated: true,
+  images: ['/dog12.webp'],
+  description: 'Chien fidèle et attentif, aime surveiller son environnement tout en restant affectueux.',
+  veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+},
+  {
+  id: '17',
+  name: 'Nala',
+  age: 3,
+  ageUnit: 'ANS',
+  breed: 'Husky Sibérien',
+  sex: 'Femelle',
+  vaccinated: true,
+  images: ['/dog13.webp'],
+  description: 'Chienne vive et élégante, très énergique et adore courir et jouer dehors.',
+  veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+},
+{
+  id: '18',
+  name: 'Oscar',
+  age: 2,
+  ageUnit: 'ANS',
+  breed: 'Golden Retriever',
+  sex: 'Male',
+  vaccinated: false,
+  images: ['/dog14.webp'],
+  description: 'Chien calme et affectueux, avec un regard doux et très sociable avec les humains.',
+  veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+},
+{
+  id: '19',
+  name: 'Maya',
+  age: 5,
+  ageUnit: 'ANS',
+  breed: 'Border Collie',
+  sex: 'Femelle',
+  vaccinated: true,
+  images: ['/dog15.webp'],
+  description: 'Chienne intelligente et joyeuse, aime apprendre et rester active toute la journée.',
+  veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+},
+{
+  id: '20',
+  name: 'Toby',
+  age: 6,
+  ageUnit: 'MOIS',
+  breed: 'Beagle',
+  sex: 'Male',
+  vaccinated: true,
+  images: ['/dog16.webp'],
+  description: 'Petit chien curieux et joueur, adore explorer son environnement et attirer l’attention.',
+  veterinaryInfo: ['Carnet de santé : Disponible', 'Suivi vétérinaire : Oui']
+}
 ];
 
 export default mockAnimals;
+

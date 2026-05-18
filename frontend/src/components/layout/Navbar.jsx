@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { ADMIN_URL } from '../../config';
 import Button from '../ui/Button';
 import Logo from '../Logo';
 import { Menu, X, LogOut, ChevronDown, Heart, Home, Dog, Scissors, HandHeart, Gift, Users } from 'lucide-react';
@@ -21,8 +22,8 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
     setIsOpen(false);
   };
@@ -128,14 +129,16 @@ const Navbar = () => {
                         <p className="text-sm font-medium text-gray-900 truncate">{user.email}</p>
                       </div>
                       {user.role === 'admin' && (
-                        <Link
-                          to="/admin"
+                        <a
+                          href={ADMIN_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           onClick={() => setActiveDropdown(null)}
                           className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                         >
                           <Heart className="w-4 h-4" />
                           Administration
-                        </Link>
+                        </a>
                       )}
                       {user.role === 'user' && (
                         <Link
@@ -228,14 +231,16 @@ const Navbar = () => {
                     </div>
                     
                     {user.role === 'admin' && (
-                      <Link
-                        to="/admin"
-                        onClick={() => handleNavigate('/admin')}
+                      <a
+                        href={ADMIN_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setIsOpen(false)}
                         className="flex items-center gap-3 px-4 py-3 rounded-xl text-text-main hover:bg-primary-light/60"
                       >
                         <Heart className="w-5 h-5 text-primary" />
                         <span>Administration</span>
-                      </Link>
+                      </a>
                     )}
                     {user.role === 'user' && (
                       <Link

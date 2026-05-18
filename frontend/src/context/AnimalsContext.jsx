@@ -1,41 +1,57 @@
-import React, { createContext, useState } from 'react';
-import mockAnimals from '../data/mockAnimals';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
+import axiosClient from '../api/axiosClient';
+import { mapAnimalFromApi, speciesToApi } from '../api/mappers/animalMapper';
 
 export const AnimalsContext = createContext();
 
 export const AnimalsProvider = ({ children }) => {
-  // Initialize with mock data
-  const [animals, setAnimals] = useState(mockAnimals);
+  const [animals, setAnimals] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const addAnimal = (newAnimal) => {
-    const animal = {
-      id: Date.now(),
-      ...newAnimal,
-      images: newAnimal.images
-        ? newAnimal.images.split(',').map((url) => url.trim())
-        : ['https://via.placeholder.com/400x400?text=No+Image'],
-      veterinaryInfo: [],
-    };
-    setAnimals([...animals, animal]);
-    return animal;
-  };
+  const fetchAnimals = useCallback(async (filters = {}) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const params = {};
+      const species = speciesToApi(filters.type);
+      if (species) params.species = species;
+      if (filters.search) params.search = filters.search;
+      if (filters.breed && filters.breed !== 'all') params.breed = filters.breed;
 
-  const updateAnimal = (id, updatedData) => {
-    setAnimals(
-      animals.map((a) => (String(a.id) === String(id) ? { ...a, ...updatedData } : a))
-    );
-  };
+      const { data } = await axiosClient.get('/animals', { params });
+      const list = (data.data || []).map(mapAnimalFromApi);
+      setAnimals(list);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Impossible de charger les animaux.');
+      setAnimals([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  const deleteAnimal = (id) => {
-    setAnimals(animals.filter((a) => String(a.id) !== String(id)));
-  };
+  useEffect(() => {
+    fetchAnimals();
+  }, [fetchAnimals]);
 
-  const getAnimalById = (id) => {
-    return animals.find((a) => String(a.id) === String(id));
-  };
+  const getAnimalById = useCallback(
+    async (id) => {
+      const cached = animals.find((a) => String(a.id) === String(id));
+      if (cached) return cached;
+
+      try {
+        const { data } = await axiosClient.get(`/animals/${id}`);
+        const payload = data.data ?? data;
+        return mapAnimalFromApi(payload);
+      } catch {
+        return null;
+      }
+    },
+    [animals]
+  );
 
   return (
-    <AnimalsContext.Provider value={{ animals, addAnimal, updateAnimal, deleteAnimal, getAnimalById }}>
+    <AnimalsContext.Provider value={{ animals, loading, error, fetchAnimals, getAnimalById }}>
       {children}
     </AnimalsContext.Provider>
   );

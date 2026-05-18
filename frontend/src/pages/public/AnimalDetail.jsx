@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAnimals } from '../../context/AnimalsContext';
 import Button from '../../components/ui/Button';
@@ -8,65 +8,107 @@ import AdoptionForm from '../../components/features/forms/AdoptionForm';
 const AnimalDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getAnimalById } = useAnimals();
-  const animal = getAnimalById(id);
+  const { getAnimalById, loading: listLoading } = useAnimals();
+  const [animal, setAnimal] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    const load = async () => {
+      setLoading(true);
+      const data = await getAnimalById(id);
+      if (active) {
+        setAnimal(data);
+        setLoading(false);
+      }
+    };
+    load();
+    return () => {
+      active = false;
+    };
+  }, [id, getAnimalById]);
+
+  if (loading || listLoading) {
+    return (
+      <div className="mx-auto max-w-3xl p-6 text-center text-muted">Chargement du profil...</div>
+    );
+  }
 
   if (!animal) {
-    return <div className="max-w-3xl mx-auto p-6">Animal introuvable.</div>;
+    return (
+      <div className="mx-auto max-w-3xl p-6 text-center">
+        <p className="mb-4">Animal introuvable.</p>
+        <Button variant="primary" onClick={() => navigate('/animaux')}>Retour à la liste</Button>
+      </div>
+    );
   }
 
   const { name, images, breed, sex, age, ageUnit, vaccinated, description, veterinaryInfo } = animal;
-  // Use image from public folder if no image is provided
-  const publicImages = ['dog1.jpg', 'dog3.webp', 'dog4.webp', 'dog44.webp', 'dog5.webp'];
-  const randomPublicImage = `/` + publicImages[Math.floor(Math.random() * publicImages.length)];
-
-  const [showForm, setShowForm] = useState(false);
+  const fallbackImage = '/dog1.jpg';
+  const image = images?.[0] || fallbackImage;
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12">
-      <div className="bg-white p-8 rounded-3xl shadow-lg flex flex-col md:flex-row gap-10">
+    <div className="mx-auto max-w-5xl px-6 py-12">
+      <div className="flex flex-col gap-10 rounded-3xl bg-white p-8 shadow-lg md:flex-row">
         <div className="md:w-1/3">
-          <img src={images[0] || randomPublicImage} alt={name} className="rounded-2xl w-full h-96 object-cover shadow-md" />
+          <img src={image} alt={name} className="h-96 w-full rounded-2xl object-cover shadow-md" />
         </div>
-        <div className="md:w-2/3 space-y-6">
-          <div className="flex justify-between items-center">
+        <div className="space-y-6 md:w-2/3">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <h1 className="font-serif text-4xl font-bold">{name}</h1>
-            <div className="flex gap-2">
-              <span className="bg-gray-100 px-3 py-1 rounded-md text-sm">{breed}</span>
-              <span className="bg-gray-100 px-3 py-1 rounded-md text-sm">{sex}</span>
+            <div className="flex flex-wrap gap-2">
+              <span className="rounded-md bg-gray-100 px-3 py-1 text-sm">{breed}</span>
+              <span className="rounded-md bg-gray-100 px-3 py-1 text-sm">{sex}</span>
               <Badge className="px-3 py-1">{age} {ageUnit}</Badge>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <p className="font-semibold text-lg">Race: <span className="font-normal text-muted">{breed}</span></p>
-            <p className="font-semibold text-lg">Vacciné: <span className={`font-normal ${vaccinated ? 'text-green-600' : 'text-red-500'}`}>{vaccinated ? 'Oui' : 'Non'}</span></p>
+          <p className="text-lg">
+            Vacciné :{' '}
+            <span className={vaccinated ? 'text-green-600' : 'text-red-500'}>
+              {vaccinated ? 'Oui' : 'Non'}
+            </span>
+          </p>
+
+          <div className="rounded-xl border border-orange-100 bg-bg p-6">
+            <h3 className="mb-2 font-serif text-xl">Description</h3>
+            <p className="leading-relaxed text-muted">{description}</p>
           </div>
 
-          <div className="bg-bg p-6 rounded-xl border border-orange-100">
-            <h3 className="font-serif text-xl mb-2">Description</h3>
-            <p className="text-muted leading-relaxed">{description}</p>
-          </div>
-
-          <div className="bg-gray-50 p-6 rounded-xl">
-            <h3 className="font-serif text-xl mb-2">Information vétérinaires</h3>
-            <ul className="text-sm space-y-2 text-muted">
+          <div className="rounded-xl bg-gray-50 p-6">
+            <h3 className="mb-2 font-serif text-xl">Informations vétérinaires</h3>
+            <ul className="space-y-2 text-sm text-muted">
               {veterinaryInfo.map((line, idx) => (
                 <li key={idx}>• {line}</li>
               ))}
             </ul>
           </div>
 
-          <div className="flex gap-4 pt-4">
-            <Button variant="primary" onClick={() => setShowForm(true)}>Demande d'adoption</Button>
-            <Button variant="secondary" className="bg-secondary text-white" onClick={() => alert('Demande de couplage (mock)')}>Demande de couplage</Button>
+          {success && (
+            <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
+              Demande envoyée. Consultez votre espace pour suivre l&apos;avancement.
+            </div>
+          )}
+
+          <div className="flex flex-wrap gap-4 pt-4">
+            <Button variant="primary" onClick={() => setShowForm(true)}>Demande d&apos;adoption</Button>
             <Button variant="white" onClick={() => navigate('/animaux')}>Retour</Button>
           </div>
         </div>
       </div>
+
       {showForm && (
-        <div className="max-w-2xl mx-auto mt-8">
-          <AdoptionForm animalId={id} onCancel={() => setShowForm(false)} onSuccess={() => setShowForm(false)} />
+        <div className="mx-auto mt-8 max-w-2xl">
+          <AdoptionForm
+            animalId={id}
+            onCancel={() => setShowForm(false)}
+            onSuccess={() => {
+              setShowForm(false);
+              setSuccess(true);
+            }}
+          />
         </div>
       )}
     </div>

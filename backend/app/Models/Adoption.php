@@ -10,14 +10,15 @@ class Adoption extends Model
     protected $fillable = [
         'user_id',
         'animal_id',
-        'date_demande',
-        'statut',
+        'status',
+        'requested_at',
         'motivation',
         'notes',
+
     ];
 
     protected $casts = [
-        'date_demande' => 'date',
+        'requested_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

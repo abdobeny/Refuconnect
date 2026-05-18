@@ -13,13 +13,26 @@ return new class extends Migration
     {
         Schema::create('donations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained(); // Nullable for guest donations
-            $table->enum('type', ['financier', 'nourriture', 'matériel']);
-            $table->decimal('montant', 10, 2)->nullable(); // For financial 
-            $table->string('objet')->nullable(); // For food/material 
-            $table->text('details')->nullable();
+            
+            // Donor (nullable for anonymous donations)
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
+            
+            // Donation type and amount
+            $table->enum('type', ['financial', 'food', 'material']);  // financier, nourriture, materiel
+            $table->decimal('amount', 10, 2)->nullable();  // For financial donations
+            $table->string('item_description')->nullable();  // For food/material donations
+            
+            // Payment details
+            $table->enum('payment_method', ['cash', 'card', 'bank_transfer', 'paypal', 'other'])->nullable();
+            $table->enum('status', ['pending', 'completed', 'failed', 'refunded'])->default('pending');
+            
+            // Dates and messages
+            $table->date('donation_date')->default(now());
+            $table->text('message')->nullable();  // Donor's message
+            $table->text('admin_notes')->nullable();  // Internal notes
+            
             $table->timestamps();
-});
+        });
     }
 
     /**

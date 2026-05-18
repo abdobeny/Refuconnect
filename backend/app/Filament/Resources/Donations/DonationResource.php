@@ -21,6 +21,10 @@ class DonationResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
     protected static ?string $navigationLabel = 'Dons';
+
+    protected static string | \UnitEnum | null $navigationGroup = 'Demandes';
+
+    protected static ?int $navigationSort = 2;
     protected static ?string $pluralLabel = 'Historique des dons';
     protected static ?string $label = 'Don';
 
@@ -35,33 +39,29 @@ class DonationResource extends Resource
                     ->searchable()
                     ->preload(),
 
-                Forms\Components\TextInput::make('amount')
-                    ->label('Montant (DH)')
-                    ->numeric()
-                    ->required()
-                    ->prefix('DH')
-                    ->minValue(1),
-
-                Forms\Components\Select::make('payment_method')
-                    ->label('Mode de paiement')
-                    ->options([
-                        'cash'       => 'Espèces',
-                        'card'       => 'Carte bancaire',
-                        'bank_transfer' => 'Virement',
-                        'paypal'     => 'PayPal',
-                        'other'      => 'Autre',
-                    ])
-                    ->required(),
-
                 Forms\Components\Select::make('type')
                     ->label('Type de don')
                     ->options([
-                        'one_time' => 'Don unique',
-                        'monthly'  => 'Don mensuel',
-                        'in_kind'  => 'Don en nature',
+                        'financial' => 'Don financier',
+                        'food' => 'Nourriture',
+                        'material' => 'Matériel',
                     ])
-                    ->default('one_time')
-                    ->required(),
+                    ->default('financial')
+                    ->required()
+                    ->live(),
+
+                Forms\Components\TextInput::make('amount')
+                    ->label('Montant (DH)')
+                    ->numeric()
+                    ->prefix('DH')
+                    ->minValue(1)
+                    ->required(fn (callable $get) => $get('type') === 'financial')
+                    ->visible(fn (callable $get) => $get('type') === 'financial'),
+                    
+                Forms\Components\TextInput::make('item_description')
+                    ->label('Description de l\'objet')
+                    ->placeholder('Ex: 5kg de croquettes, panier, etc.')
+                    ->visible(fn (callable $get) => in_array($get('type'), ['food', 'material'])),
 
                 Forms\Components\Select::make('status')
                     ->label('Statut')
@@ -71,7 +71,7 @@ class DonationResource extends Resource
                         'failed'    => 'Échoué',
                         'refunded'  => 'Remboursé',
                     ])
-                    ->default('completed')
+                    ->default('pending')
                     ->required()
                     ->live(),
 
@@ -107,33 +107,22 @@ class DonationResource extends Resource
                     ->alignRight()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('payment_method')
-                    ->label('Paiement')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'cash' => 'Espèces',
-                        'card' => 'Carte',
-                        'bank_transfer' => 'Virement',
-                        'paypal' => 'PayPal',
-                        default => 'Autre',
-                    }),
-
                 Tables\Columns\TextColumn::make('type')
                     ->label('Type')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'one_time' => 'info',
-                        'monthly' => 'success',
-                        'in_kind' => 'warning',
+                        'financial' => 'success',
+                        'food' => 'warning',
+                        'material' => 'info',
                         default => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'one_time' => 'Unique',
-                        'monthly' => 'Mensuel',
-                        'in_kind' => 'En nature',
+                        'financial' => 'Financier',
+                        'food' => 'Nourriture',
+                        'material' => 'Matériel',
                         default => $state,
                     }),
-
+                
                 Tables\Columns\TextColumn::make('status')
                     ->label('Statut')
                     ->badge()

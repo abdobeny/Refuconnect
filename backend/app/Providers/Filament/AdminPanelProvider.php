@@ -2,26 +2,33 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\Login;
+use App\Filament\Pages\Dashboard;
 use App\Filament\Resources\Adoptions\AdoptionResource;
 use App\Filament\Resources\Animals\AnimalResource;
+use App\Filament\Resources\CouplingRequests\CouplingRequestResource;
 use App\Filament\Resources\Donations\DonationResource;
 use App\Filament\Resources\GroomingReservations\GroomingReservationResource;
-use App\Filament\Resources\RaceCouplings\RaceCouplingResource;
+use App\Filament\Resources\UsersResource;
+use App\Filament\Widgets\AnimalStatusChart;
+use App\Filament\Widgets\RecentAdoptions;
+use App\Filament\Widgets\StatsOverview;
+use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
+use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -32,26 +39,53 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->viteTheme('resources/css/filament/admin/theme.css')
+            ->brandName('RefuConnect')
+            ->brandLogo(fn () => new HtmlString(view('filament.components.brand')->render()))
+            ->brandLogoHeight('2.25rem')
+            ->favicon(asset('images/favicon.svg'))
+            ->font('Inter')
+            ->serifFont('Playfair Display')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#2F3634'),
+                'gray' => Color::hex('#786D64'),
+                'danger' => Color::hex('#B85C4E'),
+                'success' => Color::hex('#5C7A6B'),
+                'warning' => Color::hex('#A9795F'),
+                'info' => Color::hex('#6E706C'),
+            ])
+            ->darkMode(false)
+            ->defaultThemeMode(ThemeMode::Light)
+            ->login(Login::class)
+            ->sidebarCollapsibleOnDesktop()
+            ->navigationGroups([
+                NavigationGroup::make('Refuge')->icon('heroicon-o-home'),
+                NavigationGroup::make('Demandes')->icon('heroicon-o-inbox'),
             ])
             ->resources([
                 AnimalResource::class,
                 AdoptionResource::class,
                 DonationResource::class,
                 GroomingReservationResource::class,
-                RaceCouplingResource::class,
+                CouplingRequestResource::class,
+                UsersResource::class,
             ])
             ->pages([
                 Dashboard::class,
             ])
             ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
-                \App\Filament\Widgets\StatsOverview::class,
-                \App\Filament\Widgets\RecentAdoptions::class,
+                StatsOverview::class,
+                AnimalStatusChart::class,
+                RecentAdoptions::class,
             ])
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn () => new HtmlString(
+                    '<link rel="preconnect" href="https://fonts.googleapis.com">'
+                    .'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+                    .'<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">'
+                ),
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

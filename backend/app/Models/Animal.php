@@ -8,22 +8,25 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Animal extends Model
 {
     protected $fillable = [
-        'nom',
-        'espece',
-        'race',
+        'name',
+        'species',
+        'breed',
         'age',
-        'sexe',
+        'sex',
         'description',
-        'photo',
-        'statut',
-        'taille',
-        'vaccine',
+        'size',
+        'vaccinated',
+        'sterilized',
+        'health_status',
+        'status',
         'photos',
     ];
 
     protected $casts = [
-        'vaccine' => 'boolean',
-        'photos' => 'array',
+        'vaccinated' => 'boolean',
+        'sterilized' => 'boolean',
+        'photos' => 'array',  // JSON to PHP array
+        'age' => 'integer',
     ];
 
     public function adoptions(): HasMany

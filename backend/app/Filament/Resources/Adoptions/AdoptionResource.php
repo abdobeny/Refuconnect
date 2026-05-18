@@ -20,6 +20,10 @@ class AdoptionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-heart';
     protected static ?string $navigationLabel = 'Adoptions';
+
+    protected static string | \UnitEnum | null $navigationGroup = 'Demandes';
+
+    protected static ?int $navigationSort = 1;
     protected static ?string $pluralLabel = 'Demandes d\'adoption';
     protected static ?string $label = 'Demande d\'adoption';
 
@@ -41,15 +45,15 @@ class AdoptionResource extends Resource
                     ->searchable()
                     ->preload(),
 
-                Forms\Components\Select::make('statut')
+                Forms\Components\Select::make('status')
                     ->label('Statut')
                     ->options([
-                        'en_attente' => 'En attente',
-                        'validée'    => 'Validée',
-                        'refusée'    => 'Refusée',
+                        'pending' => 'En attente',
+                        'approved'    => 'Validée',
+                        'rejected'    => 'Refusée',
                     ])
                     ->required()
-                    ->default('en_attente')
+                    ->default('pending')
                     ->live(),
 
                 Forms\Components\Textarea::make('motivation')
@@ -80,15 +84,15 @@ class AdoptionResource extends Resource
                     ->label('Statut')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'en_attente' => 'warning',
-                        'validée'    => 'success',
-                        'refusée'    => 'danger',
+                        'pending' => 'warning',
+                        'approved'    => 'success',
+                        'rejected'    => 'danger',
                         default      => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'en_attente' => 'En attente',
-                        'validée'    => 'Validée',
-                        'refusée'    => 'Refusée',
+                        'pending' => 'En attente',
+                        'approved'    => 'Validée',
+                        'rejected'    => 'Refusée',
                     }),
 
                 Tables\Columns\TextColumn::make('created_at')
@@ -100,9 +104,9 @@ class AdoptionResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
-                        'en_attente' => 'En attente',
-                        'validée'    => 'Validée',
-                        'refusée'    => 'Refusée',
+                        'pending' => 'En attente',
+                        'approved'    => 'Validée',
+                        'rejected'    => 'Refusée',
                     ]),
             ])
             ->actions([

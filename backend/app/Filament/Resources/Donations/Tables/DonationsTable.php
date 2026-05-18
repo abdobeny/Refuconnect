@@ -14,21 +14,36 @@ class DonationsTable
     {
         return $table
             ->columns([
-                TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('type')
-                    ->badge(),
-                TextColumn::make('montant')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('objet')
+                TextColumn::make('user.name')
+                    ->label('Donateur')
                     ->searchable(),
+
+                TextColumn::make('type')
+                    ->label('Type')
+                    ->badge(),
+
+                TextColumn::make('amount')
+                    ->label('Montant (DH)')
+                    ->numeric()
+                    ->sortable(),
+
+                TextColumn::make('status')
+                    ->label('Statut')
+                    ->badge(),
+
+                TextColumn::make('donation_date')
+                    ->label('Date du don')
+                    ->dateTime()
+                    ->sortable(),
+
                 TextColumn::make('created_at')
+                    ->label('Créé le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
+                    ->label('Modifié le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

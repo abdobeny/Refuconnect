@@ -3,37 +3,41 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\DonationResource;
 use App\Models\Donation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DonationController extends Controller
 {
-    public function myDonations()
+    public function index()
     {
         $donations = Auth::user()->donations()->latest()->get();
-        return response()->json($donations);
+
+        return DonationResource::collection($donations);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'amount' => 'required|numeric|min:1',
-            'payment_method' => 'required|string',
-            'type' => 'required|in:one_time,monthly,in_kind',
+        $validated = $request->validate([
+            'type' => 'required|in:financial,food,material',
+            'amount' => 'required_if:type,financial|nullable|numeric|min:1',
+            'item_description' => 'required_if:type,food,material|nullable|string',
             'message' => 'nullable|string',
         ]);
 
         $donation = Donation::create([
             'user_id' => Auth::id(),
-            'amount' => $request->amount,
-            'payment_method' => $request->payment_method,
-            'type' => $request->type,
+            'type' => $validated['type'],
+            'amount' => $validated['type'] === 'financial' ? $validated['amount'] : null,
+            'item_description' => $validated['type'] !== 'financial' ? $validated['item_description'] : null,
             'status' => 'pending',
             'donation_date' => now(),
-            'message' => $request->message,
+            'message' => $validated['message'] ?? null,
         ]);
 
-        return response()->json($donation, 201);
+        return (new DonationResource($donation))
+            ->response()
+            ->setStatusCode(201);
     }
 }

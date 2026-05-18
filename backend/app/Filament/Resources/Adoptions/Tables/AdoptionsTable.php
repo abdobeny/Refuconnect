@@ -14,22 +14,31 @@ class AdoptionsTable
     {
         return $table
             ->columns([
-                TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('animal_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('date_demande')
-                    ->date()
-                    ->sortable(),
-                TextColumn::make('statut')
+                TextColumn::make('animal.name')
+                    ->label('Animal')
+                    ->searchable(),
+
+                TextColumn::make('user.name')
+                    ->label('Adoptant')
+                    ->searchable(),
+
+                TextColumn::make('status')
+                    ->label('Statut')
                     ->badge(),
+
+                TextColumn::make('requested_at')
+                    ->label('Date de demande')
+                    ->dateTime()
+                    ->sortable(),
+
                 TextColumn::make('created_at')
+                    ->label('Créé le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
+                    ->label('Modifié le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

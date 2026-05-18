@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
 
         // Test users
         $users = [
+            ['name' => 'User Test', 'email' => 'user@example.com'],
             ['name' => 'Jean Dupont', 'email' => 'jean@example.com'],
             ['name' => 'Marie Martin', 'email' => 'marie@example.com'],
             ['name' => 'Pierre Durand', 'email' => 'pierre@example.com'],

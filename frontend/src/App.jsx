@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import MainLayout from './components/layout/MainLayout';
-import AdminLayout from './components/layout/AdminLayout';
 import UserLayout from './components/layout/UserLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/public/Home';
@@ -12,20 +11,23 @@ import Grooming from './pages/public/Grooming';
 import Couplage from './pages/public/Couplage';
 import Dons from './pages/public/Dons';
 import Volunteer from './pages/public/Bénévolat';
-import Dashboard from './pages/admin/Dashboard';
-import ManageAnimals from './pages/admin/ManageAnimals';
-import Adoptions from './pages/admin/Adoptions';
-import Toilettage from './pages/admin/Toilettage';
-import CouplageAdmin from './pages/admin/Couplage';
+import AdminRedirect from './pages/admin/AdminRedirect';
 import UserDashboard from './pages/user/Dashboard';
 import UserProfile from './pages/user/Profile';
 import Login from './pages/public/Login';
+
+const AdminGate = ({ children }) => {
+  const { user } = useAuth();
+  if (user?.role === 'admin') {
+    return <Navigate to="/admin" replace />;
+  }
+  return children;
+};
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Public Routes */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/animaux" element={<Animals />} />
@@ -36,10 +38,8 @@ function App() {
           <Route path="/bénévolat" element={<Volunteer />} />
         </Route>
 
-        {/* Auth Route - Standalone */}
         <Route path="/connexion" element={<Login />} />
 
-        {/* Protected User Routes */}
         <Route
           element={
             <ProtectedRoute>
@@ -47,38 +47,36 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route path="/user" element={<UserDashboard />} />
-          <Route path="/user/profile" element={<UserProfile />} />
+          <Route
+            path="/user"
+            element={
+              <AdminGate>
+                <UserDashboard />
+              </AdminGate>
+            }
+          />
+          <Route
+            path="/user/profile"
+            element={
+              <AdminGate>
+                <UserProfile />
+              </AdminGate>
+            }
+          />
         </Route>
 
-        {/* Protected Admin Routes - Only for admins */}
         <Route
+          path="/admin"
           element={
             <ProtectedRoute>
-              <AdminProtectedWrapper>
-                <AdminLayout />
-              </AdminProtectedWrapper>
+              <AdminRedirect />
             </ProtectedRoute>
           }
-        >
-          <Route path="/admin" element={<Dashboard />} />
-          <Route path="/admin/animaux" element={<ManageAnimals />} />
-          <Route path="/admin/adoptions" element={<Adoptions />} />
-          <Route path="/admin/toilettage" element={<Toilettage />} />
-          <Route path="/admin/couplage" element={<CouplageAdmin />} />
-        </Route>
+        />
+        <Route path="/admin/*" element={<Navigate to="/admin" replace />} />
       </Routes>
     </Router>
   );
 }
-
-// Admin-only route wrapper
-const AdminProtectedWrapper = ({ children }) => {
-  const { user } = useAuth();
-  if (user?.role !== 'admin') {
-    return <Navigate to="/" replace />;
-  }
-  return children;
-};
 
 export default App;

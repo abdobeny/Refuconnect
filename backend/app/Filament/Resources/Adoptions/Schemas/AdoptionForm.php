@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Adoptions\Schemas;
 
-use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
 
 class AdoptionForm
@@ -13,18 +13,44 @@ class AdoptionForm
     {
         return $schema
             ->components([
-                TextInput::make('user_id')
+                Select::make('animal_id')
+                    ->label('Animal')
+                    ->relationship('animal', 'name')
                     ->required()
-                    ->numeric(),
-                TextInput::make('animal_id')
+                    ->searchable()
+                    ->preload(),
+
+                Select::make('user_id')
+                    ->label('Utilisateur / Adoptant')
+                    ->relationship('user', 'name')
                     ->required()
-                    ->numeric(),
-                DatePicker::make('date_demande')
+                    ->searchable()
+                    ->preload(),
+
+                Select::make('status')
+                    ->label('Statut')
+                    ->options([
+                        'pending' => 'En attente',
+                        'approved' => 'Validée',
+                        'rejected' => 'Refusée',
+                    ])
+                    ->default('pending')
+                    ->required()
+                    ->live(),
+
+                DateTimePicker::make('requested_at')
+                    ->label('Date de demande')
+                    ->default(now())
                     ->required(),
-                Select::make('statut')
-                    ->options(['en attente' => 'En attente', 'validée' => 'Validée', 'refusée' => 'Refusée'])
-                    ->default('en attente')
-                    ->required(),
+
+                Textarea::make('motivation')
+                    ->label('Pourquoi souhaitez-vous adopter cet animal ?')
+                    ->columnSpanFull()
+                    ->rows(4),
+
+                Textarea::make('notes')
+                    ->label('Notes administratives (interne)')
+                    ->columnSpanFull(),
             ]);
     }
 }

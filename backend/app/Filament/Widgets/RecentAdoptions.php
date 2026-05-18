@@ -9,6 +9,8 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class RecentAdoptions extends BaseWidget
 {
+    protected static ?int $sort = 3;
+
     protected int|string|array $columnSpan = 'full';
 
     public function table(Table $table): Table
@@ -21,7 +23,7 @@ class RecentAdoptions extends BaseWidget
                     ->limit(5)
             )
             ->columns([
-                Tables\Columns\TextColumn::make('animal.nom')
+                                Tables\Columns\TextColumn::make('animal.name')
                     ->label('Animal')
                     ->searchable(),
 
@@ -29,13 +31,13 @@ class RecentAdoptions extends BaseWidget
                     ->label('Adoptant')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('statut')
+                Tables\Columns\TextColumn::make('status')
                     ->label('Statut')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'en_attente' => 'warning',
-                        'validée' => 'success',
-                        'refusée' => 'danger',
+                        'pending' => 'warning',
+                        'approved' => 'success',
+                        'rejected' => 'danger',
                         default => 'gray',
                     }),
 

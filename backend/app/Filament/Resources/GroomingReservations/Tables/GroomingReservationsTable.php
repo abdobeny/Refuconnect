@@ -14,23 +14,39 @@ class GroomingReservationsTable
     {
         return $table
             ->columns([
-                TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('animal_name')
+                TextColumn::make('user.name')
+                    ->label('Client')
                     ->searchable(),
+
+                TextColumn::make('pet_name')
+                    ->label('Animal')
+                    ->searchable(),
+
+                TextColumn::make('pet_type')
+                    ->label('Type')
+                    ->badge(),
+
                 TextColumn::make('reservation_date')
+                    ->label('Date & Heure')
                     ->dateTime()
                     ->sortable(),
-                TextColumn::make('type_soin')
+
+                TextColumn::make('service_type')
+                    ->label('Service')
                     ->badge(),
-                TextColumn::make('statut')
+
+                TextColumn::make('status')
+                    ->label('Statut')
                     ->badge(),
+
                 TextColumn::make('created_at')
+                    ->label('Créé le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
+                    ->label('Modifié le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

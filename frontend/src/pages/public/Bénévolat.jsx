@@ -38,7 +38,7 @@ const Volunteer = () => {
     e.preventDefault();
 
     if (!isAuthenticated) {
-      navigate('/connexion?redirect=/bénévolat');
+      navigate(`/connexion?redirect=${encodeURIComponent('/bénévolat')}`);
       return;
     }
 
@@ -107,7 +107,17 @@ const Volunteer = () => {
               <Input id="volEmail" label="Email" type="email" value={form.email} onChange={handleChange('email')} />
               {errors.email && <div className="text-sm text-red-500">{errors.email}</div>}
               <Input id="volPhone" label="Téléphone" type="tel" value={form.phone} onChange={handleChange('phone')} />
-              <Input id="volMessage" label="Disponibilités et intérêts" as="textarea" value={form.message} onChange={handleChange('message')} />
+              <div className="w-full">
+                <label htmlFor="volMessage" className="block text-sm font-medium text-text-main mb-2">
+                  Disponibilités et intérêts
+                </label>
+                <textarea
+                  id="volMessage"
+                  value={form.message}
+                  onChange={handleChange('message')}
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 min-h-[120px] resize-vertical focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent hover:bg-white placeholder-gray-400"
+                />
+              </div>
               <div className="flex gap-3 pt-4">
                 <Button type="submit" variant="primary" className="flex-1" disabled={submitting}>
                   {submitting ? 'Envoi...' : 'Envoyer candidature'}

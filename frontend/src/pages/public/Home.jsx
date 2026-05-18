@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
@@ -16,7 +16,6 @@ import {
   UsersRound,
 } from 'lucide-react';
 import { useAnimals } from '../../context/AnimalsContext';
-import axiosClient from '../../api/axiosClient';
 import Button from '../../components/ui/Button';
 import AnimalGrid from '../../components/features/animals/AnimalGrid';
 import Skeleton from '../../components/ui/Skeleton';
@@ -24,7 +23,6 @@ import Skeleton from '../../components/ui/Skeleton';
 const Home = () => {
   const navigate = useNavigate();
   const { animals, loading } = useAnimals();
-  const [apiTestimonials, setApiTestimonials] = useState([]);
   const animalCount = animals.length;
   const featuredAnimals = animals.slice(0, 3);
   const animalCountLabel = animalCount > 1
@@ -96,26 +94,11 @@ const Home = () => {
     navigate(`/animaux/${id}`);
   };
 
-  useEffect(() => {
-    let isMounted = true;
-
-    axiosClient
-      .get('/testimonials')
-      .then((response) => {
-        if (isMounted && Array.isArray(response.data)) {
-          setApiTestimonials(response.data);
-        }
-      })
-      .catch(() => {
-        if (isMounted) {
-          setApiTestimonials([]);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const apiTestimonials = [
+    { id: 1, name: 'Claire M.', role: 'Adoptante', quote: 'Grâce à RefuConnect, j\'ai pu adopter mon chat en toute confiance. Le processus était clair et rassurant.', detail: 'Adoption validée en 48h' },
+    { id: 2, name: 'Thomas R.', role: 'Bénévole', quote: 'La plateforme facilite vraiment le suivi des animaux et des demandes. C\'est un vrai plus pour le refuge.', detail: 'Bénévole depuis 2024' },
+    { id: 3, name: 'Sophie L.', role: 'Adoptante', quote: 'J\'ai trouvé mon compagnon idéal. Les fiches détaillées m\'ont aidée à faire le bon choix.', detail: 'A adopté Luna en mars' },
+  ];
 
   const featuredTestimonial = apiTestimonials[0];
   const supportingTestimonials = apiTestimonials.slice(1, 3);

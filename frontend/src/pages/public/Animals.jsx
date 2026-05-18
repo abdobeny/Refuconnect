@@ -23,8 +23,9 @@ const Animals = () => {
   }, [selectedType, searchTerm, selectedBreed, fetchAnimals]);
 
   useEffect(() => {
+    if (page === 1) return;
     fetchAnimals({ type: selectedType, search: searchTerm || undefined, breed: selectedBreed, page });
-  }, [page, fetchAnimals, selectedType, searchTerm, selectedBreed]);
+  }, [page, fetchAnimals]);
 
   const handleView = (id) => navigate(`/animaux/${id}`);
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import axiosClient from '../../api/axiosClient';
 import Card from '../../components/ui/Card';
@@ -7,7 +7,7 @@ import Input from '../../components/ui/Input';
 import Badge from '../../components/ui/Badge';
 
 const Profile = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, persistAuth } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [name, setName] = useState(user?.name || '');
@@ -19,16 +19,22 @@ const Profile = () => {
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    setName(user?.name || '');
+    setEmail(user?.email || '');
+  }, [user]);
+
   const handleSave = async () => {
     setError('');
     setSuccess('');
     setIsLoading(true);
 
     try {
-      await axiosClient.put('/user', { name, email });
+      const { data } = await axiosClient.put('/user', { name, email });
+      const updatedUser = data.data ?? data;
+      persistAuth(localStorage.getItem('token'), updatedUser);
       setSuccess('Profil mis à jour avec succès');
       setIsEditing(false);
-      window.location.reload();
     } catch (err) {
       const msgs = err.response?.data?.errors;
       if (msgs) {

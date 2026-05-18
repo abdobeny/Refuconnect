@@ -257,7 +257,16 @@ const Grooming = () => {
             </div>
             <Input id="date" label="Date souhaitée" type="date" value={form.date} onChange={update('date')} required />
             <Input id="time" label="Heure préférée" type="time" value={form.time} onChange={update('time')} />
-            <Input id="message" label="Message" as="textarea" className="sm:col-span-2" placeholder="Taille, comportement, allergies..." value={form.notes} onChange={update('notes')} />
+            <div className="sm:col-span-2">
+              <label htmlFor="message" className="block text-sm font-medium text-text-main mb-2">Message</label>
+              <textarea
+                id="message"
+                placeholder="Taille, comportement, allergies..."
+                value={form.notes}
+                onChange={update('notes')}
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 min-h-[120px] resize-vertical focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent hover:bg-white placeholder-gray-400"
+              />
+            </div>
             <Button type="submit" variant="primary" className="h-12 rounded-xl font-bold sm:col-span-2" disabled={submitting}>
               {submitting ? 'Envoi...' : 'Envoyer la demande'}
             </Button>

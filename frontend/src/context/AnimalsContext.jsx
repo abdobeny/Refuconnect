@@ -138,7 +138,7 @@ export const AnimalsProvider = ({ children }) => {
         total: data.meta?.total ?? 0,
       });
     } catch (err) {
-      setError(null);
+      setError(err.response?.data?.message || 'Impossible de charger les animaux.');
       setAnimals(filterFallbackAnimals(filters));
     } finally {
       setLoading(false);

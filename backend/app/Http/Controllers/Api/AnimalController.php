@@ -19,7 +19,7 @@ class AnimalController extends Controller
         }
 
         if ($request->filled('breed')) {
-            $query->where('breed', 'like', '%'.$request->string('breed').'%');
+            $query->whereRaw('LOWER(breed) LIKE ?', ['%'.strtolower($request->string('breed')).'%']);
         }
 
         if ($request->filled('sex')) {

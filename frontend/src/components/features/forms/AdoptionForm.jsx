@@ -8,26 +8,14 @@ import { useAuth } from '../../../context/AuthContext';
 const AdoptionForm = ({ animalId, onCancel, onSuccess }) => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const [form, setForm] = useState({
-    fullName: '',
-    email: '',
-    address: '',
-    message: '',
-    hasOtherPets: 'no',
-  });
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
+  const [message, setMessage] = useState('');
+  const [hasOtherPets, setHasOtherPets] = useState('no');
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState('');
-
-  const validate = () => {
-    const e = {};
-    if (!form.message.trim()) e.message = 'Merci de décrire votre motivation';
-    return e;
-  };
-
-  const handleChange = (key) => (ev) => {
-    setForm((s) => ({ ...s, [key]: ev.target.value }));
-  };
 
   const handleSubmit = async (ev) => {
     ev.preventDefault();
@@ -37,34 +25,36 @@ const AdoptionForm = ({ animalId, onCancel, onSuccess }) => {
       return;
     }
 
-    const e = validate();
-    setErrors(e);
-    if (Object.keys(e).length) return;
+    if (!message.trim()) {
+      setErrors({ message: 'Merci de décrire votre motivation' });
+      return;
+    }
+    setErrors({});
 
     setSubmitting(true);
     setApiError('');
 
     const motivation = [
-      form.message,
-      form.fullName && `Nom : ${form.fullName}`,
-      form.email && `Email : ${form.email}`,
-      form.address && `Adresse : ${form.address}`,
-      `Autres animaux : ${form.hasOtherPets === 'yes' ? 'Oui' : 'Non'}`,
+      message,
+      fullName && `Nom : ${fullName}`,
+      email && `Email : ${email}`,
+      address && `Adresse : ${address}`,
+      `Autres animaux : ${hasOtherPets === 'yes' ? 'Oui' : 'Non'}`,
     ]
       .filter(Boolean)
       .join('\n');
 
     try {
-      const { data } = await axiosClient.post('/adoptions', {
+      const response = await axiosClient.post('/adoptions', {
         animal_id: Number(animalId),
         motivation,
       });
-      onSuccess?.(data.data ?? data);
+      onSuccess?.(response.data.data ?? response.data);
     } catch (err) {
       const msg =
-        err.response?.data?.message
-        || Object.values(err.response?.data?.errors || {}).flat().join(' ')
-        || 'Impossible d\'envoyer la demande.';
+        err.response?.data?.message ||
+        Object.values(err.response?.data?.errors || {}).flat().join(' ') ||
+        'Impossible d\'envoyer la demande.';
       setApiError(msg);
     } finally {
       setSubmitting(false);
@@ -80,39 +70,31 @@ const AdoptionForm = ({ animalId, onCancel, onSuccess }) => {
       )}
 
       <div className="grid grid-cols-1 gap-4">
-        <Input id="fullName" label="Nom complet" value={form.fullName} onChange={handleChange('fullName')} />
-        <Input id="email" label="Email" type="email" value={form.email} onChange={handleChange('email')} />
-        <Input id="address" label="Adresse" value={form.address} onChange={handleChange('address')} />
-        <Input
-          id="message"
-          label="Pourquoi souhaitez-vous adopter ?"
-          as="textarea"
-          value={form.message}
-          onChange={handleChange('message')}
-        />
+        <Input id="fullName" label="Nom complet" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+        <Input id="email" label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input id="address" label="Adresse" value={address} onChange={(e) => setAddress(e.target.value)} />
+        
+        <div className="w-full">
+          <label htmlFor="message" className="block text-sm font-medium text-text-main mb-2">
+            Pourquoi souhaitez-vous adopter ?
+          </label>
+          <textarea
+            id="message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 min-h-[120px] resize-vertical focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            placeholder="Décrivez votre motivation..."
+          />
+        </div>
         {errors.message && <div className="text-sm text-red-500">{errors.message}</div>}
 
         <div className="flex items-center gap-4">
           <div className="font-medium">Avez-vous d&apos;autres animaux ?</div>
           <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="pets"
-              value="yes"
-              checked={form.hasOtherPets === 'yes'}
-              onChange={() => setForm((s) => ({ ...s, hasOtherPets: 'yes' }))}
-            />
-            Oui
+            <input type="radio" name="pets" value="yes" checked={hasOtherPets === 'yes'} onChange={() => setHasOtherPets('yes')} /> Oui
           </label>
           <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="pets"
-              value="no"
-              checked={form.hasOtherPets === 'no'}
-              onChange={() => setForm((s) => ({ ...s, hasOtherPets: 'no' }))}
-            />
-            Non
+            <input type="radio" name="pets" value="no" checked={hasOtherPets === 'no'} onChange={() => setHasOtherPets('no')} /> Non
           </label>
         </div>
 

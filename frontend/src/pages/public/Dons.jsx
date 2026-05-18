@@ -107,13 +107,15 @@ const Donations = () => {
               />
             </div>
 
-            <Input
-              id="message"
-              label="Message (optionnel)"
-              as="textarea"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
+            <div className="w-full">
+              <label htmlFor="message" className="block text-sm font-medium text-text-main mb-2">Message (optionnel)</label>
+              <textarea
+                id="message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 min-h-[120px] resize-vertical focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent hover:bg-white placeholder-gray-400"
+              />
+            </div>
 
             <Button variant="primary" className="mt-6 w-full" type="submit" disabled={submitting}>
               {submitting ? 'Envoi...' : 'Enregistrer mon don'}

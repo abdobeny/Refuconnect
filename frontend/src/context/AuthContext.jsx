@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
 
       if (bridgeParam === '1') {
         try {
-          const { data } = await axiosClient.get('http://127.0.0.1:8000/api/bridge-auth', {
+          const { data } = await axiosClient.get('/bridge-auth', {
             withCredentials: true,
           });
           const token = data.token;
@@ -109,7 +109,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout, loading, isAuthenticated: !!token }}>
+    <AuthContext.Provider value={{ user, token, login, register, logout, loading, isAuthenticated: !!token, persistAuth }}>
       {children}
     </AuthContext.Provider>
   );

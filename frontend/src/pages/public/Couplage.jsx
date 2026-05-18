@@ -310,7 +310,16 @@ const Couplage = () => {
 
             <Input id="healthStatus" label="Etat de sante" placeholder="Ex: en bonne sante, suivi en cours..." value={form.healthStatus} onChange={(e) => updateField('healthStatus', e.target.value)} />
             <Input id="preferredBreed" label="Race recherchee" placeholder="Optionnel" value={form.preferredBreed} onChange={(e) => updateField('preferredBreed', e.target.value)} />
-            <Input id="message" label="Details importants" as="textarea" className="md:col-span-2" placeholder="Temperament, taille, documents disponibles, contraintes..." value={form.message} onChange={(e) => updateField('message', e.target.value)} />
+            <div className="md:col-span-2">
+              <label htmlFor="message" className="block text-sm font-medium text-text-main mb-2">Details importants</label>
+              <textarea
+                id="message"
+                placeholder="Temperament, taille, documents disponibles, contraintes..."
+                value={form.message}
+                onChange={(e) => updateField('message', e.target.value)}
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 min-h-[120px] resize-vertical focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent hover:bg-white placeholder-gray-400"
+              />
+            </div>
 
             <div className="flex flex-col gap-4 border-t border-[#EEE5DA] pt-5 md:col-span-2 md:flex-row md:items-center md:justify-between">
               <p className="max-w-xl text-sm leading-6 text-[#68726D]">

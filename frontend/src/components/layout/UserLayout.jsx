@@ -12,7 +12,6 @@ const UserLayout = () => {
   const menuItems = [
     { label: 'Tableau de bord', path: '/user' },
     { label: 'Mon profil', path: '/user/profile' },
-    { label: 'Mes demandes', path: '/user' },
   ];
 
   return (
@@ -66,7 +65,7 @@ const UserLayout = () => {
         )}
 
         {/* Main Content */}
-        <main className="flex-1 p-4 md:p-10 pt-20 md:pt-10">
+        <main className="flex-1 p-4 md:p-10">
           <Outlet />
         </main>
       </div>

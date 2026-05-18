@@ -27,3 +27,8 @@ vendor/
 # Cache
 .cache/
 .phpunit.result.cache
+
+# AI generated files
+REFUCONNECT_FIXES.md
+context.md
+text.md

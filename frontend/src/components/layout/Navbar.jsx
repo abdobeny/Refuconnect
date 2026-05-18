@@ -161,13 +161,22 @@ const Navbar = () => {
                   )}
                 </div>
               ) : (
-                <Button 
-                  variant="primary" 
-                  className="bg-primary hover:bg-primary-hover shadow-sm hover:shadow-md transition-all duration-300 px-5 py-2.5 rounded-lg text-sm font-semibold"
-                  onClick={() => navigate('/connexion')}
-                >
-                  Connexion
-                </Button>
+                <>
+                  <Button 
+                    variant="outline" 
+                    className="border-primary text-primary hover:bg-primary hover:text-white shadow-sm transition-all duration-300 px-5 py-2.5 rounded-lg text-sm font-semibold"
+                    onClick={() => navigate('/inscription')}
+                  >
+                    Inscription
+                  </Button>
+                  <Button 
+                    variant="primary" 
+                    className="bg-primary hover:bg-primary-hover shadow-sm hover:shadow-md transition-all duration-300 px-5 py-2.5 rounded-lg text-sm font-semibold"
+                    onClick={() => navigate('/connexion')}
+                  >
+                    Connexion
+                  </Button>
+                </>
               )}
             </div>
 
@@ -261,12 +270,20 @@ const Navbar = () => {
                     </button>
                   </>
                 ) : (
-                  <button
-                    onClick={() => handleNavigate('/connexion')}
-                    className="w-full mt-2 bg-primary text-white py-3 px-4 rounded-xl font-semibold hover:bg-primary-hover transition-colors shadow-sm"
-                  >
-                    Connexion
-                  </button>
+                  <div className="space-y-2 mt-2">
+                    <button
+                      onClick={() => handleNavigate('/inscription')}
+                      className="w-full bg-white text-primary border border-primary py-3 px-4 rounded-xl font-semibold hover:bg-primary-light/60 transition-colors"
+                    >
+                      Inscription
+                    </button>
+                    <button
+                      onClick={() => handleNavigate('/connexion')}
+                      className="w-full bg-primary text-white py-3 px-4 rounded-xl font-semibold hover:bg-primary-hover transition-colors shadow-sm"
+                    >
+                      Connexion
+                    </button>
+                  </div>
                 )}
               </div>
             </div>

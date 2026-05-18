@@ -109,6 +109,12 @@ export const AnimalsProvider = ({ children }) => {
   const [animals, setAnimals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    last_page: 1,
+    per_page: 12,
+    total: 0,
+  });
 
   const fetchAnimals = useCallback(async (filters = {}) => {
     setLoading(true);
@@ -119,10 +125,18 @@ export const AnimalsProvider = ({ children }) => {
       if (species) params.species = species;
       if (filters.search) params.search = filters.search;
       if (filters.breed && filters.breed !== 'all') params.breed = filters.breed;
+      if (filters.page) params.page = filters.page;
+      params.per_page = 12;
 
       const { data } = await axiosClient.get('/animals', { params });
       const list = (data.data || []).map(mapAnimalFromApi);
       setAnimals(list);
+      setPagination({
+        current_page: data.meta?.current_page ?? 1,
+        last_page: data.meta?.last_page ?? 1,
+        per_page: data.meta?.per_page ?? 12,
+        total: data.meta?.total ?? 0,
+      });
     } catch (err) {
       setError(null);
       setAnimals(filterFallbackAnimals(filters));
@@ -152,7 +166,7 @@ export const AnimalsProvider = ({ children }) => {
   );
 
   return (
-    <AnimalsContext.Provider value={{ animals, loading, error, fetchAnimals, getAnimalById }}>
+    <AnimalsContext.Provider value={{ animals, loading, error, fetchAnimals, getAnimalById, pagination }}>
       {children}
     </AnimalsContext.Provider>
   );

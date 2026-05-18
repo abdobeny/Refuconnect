@@ -93,7 +93,10 @@ const Login = () => {
             </Button>
           </form>
           <p className="mt-6 text-center text-xs text-muted">
-            Admin refuge : admin@refuconnect.com — Utilisateur test : user@example.com / password123
+            Pas encore de compte ?{' '}
+            <Link to="/inscription" className="font-medium text-primary hover:text-primary-hover">
+              S'inscrire
+            </Link>
           </p>
         </Card>
 

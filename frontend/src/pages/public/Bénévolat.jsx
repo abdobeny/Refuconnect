@@ -2,9 +2,19 @@ import React, { useState } from 'react';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
+import axiosClient from '../../api/axiosClient';
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Volunteer = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [apiError, setApiError] = useState('');
+  const [success, setSuccess] = useState(false);
 
   const opportunities = [
     { role: 'Soigneur', desc: 'Aide aux soins quotidiens des animaux.' },
@@ -12,10 +22,52 @@ const Volunteer = () => {
     { role: 'Événements', desc: 'Organisation d\'événements et collectes.' },
   ];
 
-  const handleSubmit = (e) => {
+  const handleChange = (key) => (ev) => {
+    setForm((s) => ({ ...s, [key]: ev.target.value }));
+  };
+
+  const validate = () => {
+    const e = {};
+    if (!form.name.trim()) e.name = 'Le nom est requis';
+    if (!form.email.trim()) e.email = 'L\'email est requis';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Email invalide';
+    return e;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Formulaire de bénévolat envoyé (mock) — merci !');
-    setShowForm(false);
+
+    if (!isAuthenticated) {
+      navigate('/connexion?redirect=/bénévolat');
+      return;
+    }
+
+    const e2 = validate();
+    setErrors(e2);
+    if (Object.keys(e2).length) return;
+
+    setSubmitting(true);
+    setApiError('');
+
+    try {
+      await axiosClient.post('/volunteer-applications', {
+        name: form.name,
+        email: form.email,
+        phone: form.phone || null,
+        message: form.message || null,
+      });
+      setSuccess(true);
+      setForm({ name: '', email: '', phone: '', message: '' });
+      setShowForm(false);
+    } catch (err) {
+      const msg =
+        err.response?.data?.message
+        || Object.values(err.response?.data?.errors || {}).flat().join(' ')
+        || 'Impossible d\'envoyer la candidature.';
+      setApiError(msg);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -33,19 +85,34 @@ const Volunteer = () => {
           ))}
         </div>
 
+        {success && (
+          <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
+            Candidature envoyée avec succès. Nous vous contacterons bientôt.
+          </div>
+        )}
+
         {!showForm ? (
           <Button variant="primary" onClick={() => setShowForm(true)}>Proposer votre aide</Button>
         ) : (
           <Card className="max-w-2xl mx-auto p-8">
             <h2 className="font-serif text-2xl font-bold mb-6">Inscription bénévole</h2>
+
+            {apiError && (
+              <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{apiError}</div>
+            )}
+
             <form className="grid grid-cols-1 gap-4" onSubmit={handleSubmit}>
-              <Input id="volName" label="Nom complet" required />
-              <Input id="volEmail" label="Email" type="email" required />
-              <Input id="volPhone" label="Téléphone" type="tel" />
-              <Input id="volMessage" label="Disponibilités et intérêts" as="textarea" />
+              <Input id="volName" label="Nom complet" value={form.name} onChange={handleChange('name')} />
+              {errors.name && <div className="text-sm text-red-500">{errors.name}</div>}
+              <Input id="volEmail" label="Email" type="email" value={form.email} onChange={handleChange('email')} />
+              {errors.email && <div className="text-sm text-red-500">{errors.email}</div>}
+              <Input id="volPhone" label="Téléphone" type="tel" value={form.phone} onChange={handleChange('phone')} />
+              <Input id="volMessage" label="Disponibilités et intérêts" as="textarea" value={form.message} onChange={handleChange('message')} />
               <div className="flex gap-3 pt-4">
-                <Button type="submit" variant="primary" className="flex-1">Envoyer candidature</Button>
-                <Button type="button" variant="white" onClick={() => setShowForm(false)}>Annuler</Button>
+                <Button type="submit" variant="primary" className="flex-1" disabled={submitting}>
+                  {submitting ? 'Envoi...' : 'Envoyer candidature'}
+                </Button>
+                <Button type="button" variant="white" onClick={() => { setShowForm(false); setApiError(''); }}>Annuler</Button>
               </div>
             </form>
           </Card>

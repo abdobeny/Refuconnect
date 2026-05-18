@@ -10,6 +10,7 @@ import Input from '../../components/ui/Input';
 const SERVICE_MAP = {
   'Bain complet - dès 80 DH': 'bath',
   'Coupe hygiénique - dès 120 DH': 'haircut',
+  'Toilettage complet - dès 180 DH': 'full_grooming',
   'Griffes & oreilles - dès 40 DH': 'nail_trim',
   'Soin sensible - dès 150 DH': 'other',
 };
@@ -94,6 +95,14 @@ const Grooming = () => {
       duration: '60 à 90 min',
       price: 'à partir de 120 DH',
       bestFor: 'Poils longs ou emmêlés',
+    },
+    {
+      icon: Sparkles,
+      name: 'Toilettage complet',
+      description: 'Bain, coupe, griffes, oreilles et brossage. Le soin intégral pour votre animal.',
+      duration: '90 à 120 min',
+      price: 'à partir de 180 DH',
+      bestFor: 'Entretien complet',
       featured: true,
     },
     {

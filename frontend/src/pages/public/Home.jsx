@@ -19,6 +19,7 @@ import { useAnimals } from '../../context/AnimalsContext';
 import axiosClient from '../../api/axiosClient';
 import Button from '../../components/ui/Button';
 import AnimalGrid from '../../components/features/animals/AnimalGrid';
+import Skeleton from '../../components/ui/Skeleton';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -268,7 +269,18 @@ const Home = () => {
           </div>
         </div>
         {loading ? (
-          <p className="text-center text-muted">Chargement des animaux...</p>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm">
+                <Skeleton variant="card" className="h-56 rounded-none" />
+                <div className="p-4 space-y-3">
+                  <Skeleton variant="text-xl" className="w-2/3" />
+                  <Skeleton variant="text" className="w-1/2" />
+                  <Skeleton variant="text" className="w-full" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
           <AnimalGrid animals={featuredAnimals} onView={handleView} />
         )}

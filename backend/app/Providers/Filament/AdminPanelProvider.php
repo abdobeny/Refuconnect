@@ -9,7 +9,7 @@ use App\Filament\Resources\Animals\AnimalResource;
 use App\Filament\Resources\CouplingRequests\CouplingRequestResource;
 use App\Filament\Resources\Donations\DonationResource;
 use App\Filament\Resources\GroomingReservations\GroomingReservationResource;
-use App\Filament\Resources\UsersResource;
+use App\Filament\Resources\Users\UsersResource;
 use App\Filament\Widgets\AnimalStatusChart;
 use App\Filament\Widgets\RecentAdoptions;
 use App\Filament\Widgets\StatsOverview;
@@ -19,6 +19,7 @@ use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -61,6 +62,13 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 NavigationGroup::make('Refuge')->icon('heroicon-o-home'),
                 NavigationGroup::make('Demandes')->icon('heroicon-o-inbox'),
+            ])
+            ->navigationItems([
+                NavigationItem::make('Voir le site')
+                    ->url(url('/to-frontend'), shouldOpenInNewTab: false)
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->group('Navigation')
+                    ->sort(99),
             ])
             ->resources([
                 AnimalResource::class,

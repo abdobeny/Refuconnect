@@ -33,9 +33,9 @@ class AdoptionController extends Controller
 
         if ($animal->status !== 'available') {
             return response()->json([
-                'message' => 'This animal is not available for adoption.',
+                'message' => 'Cet animal n\'est pas disponible à l\'adoption.',
                 'errors' => [
-                    'animal_id' => ['This animal is not available for adoption.'],
+                    'animal_id' => ['Cet animal n\'est pas disponible à l\'adoption.'],
                 ],
             ], 422);
         }
@@ -48,9 +48,9 @@ class AdoptionController extends Controller
 
         if ($hasPending) {
             return response()->json([
-                'message' => 'You already have a pending adoption request for this animal.',
+                'message' => 'Vous avez déjà une demande en cours pour cet animal.',
                 'errors' => [
-                    'animal_id' => ['You already have a pending adoption request for this animal.'],
+                    'animal_id' => ['Vous avez déjà une demande en cours pour cet animal.'],
                 ],
             ], 422);
         }

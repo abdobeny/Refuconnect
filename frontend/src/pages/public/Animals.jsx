@@ -2,43 +2,42 @@ import React, { useState, useEffect } from 'react';
 import AnimalGrid from '../../components/features/animals/AnimalGrid';
 import { useAnimals } from '../../context/AnimalsContext';
 import { useNavigate } from 'react-router-dom';
-import { Search, Filter, X, Heart, PawPrint, CheckCircle2 } from 'lucide-react';
+import { Search, Filter, X, Heart, PawPrint, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
+import Skeleton from '../../components/ui/Skeleton';
 
 const Animals = () => {
   const navigate = useNavigate();
-  const { animals, loading, error, fetchAnimals } = useAnimals();
+  const { animals, loading, error, fetchAnimals, pagination } = useAnimals();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('all');
   const [selectedBreed, setSelectedBreed] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetchAnimals({ type: selectedType, search: searchTerm || undefined });
+      setPage(1);
+      fetchAnimals({ type: selectedType, search: searchTerm || undefined, breed: selectedBreed, page: 1 });
     }, 300);
     return () => clearTimeout(timer);
-  }, [selectedType, searchTerm, fetchAnimals]);
+  }, [selectedType, searchTerm, selectedBreed, fetchAnimals]);
+
+  useEffect(() => {
+    fetchAnimals({ type: selectedType, search: searchTerm || undefined, breed: selectedBreed, page });
+  }, [page, fetchAnimals, selectedType, searchTerm, selectedBreed]);
 
   const handleView = (id) => navigate(`/animaux/${id}`);
 
-  // Get unique animal types and breeds
-  const types = ['all', ...new Set(animals.map(a => a.type).filter(Boolean))];
-  const breeds = ['all', ...new Set(animals.map(a => a.breed).filter(Boolean))];
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= pagination.last_page) {
+      setPage(newPage);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
-  // Filter animals
-  const filteredAnimals = animals.filter(animal => {
-    const matchesSearch = animal.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         animal.breed?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = selectedType === 'all' || animal.type === selectedType;
-    const matchesBreed = selectedBreed === 'all' || animal.breed === selectedBreed;
-    
-    return matchesSearch && matchesType && matchesBreed;
-  });
-
-  const adoptionCount = filteredAnimals.length;
-  const adoptionLabel = adoptionCount > 1
-    ? `${adoptionCount} profils à consulter`
-    : adoptionCount === 1
+  const adoptionLabel = pagination.total > 1
+    ? `${pagination.total} profils à consulter`
+    : pagination.total === 1
       ? '1 profil à consulter'
       : 'Aucun profil trouvé';
   const hasActiveFilters = searchTerm || selectedType !== 'all' || selectedBreed !== 'all';
@@ -90,7 +89,7 @@ const Animals = () => {
                 </p>
                 <div className="mt-4 grid gap-2">
                   {[
-                    'Temps d’adaptation prévu',
+                    "Temps d'adaptation prévu",
                     'Espace et rythme adaptés',
                     'Échange avec le refuge',
                   ].map((item) => (
@@ -113,7 +112,7 @@ const Animals = () => {
               <h2 className="text-xl font-bold text-text-dark">Rechercher un animal</h2>
               <p className="text-sm text-text-light">Filtrez la liste sans quitter la page.</p>
             </div>
-            <span className="text-sm font-semibold text-accent">{adoptionCount} résultat{adoptionCount > 1 ? 's' : ''}</span>
+            <span className="text-sm font-semibold text-accent">{pagination.total} résultat{pagination.total > 1 ? 's' : ''}</span>
           </div>
           <div className="flex flex-col gap-3 lg:flex-row">
             <div className="relative flex-1">
@@ -157,7 +156,7 @@ const Animals = () => {
                   Type d'animal
                 </label>
                 <div className="flex flex-wrap gap-2">
-                  {types.map(type => (
+                  {['all', 'Chien', 'Chat'].map(type => (
                     <button
                       key={type}
                       onClick={() => setSelectedType(type)}
@@ -167,7 +166,7 @@ const Animals = () => {
                           : 'bg-slate-100 text-slate-600 hover:bg-background-cream hover:text-primary'
                       }`}
                     >
-                      {type === 'all' ? 'Tous' : type.charAt(0).toUpperCase() + type.slice(1)}
+                      {type === 'all' ? 'Tous' : type}
                     </button>
                   ))}
                 </div>
@@ -182,10 +181,9 @@ const Animals = () => {
                   onChange={(e) => setSelectedBreed(e.target.value)}
                   className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-text-main outline-none transition-all focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
                 >
-                  {breeds.map(breed => (
-                    <option key={breed} value={breed}>
-                      {breed === 'all' ? 'Toutes les races' : breed}
-                    </option>
+                  <option value="all">Toutes les races</option>
+                  {animals.map(a => a.breed).filter(Boolean).filter((v, i, arr) => arr.indexOf(v) === i).map(breed => (
+                    <option key={breed} value={breed}>{breed}</option>
                   ))}
                 </select>
               </div>
@@ -197,19 +195,64 @@ const Animals = () => {
           <div>
             <h2 className="text-2xl font-bold text-text-dark">Animaux disponibles</h2>
             <p className="mt-1 text-text-light">
-              {adoptionCount} résultat{adoptionCount > 1 ? 's' : ''} affiché{adoptionCount > 1 ? 's' : ''} avec vos critères.
+              Page {pagination.current_page} sur {pagination.last_page} — {animals.length} affiché{animals.length > 1 ? 's' : ''} sur {pagination.total}.
             </p>
           </div>
         </div>
 
         {loading && (
-          <p className="py-12 text-center text-muted">Chargement des animaux...</p>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm">
+                <Skeleton variant="card" className="h-56 rounded-none" />
+                <div className="p-4 space-y-3">
+                  <Skeleton variant="text-xl" className="w-2/3" />
+                  <Skeleton variant="text" className="w-1/2" />
+                  <Skeleton variant="text" className="w-full" />
+                  <Skeleton variant="text" className="w-3/4" />
+                </div>
+              </div>
+            ))}
+          </div>
         )}
         {error && !loading && (
           <p className="py-12 text-center text-red-600">{error}</p>
         )}
-        {!loading && !error && filteredAnimals.length > 0 ? (
-          <AnimalGrid animals={filteredAnimals} onView={handleView} />
+        {!loading && !error && animals.length > 0 ? (
+          <>
+            <AnimalGrid animals={animals} onView={handleView} />
+            {pagination.last_page > 1 && (
+              <div className="mt-8 flex items-center justify-center gap-2">
+                <button
+                  onClick={() => handlePageChange(pagination.current_page - 1)}
+                  disabled={pagination.current_page === 1}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-all hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                {Array.from({ length: pagination.last_page }, (_, i) => i + 1).map(p => (
+                  <button
+                    key={p}
+                    onClick={() => handlePageChange(p)}
+                    className={`h-10 w-10 rounded-lg text-sm font-semibold transition-all ${
+                      p === pagination.current_page
+                        ? 'bg-primary text-white'
+                        : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ))}
+                <button
+                  onClick={() => handlePageChange(pagination.current_page + 1)}
+                  disabled={pagination.current_page === pagination.last_page}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-all hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </div>
+            )}
+          </>
         ) : !loading && !error ? (
           <div className="rounded-2xl border border-background-beige bg-white px-6 py-16 text-center shadow-soft">
             <p className="mb-4 text-lg text-text-light">

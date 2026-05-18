@@ -22,6 +22,11 @@ class Dashboard extends BaseDashboard
 
     public function getSubheading(): ?string
     {
-        return 'Vue d’ensemble du refuge — ' . now()->translatedFormat('d F Y');
+        return 'Vue d\'ensemble du refuge — ' . now()->translatedFormat('d F Y');
+    }
+
+    public function getColumns(): array|int
+    {
+        return 2;
     }
 }

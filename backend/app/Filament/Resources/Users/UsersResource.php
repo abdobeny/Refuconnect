@@ -1,14 +1,18 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Users;
 
-use App\Filament\Resources\UsersResource\Pages;
+use App\Filament\Resources\Users\Pages;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\DeleteAction;
 use Illuminate\Support\Facades\Hash;
 
 class UsersResource extends Resource
@@ -91,12 +95,12 @@ class UsersResource extends Resource
                     ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

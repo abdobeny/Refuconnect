@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAnimals } from '../../context/AnimalsContext';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
+import Skeleton from '../../components/ui/Skeleton';
 import AdoptionForm from '../../components/features/forms/AdoptionForm';
 
 const AnimalDetail = () => {
@@ -32,7 +33,24 @@ const AnimalDetail = () => {
 
   if (loading || listLoading) {
     return (
-      <div className="mx-auto max-w-3xl p-6 text-center text-muted">Chargement du profil...</div>
+      <div className="mx-auto max-w-5xl px-6 py-12">
+        <div className="flex flex-col gap-10 rounded-3xl bg-white p-8 shadow-lg md:flex-row">
+          <div className="md:w-1/3">
+            <Skeleton variant="card" className="h-96 w-full rounded-2xl" />
+          </div>
+          <div className="space-y-6 md:w-2/3">
+            <Skeleton variant="text-xl" className="w-1/2" />
+            <div className="flex gap-2">
+              <Skeleton variant="text" className="w-20" />
+              <Skeleton variant="text" className="w-16" />
+              <Skeleton variant="text" className="w-24" />
+            </div>
+            <Skeleton variant="text" className="w-32" />
+            <Skeleton variant="card" className="h-32" />
+            <Skeleton variant="card" className="h-24" />
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -72,7 +90,7 @@ const AnimalDetail = () => {
             </span>
           </p>
 
-          <div className="rounded-xl border border-orange-100 bg-bg p-6">
+          <div className="rounded-xl border border-orange-100 bg-background-beige p-6">
             <h3 className="mb-2 font-serif text-xl">Description</h3>
             <p className="leading-relaxed text-muted">{description}</p>
           </div>

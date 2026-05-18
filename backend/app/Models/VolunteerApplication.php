@@ -5,23 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Donation extends Model
+class VolunteerApplication extends Model
 {
     protected $fillable = [
         'user_id',
-        'type',
-        'amount',
-        'item_description',
-        'status',
-        'donation_date',
+        'name',
+        'email',
+        'phone',
         'message',
-        'admin_notes',
-        'payment_method',
-    ];
-
-    protected $casts = [
-        'amount' => 'decimal:2',
-        'donation_date' => 'date',
+        'status',
+        'notes',
     ];
 
     public function user(): BelongsTo

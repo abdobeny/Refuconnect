@@ -33,9 +33,4 @@ class Animal extends Model
     {
         return $this->hasMany(Adoption::class);
     }
-
-    public function groomingReservations(): HasMany
-    {
-        return $this->hasMany(GroomingReservation::class);
-    }
 }

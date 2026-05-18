@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\CouplingRequestController;
 use App\Http\Controllers\Api\DonationController;
 use App\Http\Controllers\Api\GroomingReservationController;
 use App\Http\Controllers\Api\TestimonialController;
+use App\Http\Controllers\Api\VolunteerApplicationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,8 +20,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Public routes
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
+Route::middleware('throttle:10,1')->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+});
 
 Route::get('/animals', [AnimalController::class, 'index']);
 Route::get('/animals/{animal}', [AnimalController::class, 'show']);
@@ -31,6 +34,7 @@ Route::get('/testimonials', [TestimonialController::class, 'index']);
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
+    Route::put('/user', [AuthController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::get('/my-adoptions', [AdoptionController::class, 'index']);
@@ -46,4 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/my-coupling-requests', [CouplingRequestController::class, 'index']);
     Route::post('/coupling-requests', [CouplingRequestController::class, 'store']);
     Route::get('/coupling-requests/{couplingRequest}', [CouplingRequestController::class, 'show']);
+
+    Route::get('/my-volunteer-applications', [VolunteerApplicationController::class, 'index']);
+    Route::post('/volunteer-applications', [VolunteerApplicationController::class, 'store']);
 });

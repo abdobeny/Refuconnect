@@ -7,6 +7,7 @@ import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import { FileText, Clock } from 'lucide-react';
+import Skeleton from '../../components/ui/Skeleton';
 
 const statusLabels = {
   pending: { label: 'En attente', variant: 'light' },
@@ -77,7 +78,19 @@ const UserDashboard = () => {
           </Link>
         </div>
 
-        {loading && <p className="text-muted">Chargement...</p>}
+        {loading && (
+          <div className="space-y-4">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <div key={i} className="flex gap-4 rounded-xl border border-gray-100 p-4">
+                <Skeleton variant="circle" className="h-20 w-20 rounded-lg" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton variant="text-lg" className="w-1/3" />
+                  <Skeleton variant="text" className="w-1/2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         {error && <p className="text-red-600">{error}</p>}
 
         {!loading && !error && adoptions.length === 0 && (

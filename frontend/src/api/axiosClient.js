@@ -25,8 +25,9 @@ axiosClient.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      if (!window.location.pathname.startsWith('/connexion')) {
-        window.location.href = `/connexion?redirect=${encodeURIComponent(window.location.pathname)}`;
+      const path = window.location.pathname;
+      if (!path.startsWith('/connexion') && !path.startsWith('/inscription')) {
+        window.location.href = `/connexion?redirect=${encodeURIComponent(path)}`;
       }
     }
     return Promise.reject(error);

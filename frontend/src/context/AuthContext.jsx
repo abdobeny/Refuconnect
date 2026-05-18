@@ -24,6 +24,31 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const init = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const bridgeParam = urlParams.get('bridge');
+
+      if (bridgeParam === '1') {
+        try {
+          const { data } = await axiosClient.get('http://127.0.0.1:8000/api/bridge-auth', {
+            withCredentials: true,
+          });
+          const token = data.token;
+          const { data: userData } = await axiosClient.get('/user', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const freshUser = userData.data ?? userData;
+          persistAuth(token, freshUser);
+          window.history.replaceState({}, '', window.location.pathname);
+          setLoading(false);
+          return;
+        } catch (err) {
+          console.error('Bridge auth failed:', err);
+          clearAuth();
+          setLoading(false);
+          return;
+        }
+      }
+
       const storedToken = localStorage.getItem('token');
       const storedUser = localStorage.getItem('user');
 
@@ -62,6 +87,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (payload) => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setToken(null);
+    setUser(null);
     const { data } = await axiosClient.post('/register', payload);
     persistAuth(data.token, data.user);
     return data.user;

@@ -15,6 +15,11 @@ import AdminRedirect from './pages/admin/AdminRedirect';
 import UserDashboard from './pages/user/Dashboard';
 import UserProfile from './pages/user/Profile';
 import Login from './pages/public/Login';
+import Register from './pages/public/Register';
+import MentionsLegales from './pages/public/MentionsLegales';
+import CGU from './pages/public/CGU';
+import PolitiqueConfidentialite from './pages/public/PolitiqueConfidentialite';
+import NotFound from './pages/public/NotFound';
 
 const AdminGate = ({ children }) => {
   const { user } = useAuth();
@@ -36,9 +41,13 @@ function App() {
           <Route path="/couplage" element={<Couplage />} />
           <Route path="/dons" element={<Dons />} />
           <Route path="/bénévolat" element={<Volunteer />} />
+          <Route path="/mentions-legales" element={<MentionsLegales />} />
+          <Route path="/cgu" element={<CGU />} />
+          <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
         </Route>
 
         <Route path="/connexion" element={<Login />} />
+        <Route path="/inscription" element={<Register />} />
 
         <Route
           element={
@@ -74,6 +83,7 @@ function App() {
           }
         />
         <Route path="/admin/*" element={<Navigate to="/admin" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );

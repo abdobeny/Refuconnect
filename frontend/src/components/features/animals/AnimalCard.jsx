@@ -11,12 +11,11 @@ const AnimalCard = ({ animal = {}, onView }) => {
   const fallbackIndex = animalHash % publicImages.length;
   const image = images[0] || `/${publicImages[fallbackIndex]}`;
   const ageLabel = age ? `${age} ${ageUnit || 'ANS'}` : 'Âge à confirmer';
-  const statusFallbacks = ['Disponible', 'Visite possible', 'Urgent'];
-  const statusLabel = status || statusFallbacks[animalHash % statusFallbacks.length];
-  const healthBadges = [
-    vaccinated ?? animalHash % 2 === 0 ? 'Vacciné' : 'Suivi vétérinaire',
-    sterilized ?? animalHash % 3 === 0 ? 'Stérilisé' : 'À confirmer',
-  ];
+  const healthBadges = [];
+  if (vaccinated) healthBadges.push('Vacciné');
+  else if (vaccinated === false) healthBadges.push('Suivi vétérinaire');
+  if (sterilized) healthBadges.push('Stérilisé');
+  else if (sterilized === false) healthBadges.push('À stériliser');
 
   return (
     <Card className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-soft">
@@ -28,7 +27,7 @@ const AnimalCard = ({ animal = {}, onView }) => {
         />
         <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/35 to-transparent" />
         <Badge className="absolute left-3 top-3 bg-white/95 font-bold text-primary">
-          {statusLabel}
+          {status || 'Disponible'}
         </Badge>
         <Badge className="absolute right-3 top-3 bg-white/95 font-bold text-text-main">
           {ageLabel}

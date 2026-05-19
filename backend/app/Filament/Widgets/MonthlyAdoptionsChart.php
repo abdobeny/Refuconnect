@@ -8,42 +8,49 @@ use Filament\Widgets\ChartWidget;
 
 class MonthlyAdoptionsChart extends ChartWidget
 {
-    protected ?string $heading = 'Adoptions par mois';
-    
-    protected ?string $description = 'Tendance des demandes d\'adoption (6 derniers mois)';
-    
-    protected int|string|array $columnSpan = 2;
+    protected ?string $heading = 'Demandes d\'adoption';
+
+    protected ?string $description = 'Evolution sur les 6 derniers mois';
+
+    protected int|string|array $columnSpan = [
+        'default' => 'full',
+        'xl' => 4,
+    ];
+
+    protected static ?int $sort = 3;
+
+    protected static bool $isLazy = false;
+
+    protected ?string $pollingInterval = null;
 
     protected function getData(): array
     {
         $data = [];
         $labels = [];
-        
-        // Get data for last 6 months
+
         for ($i = 5; $i >= 0; $i--) {
             $month = Carbon::now()->subMonths($i);
-            $labels[] = $month->format('M Y');
-            
-            $count = Adoption::whereMonth('created_at', $month->month)
+            $labels[] = $month->translatedFormat('M');
+
+            $data[] = Adoption::whereMonth('created_at', $month->month)
                 ->whereYear('created_at', $month->year)
                 ->count();
-            $data[] = $count;
         }
 
         return [
             'datasets' => [
                 [
-                    'label' => 'Adoptions',
+                    'label' => 'Demandes',
                     'data' => $data,
-                    'backgroundColor' => 'rgba(245, 158, 11, 0.2)',
-                    'borderColor' => '#f59e0b',
-                    'borderWidth' => 2,
+                    'backgroundColor' => 'rgba(92, 122, 107, 0.14)',
+                    'borderColor' => '#5C7A6B',
+                    'borderWidth' => 3,
                     'fill' => true,
-                    'tension' => 0.4,
-                    'pointBackgroundColor' => '#f59e0b',
-                    'pointBorderColor' => '#fff',
-                    'pointBorderWidth' => 2,
-                    'pointRadius' => 4,
+                    'tension' => 0.38,
+                    'pointBackgroundColor' => '#A9795F',
+                    'pointBorderColor' => '#FFFDF9',
+                    'pointBorderWidth' => 3,
+                    'pointRadius' => 5,
                 ],
             ],
             'labels' => $labels,
@@ -59,29 +66,19 @@ class MonthlyAdoptionsChart extends ChartWidget
     {
         return [
             'plugins' => [
-                'legend' => [
-                    'display' => false,
-                ],
+                'legend' => ['display' => false],
             ],
             'scales' => [
                 'y' => [
                     'beginAtZero' => true,
-                    'ticks' => [
-                        'stepSize' => 1,
-                    ],
-                    'grid' => [
-                        'display' => true,
-                        'drawBorder' => false,
-                    ],
+                    'ticks' => ['stepSize' => 1],
+                    'grid' => ['color' => 'rgba(120, 109, 100, 0.13)', 'drawBorder' => false],
                 ],
                 'x' => [
-                    'grid' => [
-                        'display' => false,
-                    ],
+                    'grid' => ['display' => false],
                 ],
             ],
-            'responsive' => true,
-            'maintainAspectRatio' => true,
+            'maintainAspectRatio' => false,
         ];
     }
 }

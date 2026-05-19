@@ -9,9 +9,14 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class RecentAdoptions extends BaseWidget
 {
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 4;
 
-    protected int|string|array $columnSpan = 'full';
+    protected static bool $isLazy = false;
+
+    protected int|string|array $columnSpan = [
+        'default' => 'full',
+        'xl' => 4,
+    ];
 
     public function table(Table $table): Table
     {
@@ -20,20 +25,30 @@ class RecentAdoptions extends BaseWidget
                 Adoption::query()
                     ->with(['user', 'animal'])
                     ->latest()
-                    ->limit(5)
+                    ->limit(6)
             )
             ->columns([
-                                Tables\Columns\TextColumn::make('animal.name')
+                Tables\Columns\TextColumn::make('animal.name')
                     ->label('Animal')
-                    ->searchable(),
+                    ->placeholder('Animal non renseigne')
+                    ->searchable()
+                    ->weight('font-semibold'),
 
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Adoptant')
+                    ->placeholder('Compte sans nom')
+                    ->description(fn (Adoption $record): ?string => $record->user?->email)
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('status')
                     ->label('Statut')
                     ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'pending' => 'A traiter',
+                        'approved' => 'Approuvee',
+                        'rejected' => 'Refusee',
+                        default => ucfirst($state),
+                    })
                     ->color(fn (string $state): string => match ($state) {
                         'pending' => 'warning',
                         'approved' => 'success',
@@ -42,11 +57,12 @@ class RecentAdoptions extends BaseWidget
                     }),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Date')
-                    ->dateTime('d/m/Y H:i')
+                    ->label('Recue le')
+                    ->since()
                     ->sortable(),
             ])
-            ->heading('Dernières demandes d\'adoption')
+            ->heading('Demandes recentes')
+            ->description('Les dossiers les plus recents a suivre')
             ->paginated(false);
     }
 }

@@ -14,6 +14,7 @@ class Testimonial extends Model
         'quote',
         'detail',
         'status',
+        'rejection_reason',
         'featured',
         'sort_order',
     ];

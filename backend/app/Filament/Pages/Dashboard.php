@@ -2,6 +2,11 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\AnimalStatusChart;
+use App\Filament\Widgets\MonthlyAdoptionsChart;
+use App\Filament\Widgets\RecentAdoptions;
+use App\Filament\Widgets\RecentAnimalsWidget;
+use App\Filament\Widgets\StatsOverview;
 use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
@@ -22,11 +27,26 @@ class Dashboard extends BaseDashboard
 
     public function getSubheading(): ?string
     {
-        return 'Vue d\'ensemble du refuge — ' . now()->translatedFormat('d F Y');
+        return 'Pilotage du refuge, demandes a traiter et activite recente - ' . now()->translatedFormat('d F Y');
     }
 
     public function getColumns(): array|int
     {
-        return 2;
+        return [
+            'default' => 1,
+            'lg' => 2,
+            'xl' => 6,
+        ];
+    }
+
+    public function getWidgets(): array
+    {
+        return [
+            StatsOverview::class,
+            AnimalStatusChart::class,
+            MonthlyAdoptionsChart::class,
+            RecentAdoptions::class,
+            RecentAnimalsWidget::class,
+        ];
     }
 }

@@ -64,7 +64,16 @@ class TestimonialResource extends Resource
                         'rejected' => 'Rejeté',
                     ])
                     ->default('pending')
-                    ->required(),
+                    ->required()
+                    ->live(),
+
+                Forms\Components\Textarea::make('rejection_reason')
+                    ->label('Motif du rejet')
+                    ->helperText('Expliquez pourquoi ce témoignage a été rejeté')
+                    ->rows(3)
+                    ->maxLength(500)
+                    ->columnSpanFull()
+                    ->visible(fn (Forms\Get $get) => $get('status') === 'rejected'),
 
                 Forms\Components\Toggle::make('featured')
                     ->label('Afficher sur la page d’accueil')

@@ -9,9 +9,14 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class RecentAnimalsWidget extends BaseWidget
 {
-    protected int|string|array $columnSpan = 'full';
+    protected static ?int $sort = 5;
 
-    protected static ?int $sort = 3;
+    protected static bool $isLazy = false;
+
+    protected int|string|array $columnSpan = [
+        'default' => 'full',
+        'xl' => 2,
+    ];
 
     public function table(Table $table): Table
     {
@@ -23,32 +28,19 @@ class RecentAnimalsWidget extends BaseWidget
             )
             ->columns([
                 Tables\Columns\ImageColumn::make('photos')
-                    ->label('Photo')
+                    ->label('')
                     ->square()
-                    ->size(40),
+                    ->size(42),
 
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Nom')
-                    ->searchable()
-                    ->weight('font-semibold'),
-
-                Tables\Columns\TextColumn::make('species')
-                    ->label('Espèce')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'dog' => 'primary',
-                        'cat' => 'info',
-                        default => 'gray',
-                    })
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                    ->label('Animal')
+                    ->description(fn (Animal $record): string => trim(($record->breed ?: 'Race non renseignee') . ' - ' . match ($record->species) {
                         'dog' => 'Chien',
                         'cat' => 'Chat',
-                        default => $state,
-                    }),
-
-                Tables\Columns\TextColumn::make('breed')
-                    ->label('Race')
-                    ->searchable(),
+                        default => ucfirst((string) $record->species),
+                    }))
+                    ->searchable()
+                    ->weight('font-semibold'),
 
                 Tables\Columns\TextColumn::make('status')
                     ->label('Statut')
@@ -61,41 +53,13 @@ class RecentAnimalsWidget extends BaseWidget
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
                         'available' => 'Disponible',
-                        'adopted' => 'Adopté',
+                        'adopted' => 'Adopte',
                         'in_care' => 'En soins',
                         default => $state,
                     }),
-
-                Tables\Columns\IconColumn::make('vaccinated')
-                    ->label('Vacciné')
-                    ->boolean(),
-
-                Tables\Columns\IconColumn::make('sterilized')
-                    ->label('Stérilisé')
-                    ->boolean(),
-
-                Tables\Columns\TextColumn::make('health_status')
-                    ->label('Santé')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'good' => 'success',
-                        'fair' => 'warning',
-                        'critical' => 'danger',
-                        default => 'gray',
-                    })
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'good' => 'Bon',
-                        'fair' => 'Moyen',
-                        'critical' => 'Critique',
-                        default => $state,
-                    }),
-
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Ajouté le')
-                    ->dateTime('d/m/Y')
-                    ->sortable(),
             ])
-            ->heading('Animaux récemment ajoutés')
+            ->heading('Nouveaux animaux')
+            ->description('Dernieres fiches ajoutees')
             ->paginated(false);
     }
 }

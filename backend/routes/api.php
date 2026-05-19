@@ -59,6 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/grooming', [GroomingReservationController::class, 'store']);
 
     Route::post('/testimonials', [TestimonialController::class, 'store']);
+    Route::get('/my-testimonials', [TestimonialController::class, 'myTestimonials']);
     Route::get('/my-coupling-requests', [CouplingRequestController::class, 'index']);
     Route::post('/coupling-requests', [CouplingRequestController::class, 'store']);
     Route::get('/coupling-requests/{couplingRequest}', [CouplingRequestController::class, 'show']);
@@ -76,5 +77,19 @@ Route::middleware('auth:sanctum')->group(function () {
             'volunteers' => \App\Models\VolunteerApplication::count(),
             'animals_available' => \App\Models\Animal::where('status', 'available')->count(),
         ]);
+    });
+
+    // Admin routes for animals management
+    Route::middleware('admin')->prefix('admin')->group(function () {
+        Route::post('/animals', [AnimalController::class, 'store']);
+        Route::put('/animals/{animal}', [AnimalController::class, 'update']);
+        Route::delete('/animals/{animal}', [AnimalController::class, 'destroy']);
+        Route::patch('/animals/{animal}/status', [AnimalController::class, 'updateStatus']);
+
+        // Testimonials management
+        Route::get('/testimonials', [TestimonialController::class, 'adminIndex']);
+        Route::post('/testimonials/{testimonial}/approve', [TestimonialController::class, 'approve']);
+        Route::post('/testimonials/{testimonial}/reject', [TestimonialController::class, 'reject']);
+        Route::post('/testimonials/{testimonial}/feature', [TestimonialController::class, 'feature']);
     });
 });

@@ -9,9 +9,13 @@ use App\Filament\Resources\Animals\AnimalResource;
 use App\Filament\Resources\CouplingRequests\CouplingRequestResource;
 use App\Filament\Resources\Donations\DonationResource;
 use App\Filament\Resources\GroomingReservations\GroomingReservationResource;
+use App\Filament\Resources\Testimonials\TestimonialResource;
 use App\Filament\Resources\Users\UsersResource;
+use App\Filament\Resources\VolunteerApplications\VolunteerApplicationResource;
 use App\Filament\Widgets\AnimalStatusChart;
+use App\Filament\Widgets\MonthlyAdoptionsChart;
 use App\Filament\Widgets\RecentAdoptions;
+use App\Filament\Widgets\RecentAnimalsWidget;
 use App\Filament\Widgets\StatsOverview;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
@@ -76,6 +80,8 @@ class AdminPanelProvider extends PanelProvider
                 DonationResource::class,
                 GroomingReservationResource::class,
                 CouplingRequestResource::class,
+                VolunteerApplicationResource::class,
+                TestimonialResource::class,
                 UsersResource::class,
             ])
             ->pages([
@@ -84,7 +90,9 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 StatsOverview::class,
                 AnimalStatusChart::class,
+                MonthlyAdoptionsChart::class,
                 RecentAdoptions::class,
+                RecentAnimalsWidget::class,
             ])
             ->renderHook(
                 PanelsRenderHook::HEAD_END,

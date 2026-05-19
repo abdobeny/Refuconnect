@@ -11,12 +11,8 @@ class AnimalController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Animal::query();
-
-        $status = $request->input('status', 'available');
-        if ($status !== 'all') {
-            $query->where('status', $status);
-        }
+        $query = Animal::query()
+            ->where('status', 'available');
 
         if ($request->filled('species')) {
             $query->where('species', $request->string('species'));
@@ -40,7 +36,9 @@ class AnimalController extends Controller
         }
 
         $perPage = min((int) $request->input('per_page', 15), 50);
-        $animals = $query->latest()->paginate($perPage);
+        $animals = $query
+            ->latest()
+            ->paginate($perPage);
 
         return AnimalResource::collection($animals);
     }

@@ -9,151 +9,111 @@ class AnimalSeeder extends Seeder
 {
     public function run(): void
     {
-        $animals = [
-            [
-                'name' => 'Max',
-                'species' => 'dog',
-                'breed' => 'Berger Allemand',
-                'age' => 3,
-                'sex' => 'male',
-                'description' => 'Chien affectueux et sportif, parfait pour une famille active.',
-                'status' => 'available',
-                'size' => 'large',
-                'vaccinated' => true,
-                'sterilized' => true,
-                'health_status' => 'good',
-                'photos' => ['https://images.unsplash.com/photo-1583511655857-d19b40a7a54e'],
-            ],
-            [
-                'name' => 'Luna',
-                'species' => 'cat',
-                'breed' => 'Siamois',
-                'age' => 2,
-                'sex' => 'female',
-                'description' => 'Chatte calme et sociable, adore les câlins.',
-                'status' => 'available',
-                'size' => 'medium',
-                'vaccinated' => true,
-                'sterilized' => false,
-                'health_status' => 'good',
-                'photos' => ['https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba'],
-            ],
-            [
-                'name' => 'Rocky',
-                'species' => 'dog',
-                'breed' => 'Labrador',
-                'age' => 5,
-                'sex' => 'male',
-                'description' => 'Gentil labrador très sociable avec les enfants.',
-                'status' => 'available',
-                'size' => 'large',
-                'vaccinated' => true,
-                'sterilized' => true,
-                'health_status' => 'fair',
-                'photos' => ['https://images.unsplash.com/photo-1552053831-71594a27632d'],
-            ],
-            [
-                'name' => 'Milo',
-                'species' => 'cat',
-                'breed' => 'Européen',
-                'age' => 1,
-                'sex' => 'male',
-                'description' => 'Jeune chat très joueur et curieux.',
-                'status' => 'available',
-                'size' => 'small',
-                'vaccinated' => false,
-                'sterilized' => false,
-                'health_status' => 'good',
-                'photos' => [],
-            ],
-            [
-                'name' => 'Bella',
-                'species' => 'dog',
-                'breed' => 'Golden Retriever',
-                'age' => 4,
-                'sex' => 'female',
-                'description' => 'Superbe golden très douce et obéissante.',
-                'status' => 'adopted',
-                'size' => 'large',
-                'vaccinated' => true,
-                'sterilized' => true,
-                'health_status' => 'good',
-                'photos' => ['https://images.unsplash.com/photo-1633722715463-d30f4f325e24'],
-            ],
-            [
-                'name' => 'Nala',
-                'species' => 'cat',
-                'breed' => 'Maine Coon',
-                'age' => 3,
-                'sex' => 'female',
-                'description' => 'Grande chatte majestueuse, très câline malgré sa taille.',
-                'status' => 'available',
-                'size' => 'large',
-                'vaccinated' => true,
-                'sterilized' => true,
-                'health_status' => 'good',
-                'photos' => ['https://images.unsplash.com/photo-1533738363-b7f9aef128ce'],
-            ],
-            [
-                'name' => 'Rex',
-                'species' => 'dog',
-                'breed' => 'Boxer',
-                'age' => 2,
-                'sex' => 'male',
-                'description' => 'Chien énergique et protecteur, idéal pour une maison avec jardin.',
-                'status' => 'available',
-                'size' => 'medium',
-                'vaccinated' => true,
-                'sterilized' => false,
-                'health_status' => 'good',
-                'photos' => ['https://images.unsplash.com/photo-1535930749574-1399327ce78f'],
-            ],
-            [
-                'name' => 'Whiskers',
-                'species' => 'cat',
-                'breed' => 'Persan',
-                'age' => 4,
-                'sex' => 'male',
-                'description' => 'Chat calme et posé, parfait pour un appartement tranquille.',
-                'status' => 'in_care',
-                'size' => 'medium',
-                'vaccinated' => true,
-                'sterilized' => true,
-                'health_status' => 'fair',
-                'photos' => ['https://images.unsplash.com/photo-1567270671170-fdc10a5bf831'],
-            ],
-            [
-                'name' => 'Daisy',
-                'species' => 'dog',
-                'breed' => 'Beagle',
-                'age' => 6,
-                'sex' => 'female',
-                'description' => 'Chienne douce et affectueuse, adore les promenades en forêt.',
-                'status' => 'available',
-                'size' => 'medium',
-                'vaccinated' => true,
-                'sterilized' => true,
-                'health_status' => 'good',
-                'photos' => ['https://images.unsplash.com/photo-1505628346881-b72b27e84530'],
-            ],
-            [
-                'name' => 'Simba',
-                'species' => 'cat',
-                'breed' => 'Bengal',
-                'age' => 1,
-                'sex' => 'male',
-                'description' => 'Chaton très actif et joueur, besoin de beaucoup d\'attention.',
-                'status' => 'available',
-                'size' => 'small',
-                'vaccinated' => false,
-                'sterilized' => false,
-                'health_status' => 'good',
-                'photos' => ['https://images.unsplash.com/photo-1513245543132-31f507417b26'],
-            ],
+        $catImages = [
+            '/images/animals/cat1.jfif',
+            '/images/animals/cat2.jfif',
+            '/images/animals/cat3.jfif',
+            '/images/animals/cat4.jfif',
+            '/images/animals/cat5.jfif',
         ];
 
+        $dogImages = [
+            '/images/animals/dog1.jpg',
+            '/images/animals/dog2.webp',
+            '/images/animals/dog3.webp',
+            '/images/animals/dog4.webp',
+            '/images/animals/dog5.webp',
+            '/images/animals/dog6.jfif',
+            '/images/animals/dog7.webp',
+            '/images/animals/dog8.jfif',
+            '/images/animals/dog9.jfif',
+            '/images/animals/dog10.jfif',
+            '/images/animals/dog11.webp',
+            '/images/animals/dog12.webp',
+            '/images/animals/dog13.webp',
+            '/images/animals/dog14.webp',
+            '/images/animals/dog15.webp',
+            '/images/animals/dog16.webp',
+        ];
+
+        $animals = [];
+
+        /* =========================
+           🐱 CATS (5)
+        ========================= */
+        $cats = [
+            ['name' => 'Luna', 'breed' => 'Siamois', 'age' => 2, 'sex' => 'female'],
+            ['name' => 'Milo', 'breed' => 'Européen', 'age' => 1, 'sex' => 'male'],
+            ['name' => 'Nala', 'breed' => 'Maine Coon', 'age' => 3, 'sex' => 'female'],
+            ['name' => 'Simba', 'breed' => 'Bengal', 'age' => 1, 'sex' => 'male'],
+            ['name' => 'Choco', 'breed' => 'Persan', 'age' => 4, 'sex' => 'male'],
+        ];
+
+        foreach ($cats as $i => $cat) {
+            $animals[] = [
+                'name' => $cat['name'],
+                'species' => 'cat',
+                'breed' => $cat['breed'],
+                'age' => $cat['age'],
+                'sex' => $cat['sex'],
+                'description' => 'Chat ' . strtolower($cat['breed']) . ' très affectueux et calme.',
+                'status' => 'available',
+                'size' => 'small',
+                'vaccinated' => (bool)rand(0, 1),
+                'sterilized' => (bool)rand(0, 1),
+                'health_status' => 'good',
+                'photos' => [$catImages[$i]],
+            ];
+        }
+
+        /* =========================
+           🐶 DOGS (16)
+        ========================= */
+        $dogs = [
+            ['name' => 'Max', 'breed' => 'Berger Allemand', 'age' => 3, 'sex' => 'male'],
+            ['name' => 'Rocky', 'breed' => 'Labrador', 'age' => 5, 'sex' => 'male'],
+            ['name' => 'Bella', 'breed' => 'Golden Retriever', 'age' => 4, 'sex' => 'female'],
+            ['name' => 'Rex', 'breed' => 'Boxer', 'age' => 2, 'sex' => 'male'],
+            ['name' => 'Daisy', 'breed' => 'Beagle', 'age' => 6, 'sex' => 'female'],
+            ['name' => 'Jack', 'breed' => 'Husky', 'age' => 3, 'sex' => 'male'],
+            ['name' => 'Lola', 'breed' => 'Poodle', 'age' => 2, 'sex' => 'female'],
+            ['name' => 'Thor', 'breed' => 'Rottweiler', 'age' => 4, 'sex' => 'male'],
+            ['name' => 'Zara', 'breed' => 'Doberman', 'age' => 3, 'sex' => 'female'],
+            ['name' => 'Bobby', 'breed' => 'Bulldog', 'age' => 5, 'sex' => 'male'],
+            ['name' => 'Nero', 'breed' => 'Akita', 'age' => 3, 'sex' => 'male'],
+            ['name' => 'Maya', 'breed' => 'Shiba Inu', 'age' => 2, 'sex' => 'female'],
+            ['name' => 'Kira', 'breed' => 'Cocker Spaniel', 'age' => 4, 'sex' => 'female'],
+            ['name' => 'Bruno', 'breed' => 'Saint Bernard', 'age' => 6, 'sex' => 'male'],
+            ['name' => 'Sky', 'breed' => 'Border Collie', 'age' => 2, 'sex' => 'female'],
+            ['name' => 'Ghost', 'breed' => 'Malinois', 'age' => 3, 'sex' => 'male'],
+        ];
+
+        foreach ($dogs as $i => $dog) {
+            $animals[] = [
+                'name' => $dog['name'],
+                'species' => 'dog',
+                'breed' => $dog['breed'],
+                'age' => $dog['age'],
+                'sex' => $dog['sex'],
+                'description' => 'Chien ' . strtolower($dog['breed']) . ' énergique et très sociable.',
+                'status' => 'available',
+                'size' => in_array($dog['breed'], ['Chihuahua', 'Poodle']) ? 'small'
+                    : (in_array($dog['breed'], ['Beagle', 'Border Collie', 'Boxer']) ? 'medium' : 'large'),
+                'vaccinated' => true,
+                'sterilized' => (bool)rand(0, 1),
+                'health_status' => ['good', 'fair'][rand(0, 1)],
+                'photos' => [$dogImages[$i]],
+            ];
+        }
+
+        /* =========================
+           SAVE INTO DB
+        ========================= */
         foreach ($animals as $animal) {
-            Animal::create($animal);
+            Animal::updateOrCreate(
+                ['name' => $animal['name']],
+                $animal
+            );
         }
     }
 }

@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children }) => {
   const { user, token, loading } = useAuth();
   const location = useLocation();
 
-  if (loading) {
+  if (loading && (!user || !token)) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">

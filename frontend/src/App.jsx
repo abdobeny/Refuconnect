@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useAuth } from './context/AuthContext';
 import MainLayout from './components/layout/MainLayout';
 import UserLayout from './components/layout/UserLayout';
+import AdminLayout from './components/layout/AdminLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/public/Home';
@@ -12,7 +13,8 @@ import Grooming from './pages/public/Grooming';
 import Couplage from './pages/public/Couplage';
 import Dons from './pages/public/Dons';
 import Volunteer from './pages/public/Bénévolat';
-import AdminRedirect from './pages/admin/AdminRedirect';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminTestimonials from './pages/admin/AdminTestimonials';
 import UserDashboard from './pages/user/Dashboard';
 import UserProfile from './pages/user/Profile';
 import Login from './pages/public/Login';
@@ -77,13 +79,16 @@ function App() {
         </Route>
 
         <Route
-          path="/admin"
           element={
             <ProtectedRoute>
-              <AdminRedirect />
+              <AdminLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/testimonials" element={<AdminTestimonials />} />
+        </Route>
+
         <Route path="/admin/*" element={<Navigate to="/admin" replace />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

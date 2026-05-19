@@ -6,7 +6,7 @@ import { resolvePhotoUrl } from '../../api/mappers/animalMapper';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
-import { FileText, Clock } from 'lucide-react';
+import { FileText, Clock, PawPrint, Heart } from 'lucide-react';
 import Skeleton from '../../components/ui/Skeleton';
 
 const statusLabels = {
@@ -18,16 +18,21 @@ const statusLabels = {
 const UserDashboard = () => {
   const { user } = useAuth();
   const [adoptions, setAdoptions] = useState([]);
+  const [globalStats, setGlobalStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     const load = async () => {
       try {
-        const { data } = await axiosClient.get('/my-adoptions');
-        setAdoptions(data.data || []);
+        const [adoptionsRes, statsRes] = await Promise.all([
+          axiosClient.get('/my-adoptions'),
+          axiosClient.get('/stats'),
+        ]);
+        setAdoptions(adoptionsRes.data.data || []);
+        setGlobalStats(statsRes.data);
       } catch (err) {
-        setError(err.response?.data?.message || 'Impossible de charger vos demandes.');
+        setError(err.response?.data?.message || 'Impossible de charger le tableau de bord.');
       } finally {
         setLoading(false);
       }
@@ -35,12 +40,22 @@ const UserDashboard = () => {
     load();
   }, []);
 
-  const stats = [
-    { label: 'Demandes d\'adoption', value: adoptions.length, icon: FileText },
+  const dashboardStats = [
+    { label: 'Mes demandes', value: adoptions.length, icon: FileText },
     {
       label: 'En attente',
       value: adoptions.filter((a) => a.status === 'pending').length,
       icon: Clock,
+    },
+    {
+      label: 'Animaux disponibles',
+      value: globalStats?.animals_available ?? '—',
+      icon: PawPrint,
+    },
+    {
+      label: 'Dons enregistrés',
+      value: globalStats?.donations ?? '—',
+      icon: Heart,
     },
   ];
 
@@ -53,8 +68,8 @@ const UserDashboard = () => {
         <p className="mt-2 text-muted">Suivez vos demandes auprès du refuge.</p>
       </div>
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-2">
-        {stats.map((stat) => {
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {dashboardStats.map((stat) => {
           const Icon = stat.icon;
           return (
             <Card key={stat.label} className="flex items-center gap-4 p-5">

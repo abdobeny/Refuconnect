@@ -4,6 +4,7 @@ import { useAuth } from './context/AuthContext';
 import MainLayout from './components/layout/MainLayout';
 import UserLayout from './components/layout/UserLayout';
 import ProtectedRoute from './components/ProtectedRoute';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/public/Home';
 import Animals from './pages/public/Animals';
 import AnimalDetail from './pages/public/AnimalDetail';
@@ -32,6 +33,7 @@ const AdminGate = ({ children }) => {
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />

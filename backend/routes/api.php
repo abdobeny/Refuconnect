@@ -53,4 +53,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/my-volunteer-applications', [VolunteerApplicationController::class, 'index']);
     Route::post('/volunteer-applications', [VolunteerApplicationController::class, 'store']);
+
+    Route::get('/stats', function () {
+        return response()->json([
+            'adoptions' => \App\Models\Adoption::count(),
+            'adoptions_pending' => \App\Models\Adoption::where('status', 'pending')->count(),
+            'donations' => \App\Models\Donation::count(),
+            'grooming' => \App\Models\GroomingReservation::count(),
+            'coupling' => \App\Models\CouplingRequest::count(),
+            'volunteers' => \App\Models\VolunteerApplication::count(),
+            'animals_available' => \App\Models\Animal::where('status', 'available')->count(),
+        ]);
+    });
 });

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Input from '../../ui/Input';
 import Button from '../../ui/Button';
+import Alert from '../../ui/Alert';
 import axiosClient from '../../../api/axiosClient';
 import { useAuth } from '../../../context/AuthContext';
 
@@ -16,6 +17,7 @@ const AdoptionForm = ({ animalId, onCancel, onSuccess }) => {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState('');
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (ev) => {
     ev.preventDefault();
@@ -30,9 +32,10 @@ const AdoptionForm = ({ animalId, onCancel, onSuccess }) => {
       return;
     }
     setErrors({});
+    setApiError('');
+    setSuccess(false);
 
     setSubmitting(true);
-    setApiError('');
 
     const motivation = [
       message,
@@ -49,6 +52,12 @@ const AdoptionForm = ({ animalId, onCancel, onSuccess }) => {
         animal_id: Number(animalId),
         motivation,
       });
+      setSuccess(true);
+      setFullName('');
+      setEmail('');
+      setAddress('');
+      setMessage('');
+      setHasOtherPets('no');
       onSuccess?.(response.data.data ?? response.data);
     } catch (err) {
       const msg =
@@ -65,8 +74,11 @@ const AdoptionForm = ({ animalId, onCancel, onSuccess }) => {
     <form className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm" onSubmit={handleSubmit}>
       <h3 className="mb-4 font-serif text-xl">Demande d&apos;adoption</h3>
 
-      {apiError && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{apiError}</div>
+      <Alert type="error" message={apiError} className="mb-4" onClose={() => setApiError('')} />
+      {success && (
+        <div className="mb-4">
+          <Alert type="success" message="Demande envoyée avec succès. Consultez votre espace pour suivre l'avancement." />
+        </div>
       )}
 
       <div className="grid grid-cols-1 gap-4">

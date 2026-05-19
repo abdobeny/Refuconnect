@@ -98,6 +98,6 @@ class PayPalService
 
     private function frontendUrl(string $path): string
     {
-        return rtrim(config('app.frontend_url', env('FRONTEND_URL', 'http://localhost:5173')), '/') . $path;
+        return rtrim(config('app.frontend_url'), '/') . $path;
     }
 }

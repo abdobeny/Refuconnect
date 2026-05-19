@@ -74,7 +74,7 @@ class AdminPanelProvider extends PanelProvider
 
             ->navigationItems([
                 NavigationItem::make('Voir le site')
-                    ->url(config('app.frontend_url', 'http://localhost:5173'))
+                    ->url(url('/to-frontend'))
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->group('Navigation')
                     ->sort(99),

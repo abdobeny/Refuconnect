@@ -96,6 +96,7 @@ class AnimalResource extends Resource
 
                 Forms\Components\FileUpload::make('photos')
                     ->label('Photos')
+                    ->disk('public')
                     ->multiple()
                     ->image()
                     ->directory('animals')

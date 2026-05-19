@@ -18,14 +18,18 @@ class UserSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        // Test users
+        // Test users with diverse profiles
         $users = [
-            ['name' => 'User Test', 'email' => 'user@example.com'],
             ['name' => 'Jean Dupont', 'email' => 'jean@example.com'],
             ['name' => 'Marie Martin', 'email' => 'marie@example.com'],
             ['name' => 'Pierre Durand', 'email' => 'pierre@example.com'],
             ['name' => 'Sophie Bernard', 'email' => 'sophie@example.com'],
             ['name' => 'Lucas Petit', 'email' => 'lucas@example.com'],
+            ['name' => 'Amina Khelifi', 'email' => 'amina@example.com'],
+            ['name' => 'Thomas Moreau', 'email' => 'thomas@example.com'],
+            ['name' => 'Léa Rousseau', 'email' => 'lea@example.com'],
+            ['name' => 'Hassan Benali', 'email' => 'hassan@example.com'],
+            ['name' => 'Claire Fontaine', 'email' => 'claire@example.com'],
         ];
 
         foreach ($users as $user) {

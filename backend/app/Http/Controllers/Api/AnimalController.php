@@ -11,8 +11,12 @@ class AnimalController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Animal::query()
-            ->where('status', 'available');
+        $query = Animal::query();
+
+        $status = $request->input('status', 'available');
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
 
         if ($request->filled('species')) {
             $query->where('species', $request->string('species'));

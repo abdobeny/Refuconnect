@@ -125,6 +125,7 @@ export const AnimalsProvider = ({ children }) => {
       if (species) params.species = species;
       if (filters.search) params.search = filters.search;
       if (filters.breed && filters.breed !== 'all') params.breed = filters.breed;
+      if (filters.status && filters.status !== 'all') params.status = filters.status;
       if (filters.page) params.page = filters.page;
       params.per_page = 12;
 

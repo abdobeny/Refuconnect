@@ -1,156 +1,104 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Facebook, Instagram, Twitter, Linkedin, MapPin, Phone, Mail, Clock, Home, Scissors, HeartHandshake, DollarSign, Handshake } from 'lucide-react';
+import {
+  Facebook,
+  Gift,
+  HandHeart,
+  Home,
+  Instagram,
+  Mail,
+  MapPin,
+  PawPrint,
+  Phone,
+  Scissors,
+  Users,
+} from 'lucide-react';
 
 const Footer = () => {
-	const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear();
 
-	return (
-		<footer className="bg-gradient-to-br from-background-beige to-background-cream border-t border-primary/10 mt-auto">
-			<div className="max-w-7xl mx-auto px-6 py-12">
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-					{/* About Section */}
-					<div className="space-y-4">
-						<div className="flex items-center gap-3">
-							<div className="bg-gradient-to-br from-primary to-primary-light p-2.5 rounded-xl shadow-lg">
-								<Heart className="w-8 h-8 text-white" fill="white" />
-							</div>
-							<h3 className="text-2xl font-bold text-primary font-serif">RefuConnect</h3>
-						</div>
-						<p className="text-text-light text-sm leading-relaxed">
-							Relier des animaux avec des familles aimantes. Nous nous engageons à offrir une seconde chance à chaque animal en besoin.
-						</p>
-						<div className="flex gap-3 pt-2">
-							<a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg hover:bg-primary/5 transition-all duration-300 group" aria-label="Facebook">
-								<Facebook className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-							</a>
-							<a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg hover:bg-primary/5 transition-all duration-300 group" aria-label="Instagram">
-								<Instagram className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-							</a>
-							<a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg hover:bg-primary/5 transition-all duration-300 group" aria-label="Twitter">
-								<Twitter className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-							</a>
-							<a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg hover:bg-primary/5 transition-all duration-300 group" aria-label="LinkedIn">
-								<Linkedin className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-							</a>
-						</div>
-					</div>
+  return (
+    <footer className="mt-auto border-t border-[#DED3C7] bg-[#FBF7F1] text-[#202824]">
+      <div className="mx-auto max-w-7xl px-6 py-5">
+        <div className="grid gap-8 md:grid-cols-3 md:items-start">
+          <div>
+            <Link to="/" className="inline-flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#26332E] text-white">
+                <PawPrint className="h-4 w-4" />
+              </span>
+              <span className="font-serif text-2xl font-extrabold">
+                Refu<span className="text-[#A66449]">Connect</span>
+              </span>
+            </Link>
+            <p className="mt-3 max-w-sm text-sm leading-6 text-[#5F6863]">
+              Relier les animaux aux bonnes familles, et faciliter les gestes utiles pour les refuges.
+            </p>
+            <div className="mt-3 flex gap-2">
+              <a href="#" aria-label="Facebook" className="flex h-8 w-8 items-center justify-center rounded-full border border-[#D8CBBE] bg-white text-[#5F6863] transition-colors hover:border-[#A66449] hover:text-[#A66449]">
+                <Facebook className="h-4 w-4" />
+              </a>
+              <a href="#" aria-label="Instagram" className="flex h-8 w-8 items-center justify-center rounded-full border border-[#D8CBBE] bg-white text-[#5F6863] transition-colors hover:border-[#A66449] hover:text-[#A66449]">
+                <Instagram className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
 
-					{/* Quick Links */}
-					<div className="space-y-4">
-						<h3 className="text-lg font-bold text-primary font-serif">Liens Rapides</h3>
-						<ul className="space-y-2">
-							<li>
-								<Link to="/animaux" className="text-text-main hover:text-primary transition-colors duration-200 flex items-center gap-2 group">
-									<span className="w-1.5 h-1.5 bg-primary/60 rounded-full group-hover:scale-125 transition-transform"></span>
-									Nos Animaux
-								</Link>
-							</li>
-							<li>
-								<Link to="/toilettage" className="text-text-main hover:text-primary transition-colors duration-200 flex items-center gap-2 group">
-									<span className="w-1.5 h-1.5 bg-primary/60 rounded-full group-hover:scale-125 transition-transform"></span>
-									Toilettage
-								</Link>
-							</li>
-							<li>
-								<Link to="/couplage" className="text-text-main hover:text-primary transition-colors duration-200 flex items-center gap-2 group">
-									<span className="w-1.5 h-1.5 bg-primary/60 rounded-full group-hover:scale-125 transition-transform"></span>
-									Couplage
-								</Link>
-							</li>
-							<li>
-								<Link to="/dons" className="text-text-main hover:text-primary transition-colors duration-200 flex items-center gap-2 group">
-									<span className="w-1.5 h-1.5 bg-primary/60 rounded-full group-hover:scale-125 transition-transform"></span>
-									Faire un Don
-								</Link>
-							</li>
-							<li>
-								<Link to="/bénévolat" className="text-text-main hover:text-primary transition-colors duration-200 flex items-center gap-2 group">
-									<span className="w-1.5 h-1.5 bg-primary/60 rounded-full group-hover:scale-125 transition-transform"></span>
-									Bénévolat
-								</Link>
-							</li>
-						</ul>
-					</div>
+          <nav aria-label="Services" className="md:justify-self-center">
+            <h3 className="font-serif text-lg font-bold text-[#202824]">Services</h3>
+            <div className="mt-2 grid gap-1.5">
+              <Link to="/animaux" className="flex items-center gap-2 text-sm text-[#5F6863] transition-colors hover:text-[#A66449]">
+                <Home className="h-3.5 w-3.5 text-[#A66449]" />
+                Adoption
+              </Link>
+              <Link to="/toilettage" className="flex items-center gap-2 text-sm text-[#5F6863] transition-colors hover:text-[#A66449]">
+                <Scissors className="h-3.5 w-3.5 text-[#A66449]" />
+                Toilettage
+              </Link>
+              <Link to="/couplage" className="flex items-center gap-2 text-sm text-[#5F6863] transition-colors hover:text-[#A66449]">
+                <HandHeart className="h-3.5 w-3.5 text-[#A66449]" />
+                Couplage
+              </Link>
+              <Link to="/dons" className="flex items-center gap-2 text-sm text-[#5F6863] transition-colors hover:text-[#A66449]">
+                <Gift className="h-3.5 w-3.5 text-[#A66449]" />
+                Soutien
+              </Link>
+              <Link to="/bénévolat" className="flex items-center gap-2 text-sm text-[#5F6863] transition-colors hover:text-[#A66449]">
+                <Users className="h-3.5 w-3.5 text-[#A66449]" />
+                Bénévolat
+              </Link>
+            </div>
+          </nav>
 
-					{/* Services */}
-					<div className="space-y-4">
-						<h3 className="text-lg font-bold text-primary font-serif">Nos Services</h3>
-						<ul className="space-y-2">
-							<li>
-								<Link to="/animaux" className="text-text-main hover:text-primary transition-colors duration-200 flex items-center gap-2 group">
-									<Home className="w-4 h-4 text-primary/60 group-hover:scale-110 transition-transform" />
-									<span className="group-hover:translate-x-1 transition-transform">Adoption</span>
-								</Link>
-							</li>
-							<li>
-								<Link to="/toilettage" className="text-text-main hover:text-primary transition-colors duration-200 flex items-center gap-2 group">
-									<Scissors className="w-4 h-4 text-primary/60 group-hover:scale-110 transition-transform" />
-									<span className="group-hover:translate-x-1 transition-transform">Services de Toilettage</span>
-								</Link>
-							</li>
-							<li>
-								<Link to="/couplage" className="text-text-main hover:text-primary transition-colors duration-200 flex items-center gap-2 group">
-									<HeartHandshake className="w-4 h-4 text-primary/60 group-hover:scale-110 transition-transform" />
-									<span className="group-hover:translate-x-1 transition-transform">Accouplement</span>
-								</Link>
-							</li>
-							<li>
-								<Link to="/dons" className="text-text-main hover:text-primary transition-colors duration-200 flex items-center gap-2 group">
-									<DollarSign className="w-4 h-4 text-primary/60 group-hover:scale-110 transition-transform" />
-									<span className="group-hover:translate-x-1 transition-transform">Soutien Financier</span>
-								</Link>
-							</li>
-							<li>
-								<Link to="/bénévolat" className="text-text-main hover:text-primary transition-colors duration-200 flex items-center gap-2 group">
-									<Handshake className="w-4 h-4 text-primary/60 group-hover:scale-110 transition-transform" />
-									<span className="group-hover:translate-x-1 transition-transform">Devenir Bénévole</span>
-								</Link>
-							</li>
-						</ul>
-					</div>
+          <div className="md:justify-self-end">
+            <h3 className="font-serif text-lg font-bold text-[#202824]">Contact</h3>
+            <div className="mt-2 grid gap-2 text-sm text-[#5F6863]">
+              <p className="flex gap-2.5">
+                <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#A66449]" />
+                Marrakech, Maroc
+              </p>
+              <a href="tel:+212612345678" className="flex gap-2.5 transition-colors hover:text-[#A66449]">
+                <Phone className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#A66449]" />
+                +212 6 12 34 56 78
+              </a>
+              <a href="mailto:contact@refuconnect.ma" className="flex gap-2.5 transition-colors hover:text-[#A66449]">
+                <Mail className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#A66449]" />
+                contact@refuconnect.ma
+              </a>
+            </div>
+          </div>
+        </div>
 
-					{/* Contact */}
-					<div className="space-y-4">
-						<h3 className="text-lg font-bold text-primary font-serif">Contact</h3>
-						<div className="space-y-3">
-							<div className="flex items-start gap-3">
-								<MapPin className="w-5 h-5 text-primary/60 mt-0.5 flex-shrink-0" />
-								<p className="text-text-main text-sm">
-									123 Rue des Animaux<br />
-									75000 Paris, France
-								</p>
-							</div>
-							<div className="flex items-center gap-3">
-								<Phone className="w-5 h-5 text-primary/60 flex-shrink-0" />
-								<p className="text-text-main text-sm">+33 1 23 45 67 89</p>
-							</div>
-							<div className="flex items-center gap-3">
-								<Mail className="w-5 h-5 text-primary/60 flex-shrink-0" />
-								<p className="text-text-main text-sm">contact@refuconnect.fr</p>
-							</div>
-							<div className="flex items-center gap-3">
-								<Clock className="w-5 h-5 text-primary/60 flex-shrink-0" />
-								<p className="text-text-main text-sm">Lun - Sam: 9h - 18h</p>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				{/* Bottom Bar */}
-				<div className="border-t border-primary/10 pt-8">
-					<div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted">
-						<p>© {currentYear} RefuConnect — Tous droits réservés</p>
-						<div className="flex gap-6">
-							<Link to="/mentions-legales" className="hover:text-primary transition-colors duration-200">Mentions Légales</Link>
-							<Link to="/politique-confidentialite" className="hover:text-primary transition-colors duration-200">Politique de Confidentialité</Link>
-							<Link to="/cgu" className="hover:text-primary transition-colors duration-200">CGU</Link>
-						</div>
-					</div>
-				</div>
-			</div>
-		</footer>
-	);
+        <div className="mt-5 flex flex-col gap-3 border-t border-[#DED3C7] pt-3 text-sm text-[#6D7671] md:flex-row md:items-center md:justify-between">
+          <p>© {currentYear} RefuConnect. Tous droits réservés.</p>
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            <Link to="/mentions-legales" className="transition-colors hover:text-[#A66449]">Mentions légales</Link>
+            <Link to="/politique-confidentialite" className="transition-colors hover:text-[#A66449]">Confidentialité</Link>
+            <Link to="/cgu" className="transition-colors hover:text-[#A66449]">CGU</Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
 };
 
 export default Footer;

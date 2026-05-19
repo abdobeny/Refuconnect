@@ -1,4 +1,3 @@
-import React from 'react';
 
 const Skeleton = ({ className = '', variant = 'rect' }) => {
   const base = 'animate-pulse rounded-lg bg-slate-200';

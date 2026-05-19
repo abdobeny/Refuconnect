@@ -1,4 +1,3 @@
-import React from 'react';
 import { Heart, PawPrint } from 'lucide-react';
 
 const Logo = ({ className = 'w-8 h-8 lg:w-9 lg:h-9' }) => {

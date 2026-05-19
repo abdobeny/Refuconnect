@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Check, Eye, EyeOff, LockKeyhole, Mail, ShieldCheck, UserRound } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../../components/ui/Button';
 import Logo from '../../components/Logo';
+import { ADMIN_URL } from '../../config';
 
 const passwordRules = [
   { label: '8 caracteres minimum', test: (value) => value.length >= 8 },
@@ -62,7 +63,7 @@ const Register = () => {
       });
 
       if (user.role === 'admin') {
-        window.location.href = import.meta.env.VITE_ADMIN_URL || 'http://127.0.0.1:8000/admin';
+        window.location.href = ADMIN_URL;
       } else {
         navigate('/user', { replace: true });
       }

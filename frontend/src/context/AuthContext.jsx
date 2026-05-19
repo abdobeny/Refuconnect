@@ -31,26 +31,24 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const init = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const bridgeParam = urlParams.get('bridge');
+      const hash = window.location.hash;
+      const hashParams = new URLSearchParams(hash.startsWith('#') ? hash.slice(1) : '');
+      const bridgeToken = hashParams.get('bridge_token');
 
-      if (bridgeParam === '1') {
+      if (bridgeToken) {
         try {
-          const { data } = await axiosClient.get('/bridge-auth', {
-            withCredentials: true,
-          });
-          const token = data.token;
           const { data: userData } = await axiosClient.get('/user', {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${bridgeToken}` },
           });
           const freshUser = userData.data ?? userData;
-          persistAuth(token, freshUser);
-          window.history.replaceState({}, '', window.location.pathname);
+          persistAuth(bridgeToken, freshUser);
+          window.location.hash = '';
           setLoading(false);
           return;
         } catch (err) {
           console.error('Bridge auth failed:', err);
           clearAuth();
+          window.location.hash = '';
           setLoading(false);
           return;
         }

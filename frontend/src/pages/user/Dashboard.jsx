@@ -78,6 +78,7 @@ const UserDashboard = () => {
         status: item.status,
         date: item.requested_at || item.created_at,
         image: item.animal?.photos?.[0] ? resolvePhotoUrl(item.animal.photos[0]) : '/dog1.jpg',
+        rejectionReason: item.rejection_reason || null,
       })),
       ...data.donations.map((item) => ({
         id: `donation-${item.id}`,
@@ -209,6 +210,11 @@ const UserDashboard = () => {
                     <Badge variant={st.variant}>{st.label}</Badge>
                   </div>
                   <p className="mt-1 text-sm text-muted">{item.subtitle}</p>
+                  {item.status === 'rejected' && item.rejectionReason && (
+                    <div className="mt-2 rounded-lg border border-red-100 bg-red-50 px-3 py-2 text-sm text-red-700">
+                      <span className="font-semibold">Motif du refus :</span> {item.rejectionReason}
+                    </div>
+                  )}
                   <p className="mt-2 text-xs font-semibold text-text-light">{formatDate(item.date)}</p>
                 </div>
               </div>

@@ -11,21 +11,20 @@ const Animals = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('all');
   const [selectedBreed, setSelectedBreed] = useState('all');
-  const [selectedStatus, setSelectedStatus] = useState('available');
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetchAnimals({ type: selectedType, search: searchTerm || undefined, breed: selectedBreed, status: selectedStatus, page: 1 });
+      fetchAnimals({ type: selectedType, search: searchTerm || undefined, breed: selectedBreed, page: 1 });
     }, 300);
     return () => clearTimeout(timer);
-  }, [selectedType, searchTerm, selectedBreed, selectedStatus, fetchAnimals]);
+  }, [selectedType, searchTerm, selectedBreed, fetchAnimals]);
 
   const handleView = (id) => navigate(`/animaux/${id}`);
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= pagination.last_page) {
-      fetchAnimals({ type: selectedType, search: searchTerm || undefined, breed: selectedBreed, status: selectedStatus, page: newPage });
+      fetchAnimals({ type: selectedType, search: searchTerm || undefined, breed: selectedBreed, page: newPage });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -145,7 +144,7 @@ const Animals = () => {
           </div>
 
           {showFilters && (
-            <div className="mt-4 grid gap-5 border-t border-slate-100 pt-4 lg:grid-cols-3">
+            <div className="mt-4 grid gap-5 border-t border-slate-100 pt-4 lg:grid-cols-2">
               <div>
                 <label className="mb-3 block text-sm font-bold text-text-dark">
                   Type d'animal
@@ -162,32 +161,6 @@ const Animals = () => {
                       }`}
                     >
                       {type === 'all' ? 'Tous' : type}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="mb-3 block text-sm font-bold text-text-dark">
-                  Statut
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { value: 'available', label: 'Disponible' },
-                    { value: 'adopted', label: 'Adopté' },
-                    { value: 'in_care', label: 'En soins' },
-                    { value: 'all', label: 'Tous' },
-                  ].map(status => (
-                    <button
-                      key={status.value}
-                      onClick={() => setSelectedStatus(status.value)}
-                      className={`rounded-full px-4 py-2 text-sm font-bold transition-all ${
-                        selectedStatus === status.value
-                          ? 'bg-primary text-white'
-                          : 'bg-slate-100 text-slate-600 hover:bg-background-cream hover:text-primary'
-                      }`}
-                    >
-                      {status.label}
                     </button>
                   ))}
                 </div>
@@ -297,3 +270,4 @@ const Animals = () => {
 };
 
 export default Animals;
+

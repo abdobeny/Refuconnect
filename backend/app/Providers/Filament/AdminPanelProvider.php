@@ -26,7 +26,6 @@ use Filament\Support\Colors\Color;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
-use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\HtmlString;
@@ -40,36 +39,47 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+
             ->viteTheme('resources/css/filament/admin/theme.css')
+
             ->brandName('RefuConnect')
-            ->brandLogo(fn () => new HtmlString(view('filament.components.brand')->render()))
+            ->brandLogo(fn () => view('filament.components.brand'))
             ->brandLogoHeight('2.25rem')
+
             ->favicon(asset('images/favicon.svg'))
+
             ->font('Inter')
             ->serifFont('Playfair Display')
+
             ->colors([
                 'primary' => Color::hex('#2F3634'),
-                'gray' => Color::hex('#786D64'),
-                'danger' => Color::hex('#B85C4E'),
+                'gray'    => Color::hex('#786D64'),
+                'danger'  => Color::hex('#B85C4E'),
                 'success' => Color::hex('#5C7A6B'),
                 'warning' => Color::hex('#A9795F'),
-                'info' => Color::hex('#6E706C'),
+                'info'    => Color::hex('#6E706C'),
             ])
+
             ->darkMode(false)
             ->defaultThemeMode(ThemeMode::Light)
+
             ->login(Login::class)
+
             ->sidebarCollapsibleOnDesktop()
+
             ->navigationGroups([
                 NavigationGroup::make('Refuge')->icon('heroicon-o-home'),
                 NavigationGroup::make('Demandes')->icon('heroicon-o-inbox'),
             ])
+
             ->navigationItems([
                 NavigationItem::make('Voir le site')
-                    ->url(url('/to-frontend'), shouldOpenInNewTab: false)
+                    ->url(config('app.frontend_url', 'http://localhost:5173'))
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->group('Navigation')
                     ->sort(99),
             ])
+
             ->resources([
                 AnimalResource::class,
                 AdoptionResource::class,
@@ -78,33 +88,37 @@ class AdminPanelProvider extends PanelProvider
                 CouplingRequestResource::class,
                 UsersResource::class,
             ])
+
             ->pages([
                 Dashboard::class,
             ])
+
             ->widgets([
                 StatsOverview::class,
                 AnimalStatusChart::class,
                 RecentAdoptions::class,
             ])
+
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
-                fn () => new HtmlString(
-                    '<link rel="preconnect" href="https://fonts.googleapis.com">'
-                    .'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-                    .'<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">'
-                ),
+                fn () => new HtmlString(<<<HTML
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+HTML)
             )
+
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
-                PreventRequestForgery::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+
             ->authMiddleware([
                 Authenticate::class,
             ]);

@@ -12,7 +12,7 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -25,6 +25,8 @@ axiosClient.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('user');
       const path = window.location.pathname;
       if (!path.startsWith('/connexion') && !path.startsWith('/inscription')) {
         window.location.href = `/connexion?redirect=${encodeURIComponent(path)}`;

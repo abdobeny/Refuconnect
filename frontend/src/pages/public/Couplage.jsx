@@ -327,51 +327,6 @@ const Couplage = () => {
                 </div>
               </div>
 
-            <div className="w-full">
-              <label htmlFor="animalType" className="mb-2 block text-sm font-medium text-text-main">Type d animal</label>
-              <select id="animalType" value={form.animalType} onChange={(e) => updateField('animalType', e.target.value)} className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all duration-200 hover:bg-white focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary" required>
-                <option value="">Choisir</option>
-                <option value="dog">Chien</option>
-                <option value="cat">Chat</option>
-              </select>
-            </div>
-
-            <Input id="breed" label="Race de votre animal" placeholder="Ex: Berger allemand" value={form.breed} onChange={(e) => updateField('breed', e.target.value)} required />
-
-            <div className="w-full">
-              <label htmlFor="sex" className="mb-2 block text-sm font-medium text-text-main">Sexe</label>
-              <select id="sex" value={form.sex} onChange={(e) => updateField('sex', e.target.value)} className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all duration-200 hover:bg-white focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary" required>
-                <option value="">Choisir</option>
-                <option value="male">Male</option>
-                <option value="female">Femelle</option>
-              </select>
-            </div>
-
-            <Input id="age" label="Age" placeholder="Ex: 2 ans" value={form.age} onChange={(e) => updateField('age', e.target.value)} required />
-
-            <div className="w-full">
-              <label htmlFor="vaccinated" className="mb-2 block text-sm font-medium text-text-main">Vaccins a jour ?</label>
-              <select id="vaccinated" value={form.vaccinated} onChange={(e) => updateField('vaccinated', e.target.value)} className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all duration-200 hover:bg-white focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary" required>
-                <option value="">Choisir</option>
-                <option value="yes">Oui</option>
-                <option value="no">Non</option>
-                <option value="unknown">A confirmer</option>
-              </select>
-            </div>
-
-            <Input id="healthStatus" label="Etat de sante" placeholder="Ex: en bonne sante, suivi en cours..." value={form.healthStatus} onChange={(e) => updateField('healthStatus', e.target.value)} />
-            <Input id="preferredBreed" label="Race recherchee" placeholder="Optionnel" value={form.preferredBreed} onChange={(e) => updateField('preferredBreed', e.target.value)} />
-            <div className="md:col-span-2">
-              <label htmlFor="message" className="block text-sm font-medium text-text-main mb-2">Details importants</label>
-              <textarea
-                id="message"
-                placeholder="Temperament, taille, documents disponibles, contraintes..."
-                value={form.message}
-                onChange={(e) => updateField('message', e.target.value)}
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 min-h-[120px] resize-vertical focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent hover:bg-white placeholder-gray-400"
-              />
-            </div>
-
             <div className="flex flex-col gap-4 border-t border-[#EEE5DA] pt-5 md:col-span-2 md:flex-row md:items-center md:justify-between">
               <p className="max-w-xl text-sm leading-6 text-[#68726D]">
                 L envoi du dossier ne garantit pas une mise en relation. La decision depend du bien-etre et de la securite des animaux.

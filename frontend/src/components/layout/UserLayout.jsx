@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from './Navbar';
 import { Menu, X } from 'lucide-react';
 
 const UserLayout = () => {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 

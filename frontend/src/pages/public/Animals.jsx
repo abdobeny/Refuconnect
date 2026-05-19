@@ -13,26 +13,19 @@ const Animals = () => {
   const [selectedBreed, setSelectedBreed] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('available');
   const [showFilters, setShowFilters] = useState(false);
-  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setPage(1);
       fetchAnimals({ type: selectedType, search: searchTerm || undefined, breed: selectedBreed, status: selectedStatus, page: 1 });
     }, 300);
     return () => clearTimeout(timer);
   }, [selectedType, searchTerm, selectedBreed, selectedStatus, fetchAnimals]);
 
-  useEffect(() => {
-    if (page === 1) return;
-    fetchAnimals({ type: selectedType, search: searchTerm || undefined, breed: selectedBreed, status: selectedStatus, page });
-  }, [page, fetchAnimals]);
-
   const handleView = (id) => navigate(`/animaux/${id}`);
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= pagination.last_page) {
-      setPage(newPage);
+      fetchAnimals({ type: selectedType, search: searchTerm || undefined, breed: selectedBreed, status: selectedStatus, page: newPage });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };

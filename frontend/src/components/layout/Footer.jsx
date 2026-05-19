@@ -16,6 +16,10 @@ import {
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const socialLinks = [
+    { label: 'Facebook', href: import.meta.env.VITE_FACEBOOK_URL, icon: Facebook },
+    { label: 'Instagram', href: import.meta.env.VITE_INSTAGRAM_URL, icon: Instagram },
+  ].filter((item) => item.href);
 
   return (
     <footer className="mt-auto border-t border-[#DED3C7] bg-[#FBF7F1] text-[#202824]">
@@ -33,14 +37,25 @@ const Footer = () => {
             <p className="mt-3 max-w-sm text-sm leading-6 text-[#5F6863]">
               Relier les animaux aux bonnes familles, et faciliter les gestes utiles pour les refuges.
             </p>
-            <div className="mt-3 flex gap-2">
-              <a href="#" aria-label="Facebook" className="flex h-8 w-8 items-center justify-center rounded-full border border-[#D8CBBE] bg-white text-[#5F6863] transition-colors hover:border-[#A66449] hover:text-[#A66449]">
-                <Facebook className="h-4 w-4" />
-              </a>
-              <a href="#" aria-label="Instagram" className="flex h-8 w-8 items-center justify-center rounded-full border border-[#D8CBBE] bg-white text-[#5F6863] transition-colors hover:border-[#A66449] hover:text-[#A66449]">
-                <Instagram className="h-4 w-4" />
-              </a>
-            </div>
+            {socialLinks.length > 0 && (
+              <div className="mt-3 flex gap-2">
+                {socialLinks.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      aria-label={item.label}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-8 w-8 items-center justify-center rounded-full border border-[#D8CBBE] bg-white text-[#5F6863] transition-colors hover:border-[#A66449] hover:text-[#A66449]"
+                    >
+                      <Icon className="h-4 w-4" />
+                    </a>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           <nav aria-label="Services" className="md:justify-self-center">

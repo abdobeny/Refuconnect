@@ -30,6 +30,16 @@ Route::get('/animals/{animal}', [AnimalController::class, 'show']);
 
 // Homepage social proof
 Route::get('/testimonials', [TestimonialController::class, 'index']);
+Route::get('/public-stats', function () {
+    return response()->json([
+        'animals_available' => \App\Models\Animal::where('status', 'available')->count(),
+        'adoptions_approved' => \App\Models\Adoption::where('status', 'approved')->count(),
+        'donations_count' => \App\Models\Donation::count(),
+        'donations_pledged' => (float) \App\Models\Donation::where('type', 'financial')->sum('amount'),
+        'donations_confirmed' => (float) \App\Models\Donation::where('type', 'financial')->where('status', 'completed')->sum('amount'),
+        'volunteers' => \App\Models\VolunteerApplication::count(),
+    ]);
+});
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -42,6 +52,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/my-donations', [DonationController::class, 'index']);
     Route::post('/donations', [DonationController::class, 'store']);
+    Route::post('/donations/paypal-orders', [DonationController::class, 'createPaypalOrder']);
+    Route::post('/donations/{donation}/capture-paypal', [DonationController::class, 'capturePaypalOrder']);
 
     Route::get('/my-grooming', [GroomingReservationController::class, 'index']);
     Route::post('/grooming', [GroomingReservationController::class, 'store']);

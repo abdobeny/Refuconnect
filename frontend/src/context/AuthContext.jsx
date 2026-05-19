@@ -8,11 +8,16 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const persistAuth = useCallback((authToken, authUser) => {
+  const persistAuth = useCallback((authToken, authUser, storageType = 'local') => {
+    const storage = storageType === 'session' ? sessionStorage : localStorage;
+    const otherStorage = storageType === 'session' ? localStorage : sessionStorage;
+
     setToken(authToken);
     setUser(authUser);
-    localStorage.setItem('token', authToken);
-    localStorage.setItem('user', JSON.stringify(authUser));
+    otherStorage.removeItem('token');
+    otherStorage.removeItem('user');
+    storage.setItem('token', authToken);
+    storage.setItem('user', JSON.stringify(authUser));
   }, []);
 
   const clearAuth = useCallback(() => {
@@ -20,6 +25,8 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
   }, []);
 
   useEffect(() => {
@@ -49,8 +56,9 @@ export const AuthProvider = ({ children }) => {
         }
       }
 
-      const storedToken = localStorage.getItem('token');
-      const storedUser = localStorage.getItem('user');
+      const storedToken = localStorage.getItem('token') || sessionStorage.getItem('token');
+      const storedUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+      const storageType = localStorage.getItem('token') ? 'local' : 'session';
 
       if (!storedToken) {
         setLoading(false);
@@ -69,7 +77,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const { data } = await axiosClient.get('/user');
         const freshUser = data.data ?? data;
-        persistAuth(storedToken, freshUser);
+        persistAuth(storedToken, freshUser, storageType);
       } catch {
         clearAuth();
       } finally {
@@ -80,15 +88,17 @@ export const AuthProvider = ({ children }) => {
     init();
   }, [clearAuth, persistAuth]);
 
-  const login = async (email, password) => {
+  const login = async (email, password, options = {}) => {
     const { data } = await axiosClient.post('/login', { email, password });
-    persistAuth(data.token, data.user);
+    persistAuth(data.token, data.user, options.remember === false ? 'session' : 'local');
     return data.user;
   };
 
   const register = async (payload) => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
     setToken(null);
     setUser(null);
     const { data } = await axiosClient.post('/register', payload);

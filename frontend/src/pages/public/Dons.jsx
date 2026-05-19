@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ArrowRight,
   BadgeCheck,
@@ -61,10 +61,9 @@ const helpOptions = [
   { title: 'Bénévolat', text: 'Photos, promenades, transport ou soins simples.' },
 ];
 
-const PAYPAL_DONATE_URL = import.meta.env.VITE_PAYPAL_DONATE_URL || 'https://www.paypal.com/donate';
-
 const Donations = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { isAuthenticated } = useAuth();
   const [selectedAmount, setSelectedAmount] = useState(100);
   const [customAmount, setCustomAmount] = useState('');
@@ -74,6 +73,7 @@ const Donations = () => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [publicStats, setPublicStats] = useState(null);
 
   const customValue = Number(customAmount);
   const activeAmount = customAmount ? customValue : selectedAmount;
@@ -82,12 +82,53 @@ const Donations = () => {
     [selectedAmount]
   );
   const monthlyGoal = 4000;
-  const collected = 2350;
+  const collected = publicStats?.donations_confirmed ?? 0;
   const progress = Math.min(Math.round((collected / monthlyGoal) * 100), 100);
 
-  const openPaypal = () => {
-    window.open(PAYPAL_DONATE_URL, '_blank', 'noopener,noreferrer');
-  };
+  useEffect(() => {
+    axiosClient.get('/public-stats')
+      .then(({ data }) => setPublicStats(data))
+      .catch(() => setPublicStats(null));
+  }, []);
+
+  useEffect(() => {
+    const paypalStatus = searchParams.get('paypal');
+    const donationId = searchParams.get('donation_id');
+
+    if (!paypalStatus) return;
+
+    if (paypalStatus === 'cancel') {
+      setError('Paiement PayPal annulé. Votre don n’a pas été confirmé.');
+      setSearchParams({}, { replace: true });
+      return;
+    }
+
+    if (paypalStatus === 'success' && donationId) {
+      if (!isAuthenticated) {
+        navigate(`/connexion?redirect=${encodeURIComponent(`/dons?paypal=success&donation_id=${donationId}`)}`);
+        return;
+      }
+
+      setSubmitting(true);
+      setError('');
+      axiosClient.post(`/donations/${donationId}/capture-paypal`)
+        .then(() => {
+          setSuccess(true);
+          setMessage('');
+          setSearchParams({}, { replace: true });
+          return axiosClient.get('/public-stats');
+        })
+        .then(({ data }) => setPublicStats(data))
+        .catch((err) => {
+          setError(
+            err.response?.data?.message
+            || Object.values(err.response?.data?.errors || {}).flat().join(' ')
+            || 'Impossible de confirmer le paiement PayPal.'
+          );
+        })
+        .finally(() => setSubmitting(false));
+    }
+  }, [isAuthenticated, navigate, searchParams, setSearchParams]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -106,10 +147,8 @@ const Donations = () => {
 
     setSubmitting(true);
     try {
-      await axiosClient.post('/donations', {
-        type: 'financial',
+      const { data } = await axiosClient.post('/donations/paypal-orders', {
         amount: activeAmount,
-        payment_method: 'paypal',
         message: [
           donorName && `Nom: ${donorName}`,
           donorEmail && `Email: ${donorEmail}`,
@@ -118,9 +157,7 @@ const Donations = () => {
         ].filter(Boolean).join('\n') || undefined,
       });
 
-      setSuccess(true);
-      setMessage('');
-      openPaypal();
+      window.location.href = data.approval_url;
     } catch (err) {
       setError(
         err.response?.data?.message
@@ -192,7 +229,7 @@ const Donations = () => {
               </div>
               <div className="grid border-t border-[#EEE5DA] bg-[#FFFCF7] sm:grid-cols-3">
                 {[
-                  ['Collecté', `${collected.toLocaleString('fr-FR')} DH`],
+                  ['Promesses', `${collected.toLocaleString('fr-FR')} DH`],
                   ['Objectif', `${monthlyGoal.toLocaleString('fr-FR')} DH`],
                   ['Progression', `${progress}%`],
                 ].map(([label, value]) => (
@@ -249,7 +286,7 @@ const Donations = () => {
             <div className="flex items-start gap-3">
               <BadgeCheck className="mt-1 h-5 w-5 flex-shrink-0 text-[#A66449]" />
               <p className="text-sm leading-6 text-[#68726D]">
-                RefuConnect enregistre votre intention de don, puis PayPal s’ouvre pour finaliser le paiement sécurisé.
+                RefuConnect enregistre votre promesse de don, puis PayPal s’ouvre pour finaliser le paiement sécurisé.
               </p>
             </div>
           </div>
@@ -271,7 +308,7 @@ const Donations = () => {
 
           {success && (
             <div className="mb-5 rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800">
-              Merci. Votre don a été enregistré et PayPal s’ouvre pour le paiement.
+              Merci. Votre paiement PayPal a été confirmé et le don est enregistré.
             </div>
           )}
           {error && (
@@ -326,7 +363,7 @@ const Donations = () => {
           {!isAuthenticated && (
             <p className="mt-3 text-center text-xs text-[#68726D]">Connexion requise pour enregistrer le don dans RefuConnect.</p>
           )}
-          <p className="mt-3 text-center text-xs text-[#68726D]">Paiement traité sur PayPal. Le lien du refuge peut être configuré avant la mise en ligne.</p>
+          <p className="mt-3 text-center text-xs text-[#68726D]">Le paiement est finalisé sur PayPal. Le statut reste à confirmer par l’équipe du refuge.</p>
         </form>
       </section>
 
@@ -382,3 +419,4 @@ const Donations = () => {
 };
 
 export default Donations;
+

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
@@ -19,10 +19,18 @@ import { useAnimals } from '../../context/AnimalsContext';
 import Button from '../../components/ui/Button';
 import AnimalGrid from '../../components/features/animals/AnimalGrid';
 import Skeleton from '../../components/ui/Skeleton';
+import axiosClient from '../../api/axiosClient';
+
+const fallbackTestimonials = [
+  { id: 'fallback-1', name: 'Salma R.', role: 'Adoptante', quote: 'Grâce à RefuConnect, j\'ai pu adopter mon chat en toute confiance. Le processus était clair et rassurant.', detail: 'Adoption validée en 48h' },
+  { id: 'fallback-2', name: 'Yassine B.', role: 'Bénévole', quote: 'La plateforme facilite vraiment le suivi des animaux et des demandes. C\'est un vrai plus pour le refuge.', detail: 'Bénévole depuis 2024' },
+  { id: 'fallback-3', name: 'Mina L.', role: 'Donatrice', quote: 'Même sans adopter, j\'ai pu aider avec un don et suivre les besoins du refuge de manière simple.', detail: 'Participation aux soins mensuels' },
+];
 
 const Home = () => {
   const navigate = useNavigate();
   const { animals, loading } = useAnimals();
+  const [testimonials, setTestimonials] = useState([]);
   const animalCount = animals.length;
   const featuredAnimals = animals.slice(0, 3);
   const animalCountLabel = animalCount > 1
@@ -94,14 +102,22 @@ const Home = () => {
     navigate(`/animaux/${id}`);
   };
 
-  const apiTestimonials = [
-    { id: 1, name: 'Salma R.', role: 'Adoptante', quote: 'Grâce à RefuConnect, j\'ai pu adopter mon chat en toute confiance. Le processus était clair et rassurant.', detail: 'Adoption validée en 48h' },
-    { id: 2, name: 'Yassine B.', role: 'Bénévole', quote: 'La plateforme facilite vraiment le suivi des animaux et des demandes. C\'est un vrai plus pour le refuge.', detail: 'Bénévole depuis 2024' },
-    { id: 3, name: 'Mina L.', role: 'Donatrice', quote: 'Même sans adopter, j\'ai pu aider avec un don et suivre les besoins du refuge de manière simple.', detail: 'Participation aux soins mensuels' },
-  ];
+  useEffect(() => {
+    let mounted = true;
+    axiosClient.get('/testimonials')
+      .then(({ data }) => {
+        if (mounted) setTestimonials(Array.isArray(data) && data.length ? data : fallbackTestimonials);
+      })
+      .catch(() => {
+        if (mounted) setTestimonials(fallbackTestimonials);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
-  const featuredTestimonial = apiTestimonials[0];
-  const supportingTestimonials = apiTestimonials.slice(1, 3);
+  const featuredTestimonial = testimonials[0] ?? fallbackTestimonials[0];
+  const supportingTestimonials = (testimonials.length ? testimonials : fallbackTestimonials).slice(1, 3);
 
   return (
     <div>

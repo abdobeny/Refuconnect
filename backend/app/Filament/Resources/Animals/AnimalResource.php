@@ -87,12 +87,16 @@ class AnimalResource extends Resource
                 Forms\Components\Select::make('status')
                     ->label('Statut')
                     ->options([
-                        'available' => 'Disponible',
-                        'adopted' => 'Adopté',
-                        'in_care' => 'En soins',
+                        'disponible' => 'Disponible',
+                        'urgent' => 'Urgent',
+                        'famille_accueil' => 'Famille d\'accueil',
+                        'adoption' => 'À l\'adoption',
+                        'adopte' => 'Adopté',
+                        'en_soins' => 'En soins',
+                        'decede' => 'Décédé',
                     ])
                     ->required()
-                    ->default('available'),
+                    ->default('disponible'),
 
                 Forms\Components\FileUpload::make('photos')
                     ->label('Photos')
@@ -119,17 +123,47 @@ class AnimalResource extends Resource
                     ->label('Race'),
                 Tables\Columns\TextColumn::make('age'),
                 Tables\Columns\TextColumn::make('status')
+                    ->label('Statut')
                     ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'disponible' => 'Disponible',
+                        'urgent' => 'Urgent',
+                        'famille_accueil' => 'Famille d\'accueil',
+                        'adoption' => 'À l\'adoption',
+                        'adopte' => 'Adopté',
+                        'en_soins' => 'En soins',
+                        'decede' => 'Décédé',
+                        default => $state,
+                    })
                     ->color(fn (string $state): string => match ($state) {
-                        'available' => 'success',
-                        'adopted' => 'info',
-                        'in_care' => 'warning',
+                        'disponible' => 'success',
+                        'urgent' => 'danger',
+                        'famille_accueil' => 'info',
+                        'adoption' => 'warning',
+                        'adopte' => 'gray',
+                        'en_soins' => 'warning',
+                        'decede' => 'secondary',
                         default => 'gray',
                     }),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('status'),
-                Tables\Filters\SelectFilter::make('species'),
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('Statut')
+                    ->options([
+                        'disponible' => 'Disponible',
+                        'urgent' => 'Urgent',
+                        'famille_accueil' => 'Famille d\'accueil',
+                        'adoption' => 'À l\'adoption',
+                        'adopte' => 'Adopté',
+                        'en_soins' => 'En soins',
+                        'decede' => 'Décédé',
+                    ]),
+                Tables\Filters\SelectFilter::make('species')
+                    ->label('Espèce')
+                    ->options([
+                        'dog' => 'Chien',
+                        'cat' => 'Chat',
+                    ]),
             ])
             ->actions([
                 EditAction::make(),

@@ -360,7 +360,7 @@ const Donations = () => {
       <section className="mx-auto max-w-7xl px-6 py-10">
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div className="overflow-hidden rounded-3xl border border-[#DED3C7] bg-white shadow-[0_16px_40px_rgba(38,51,46,0.08)]">
-            <img src="/dog3.webp" alt="Animal du refuge en attente de soutien" className="h-72 w-full object-cover" />
+            <img src="/dn2.png" alt="Animal du refuge en attente de soutien" className="h-72 w-full object-cover" />
           </div>
           <div>
             <p className="text-sm font-bold uppercase tracking-wide text-[#A66449]">Autres façons d’aider</p>

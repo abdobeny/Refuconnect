@@ -10,8 +10,8 @@ const MentionsLegales = () => {
         <section>
           <h2 className="mb-4 font-serif text-2xl">1. Éditeur du site</h2>
           <p className="text-muted leading-relaxed">
-            Le site RefuConnect est édité par l'association RefuConnect, association loi 1901 à but non lucratif,
-            dont le siège social est situé au 123 Rue des Animaux, 75000 Paris, France.
+            Le site RefuConnect est édité par l'association RefuConnect, association régie par la Loi 1-09-15 relative aux associations, à but non lucratif,
+            dont le siège social est situé au 45 Avenue Hassan II, Casablanca 20000, Maroc.
           </p>
         </section>
 
@@ -26,9 +26,9 @@ const MentionsLegales = () => {
           <h2 className="mb-4 font-serif text-2xl">3. Hébergement</h2>
           <p className="text-muted leading-relaxed">
             Le site est hébergé par :<br />
-            OVH SAS<br />
-            2 Rue Kellermann, 59100 Roubaix, France<br />
-            Tél. : 1007
+            Fondation Maroc Numerique<br />
+            Technopark Casablanca, Casablanca, Maroc<br />
+            Tél. : +212 5 22-98-56-00
           </p>
         </section>
 
@@ -46,9 +46,8 @@ const MentionsLegales = () => {
           <h2 className="mb-4 font-serif text-2xl">5. Données personnelles</h2>
           <p className="text-muted leading-relaxed">
             Les informations collectées via les formulaires du site sont destinées à l'association RefuConnect
-            dans le cadre de la gestion des adoptions, dons, bénévolat et services. Conformément au Règlement
-            Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès, de rectification
-            et de suppression de vos données en contactant : contact@refuconnect.fr
+            dans le cadre de la gestion des adoptions, dons, bénévolat et services. Conformément à la Loi 09-08 relative à la protection des données à caractère personnel, vous disposez d'un droit d'accès, de rectification
+            et de suppression de vos données en contactant : contact@refuconnect.ma
           </p>
         </section>
 
@@ -64,8 +63,8 @@ const MentionsLegales = () => {
           <h2 className="mb-4 font-serif text-2xl">7. Contact</h2>
           <p className="text-muted leading-relaxed">
             Pour toute question relative aux mentions légales :<br />
-            Email : contact@refuconnect.fr<br />
-            Téléphone : +33 1 23 45 67 89
+            Email : contact@refuconnect.ma<br />
+            Téléphone : +212 5 22-98-56-00
           </p>
         </section>
       </div>

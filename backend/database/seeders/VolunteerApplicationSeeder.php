@@ -15,8 +15,8 @@ class VolunteerApplicationSeeder extends Seeder
         $applications = [
             [
                 'user_index' => 0,
-                'name' => 'Jean Dupont',
-                'email' => 'jean@example.com',
+                'name' => 'Ahmed Bennani',
+                'email' => 'ahmed@refuconnect.ma',
                 'phone' => '06 12 34 56 78',
                 'message' => 'Disponible les weekends pour aider aux soins et aux promenades. Expérience avec les chiens de grande taille.',
                 'status' => 'accepted',
@@ -24,8 +24,8 @@ class VolunteerApplicationSeeder extends Seeder
             ],
             [
                 'user_index' => 1,
-                'name' => 'Marie Martin',
-                'email' => 'marie@example.com',
+                'name' => 'Fatima Tahir',
+                'email' => 'fatima@refuconnect.ma',
                 'phone' => '06 98 76 54 32',
                 'message' => 'Étudiante vétérinaire, disponible 2 après-midis par semaine. Peut aider aux soins médicaux de base.',
                 'status' => 'accepted',
@@ -33,8 +33,8 @@ class VolunteerApplicationSeeder extends Seeder
             ],
             [
                 'user_index' => 2,
-                'name' => 'Pierre Durand',
-                'email' => 'pierre@example.com',
+                'name' => 'Karim El Mansouri',
+                'email' => 'karim@refuconnect.ma',
                 'phone' => '07 11 22 33 44',
                 'message' => 'Retraité, beaucoup de temps libre. Peut aider à l\'accueil des visiteurs et à l\'entretien des locaux.',
                 'status' => 'reviewed',
@@ -42,8 +42,8 @@ class VolunteerApplicationSeeder extends Seeder
             ],
             [
                 'user_index' => 3,
-                'name' => 'Sophie Bernard',
-                'email' => 'sophie@example.com',
+                'name' => 'Zahra Hassi',
+                'email' => 'zahra@refuconnect.ma',
                 'phone' => '06 55 44 33 22',
                 'message' => 'Graphiste, peux aider à la communication et à la création de supports pour le refuge.',
                 'status' => 'pending',
@@ -51,8 +51,8 @@ class VolunteerApplicationSeeder extends Seeder
             ],
             [
                 'user_index' => 4,
-                'name' => 'Lucas Petit',
-                'email' => 'lucas@example.com',
+                'name' => 'Youssef Alami',
+                'email' => 'youssef@refuconnect.ma',
                 'phone' => '07 66 77 88 99',
                 'message' => 'Disponible pour les événements et les collectes de fonds. Bon relationnel.',
                 'status' => 'pending',
@@ -60,8 +60,8 @@ class VolunteerApplicationSeeder extends Seeder
             ],
             [
                 'user_index' => 5,
-                'name' => 'Amina K.',
-                'email' => 'amina.k@email.com',
+                'name' => 'Aisha Bouazza',
+                'email' => 'aisha@refuconnect.ma',
                 'phone' => '06 11 22 33 44',
                 'message' => 'Passionnée par les chats, peux aider au toilettage et à la socialisation des chatons.',
                 'status' => 'rejected',

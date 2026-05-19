@@ -68,7 +68,7 @@ const CGU = () => {
         <section>
           <h2 className="mb-4 font-serif text-2xl">7. Droit applicable</h2>
           <p className="text-muted leading-relaxed">
-            Les présentes CGU sont soumises au droit français. En cas de litige, les tribunaux français
+            Les présentes CGU sont soumises au droit marocain. En cas de litige, les tribunaux marocains
             seront compétents.
           </p>
         </section>

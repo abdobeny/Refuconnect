@@ -95,9 +95,9 @@ const Home = () => {
   };
 
   const apiTestimonials = [
-    { id: 1, name: 'Claire M.', role: 'Adoptante', quote: 'Grâce à RefuConnect, j\'ai pu adopter mon chat en toute confiance. Le processus était clair et rassurant.', detail: 'Adoption validée en 48h' },
-    { id: 2, name: 'Thomas R.', role: 'Bénévole', quote: 'La plateforme facilite vraiment le suivi des animaux et des demandes. C\'est un vrai plus pour le refuge.', detail: 'Bénévole depuis 2024' },
-    { id: 3, name: 'Sophie L.', role: 'Adoptante', quote: 'J\'ai trouvé mon compagnon idéal. Les fiches détaillées m\'ont aidée à faire le bon choix.', detail: 'A adopté Luna en mars' },
+    { id: 1, name: 'Salma R.', role: 'Adoptante', quote: 'Grâce à RefuConnect, j\'ai pu adopter mon chat en toute confiance. Le processus était clair et rassurant.', detail: 'Adoption validée en 48h' },
+    { id: 2, name: 'Yassine B.', role: 'Bénévole', quote: 'La plateforme facilite vraiment le suivi des animaux et des demandes. C\'est un vrai plus pour le refuge.', detail: 'Bénévole depuis 2024' },
+    { id: 3, name: 'Mina L.', role: 'Donatrice', quote: 'Même sans adopter, j\'ai pu aider avec un don et suivre les besoins du refuge de manière simple.', detail: 'Participation aux soins mensuels' },
   ];
 
   const featuredTestimonial = apiTestimonials[0];

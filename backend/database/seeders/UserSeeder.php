@@ -20,16 +20,16 @@ class UserSeeder extends Seeder
 
         // Test users with diverse profiles
         $users = [
-            ['name' => 'Jean Dupont', 'email' => 'jean@example.com'],
-            ['name' => 'Marie Martin', 'email' => 'marie@example.com'],
-            ['name' => 'Pierre Durand', 'email' => 'pierre@example.com'],
-            ['name' => 'Sophie Bernard', 'email' => 'sophie@example.com'],
-            ['name' => 'Lucas Petit', 'email' => 'lucas@example.com'],
-            ['name' => 'Amina Khelifi', 'email' => 'amina@example.com'],
-            ['name' => 'Thomas Moreau', 'email' => 'thomas@example.com'],
-            ['name' => 'Léa Rousseau', 'email' => 'lea@example.com'],
-            ['name' => 'Hassan Benali', 'email' => 'hassan@example.com'],
-            ['name' => 'Claire Fontaine', 'email' => 'claire@example.com'],
+            ['name' => 'Ahmed Bennani', 'email' => 'ahmed@refuconnect.ma'],
+            ['name' => 'Fatima Tahir', 'email' => 'fatima@refuconnect.ma'],
+            ['name' => 'Karim El Mansouri', 'email' => 'karim@refuconnect.ma'],
+            ['name' => 'Zahra Hassi', 'email' => 'zahra@refuconnect.ma'],
+            ['name' => 'Youssef Alami', 'email' => 'youssef@refuconnect.ma'],
+            ['name' => 'Aisha Bouazza', 'email' => 'aisha@refuconnect.ma'],
+            ['name' => 'Mohamed Anwar', 'email' => 'mohamed@refuconnect.ma'],
+            ['name' => 'Yasmin Rizki', 'email' => 'yasmin@refuconnect.ma'],
+            ['name' => 'Khalid Rachid', 'email' => 'khalid@refuconnect.ma'],
+            ['name' => 'Salma Zaki', 'email' => 'salma@refuconnect.ma'],
         ];
 
         foreach ($users as $user) {

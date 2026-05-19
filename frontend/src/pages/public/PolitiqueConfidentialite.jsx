@@ -10,7 +10,7 @@ const PolitiqueConfidentialite = () => {
         <section>
           <h2 className="mb-4 font-serif text-2xl">1. Collecte des données</h2>
           <p className="text-muted leading-relaxed">
-            L'association RefuCollecte collecte les données personnelles suivantes :<br />
+            L'association RefuConnect collecte les données personnelles suivantes :<br />
             — Nom et prénom<br />
             — Adresse email<br />
             — Numéro de téléphone (facultatif)<br />
@@ -66,14 +66,14 @@ const PolitiqueConfidentialite = () => {
         <section>
           <h2 className="mb-4 font-serif text-2xl">7. Vos droits</h2>
           <p className="text-muted leading-relaxed">
-            Conformément au RGPD, vous disposez des droits suivants :<br />
+            Conformément à la Loi 09-08 relative à la protection des données à caractère personnel, vous disposez des droits suivants :<br />
             — Droit d'accès à vos données personnelles<br />
             — Droit de rectification des données inexactes<br />
             — Droit à l'effacement de vos données<br />
             — Droit à la portabilité de vos données<br />
             — Droit d'opposition au traitement<br />
             <br />
-            Pour exercer ces droits, contactez-nous à : contact@refuconnect.fr
+            Pour exercer ces droits, contactez-nous à : contact@refuconnect.ma
           </p>
         </section>
 

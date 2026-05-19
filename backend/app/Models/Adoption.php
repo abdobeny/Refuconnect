@@ -14,7 +14,7 @@ class Adoption extends Model
         'requested_at',
         'motivation',
         'notes',
-
+        'rejection_reason',
     ];
 
     protected $casts = [

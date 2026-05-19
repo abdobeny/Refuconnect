@@ -9,58 +9,55 @@ use App\Models\Donation;
 use App\Models\GroomingReservation;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Facades\Cache;
 
 class StatsOverview extends BaseWidget
 {
     protected static ?int $sort = 1;
 
-    protected static bool $isLazy = false;
-
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 1;
 
     protected function getColumns(): int
     {
-        return 4;
+        return 2;
     }
 
     protected function getStats(): array
     {
-        $animalsAvailable = Animal::where('status', 'available')->count();
-        $animalsInCare = Animal::where('status', 'in_care')->count();
-        $adoptionsPending = Adoption::where('status', 'pending')->count();
-        $adoptionsApproved = Adoption::where('status', 'approved')->count();
-        $donationsMonth = Donation::query()
-            ->where('type', 'financial')
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->sum('amount');
-        $serviceRequests = GroomingReservation::where('status', 'pending')->count()
-            + CouplingRequest::where('status', 'pending')->count();
+        $stats = Cache::remember('filament.dashboard.stats', 60, function () {
+            return [
+                'animals_available' => Animal::where('status', 'available')->count(),
+                'adoptions_pending' => Adoption::where('status', 'pending')->count(),
+                'donations_month' => Donation::query()
+                    ->where('type', 'financial')
+                    ->whereMonth('created_at', now()->month)
+                    ->whereYear('created_at', now()->year)
+                    ->sum('amount'),
+                'requests_active' => GroomingReservation::where('status', 'pending')->count()
+                    + CouplingRequest::where('status', 'pending')->count(),
+            ];
+        });
 
         return [
-            Stat::make('Animaux adoptables', $animalsAvailable)
-                ->description($animalsInCare . ' en soins a suivre')
-                ->descriptionIcon('heroicon-m-heart')
-                ->chart([2, 4, 4, 6, 5, 7, $animalsAvailable])
+            Stat::make('Animaux disponibles', $stats['animals_available'])
+                ->description("Prêts à l'adoption")
+                ->descriptionIcon('heroicon-m-home')
                 ->color('success'),
 
-            Stat::make('Adoptions a traiter', $adoptionsPending)
-                ->description($adoptionsApproved . ' dossiers approuves')
-                ->descriptionIcon('heroicon-m-clock')
-                ->chart([1, 3, 2, 4, 3, 5, $adoptionsPending])
-                ->color($adoptionsPending > 0 ? 'warning' : 'success'),
+            Stat::make('Adoptions en attente', $stats['adoptions_pending'])
+                ->description('À traiter')
+                ->descriptionIcon('heroicon-m-heart')
+                ->color('warning'),
 
-            Stat::make('Dons du mois', number_format($donationsMonth, 0) . ' DH')
-                ->description('Promesses financieres recues')
+            Stat::make('Dons ce mois', number_format($stats['donations_month'], 0).' DH')
+                ->description('Engagements financiers')
                 ->descriptionIcon('heroicon-m-banknotes')
-                ->chart([120, 180, 260, 220, 340, 390, max((int) $donationsMonth, 1)])
                 ->color('primary'),
 
-            Stat::make('Services actifs', $serviceRequests)
-                ->description('Toilettage et couplage')
-                ->descriptionIcon('heroicon-m-inbox-stack')
-                ->chart([0, 1, 1, 2, 2, 3, $serviceRequests])
-                ->color('info'),
+            Stat::make('Demandes actives', $stats['requests_active'])
+                ->description('Toilettage & couplage')
+                ->descriptionIcon('heroicon-m-inbox')
+                ->color('gray'),
         ];
     }
 }

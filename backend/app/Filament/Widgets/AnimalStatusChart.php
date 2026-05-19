@@ -4,42 +4,37 @@ namespace App\Filament\Widgets;
 
 use App\Models\Animal;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\Cache;
 
 class AnimalStatusChart extends ChartWidget
 {
-    protected ?string $heading = 'Repartition des animaux';
+    protected ?string $heading = 'Animaux par statut';
 
-    protected ?string $description = 'Disponibilite actuelle du refuge';
+    protected ?string $description = "Vue d'ensemble du refuge";
 
-    protected int|string|array $columnSpan = [
-        'default' => 'full',
-        'xl' => 2,
-    ];
+    protected int|string|array $columnSpan = 1;
 
     protected static ?int $sort = 2;
 
-    protected static bool $isLazy = false;
-
-    protected ?string $pollingInterval = null;
-
     protected function getData(): array
     {
-        $available = Animal::where('status', 'available')->count();
-        $adopted = Animal::where('status', 'adopted')->count();
-        $inCare = Animal::where('status', 'in_care')->count();
+        $counts = Cache::remember('filament.dashboard.animal-status', 60, function () {
+            return [
+                'available' => Animal::where('status', 'available')->count(),
+                'adopted' => Animal::where('status', 'adopted')->count(),
+                'in_care' => Animal::where('status', 'in_care')->count(),
+            ];
+        });
 
         return [
             'datasets' => [
                 [
-                    'label' => 'Animaux',
-                    'data' => [$available, $adopted, $inCare],
-                    'backgroundColor' => ['#5C7A6B', '#A9795F', '#2F3634'],
-                    'borderColor' => '#FFFDF9',
-                    'borderWidth' => 5,
-                    'hoverOffset' => 8,
+                    'data' => [$counts['available'], $counts['adopted'], $counts['in_care']],
+                    'backgroundColor' => ['#5C7A6B', '#2F3634', '#A9795F'],
+                    'borderWidth' => 0,
                 ],
             ],
-            'labels' => ['Disponibles', 'Adoptes', 'En soins'],
+            'labels' => ['Disponibles', 'Adoptés', 'En soins'],
         ];
     }
 
@@ -56,14 +51,13 @@ class AnimalStatusChart extends ChartWidget
                     'position' => 'bottom',
                     'labels' => [
                         'usePointStyle' => true,
-                        'boxWidth' => 8,
-                        'padding' => 18,
-                        'font' => ['family' => 'Inter', 'size' => 12, 'weight' => 600],
+                        'padding' => 16,
+                        'font' => ['family' => 'Inter', 'size' => 11],
                     ],
                 ],
             ],
-            'cutout' => '64%',
-            'maintainAspectRatio' => false,
+            'cutout' => '68%',
+            'maintainAspectRatio' => true,
         ];
     }
 }

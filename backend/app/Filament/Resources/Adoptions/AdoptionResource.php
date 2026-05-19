@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Adoptions;
 
 use App\Filament\Resources\Adoptions\Pages;
 use App\Models\Adoption;
+use App\Models\Animal;
 use Filament\Forms;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
@@ -12,6 +13,8 @@ use Filament\Tables\Table;
 use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use BackedEnum;
 
 class AdoptionResource extends Resource
@@ -64,6 +67,12 @@ class AdoptionResource extends Resource
                 Forms\Components\Textarea::make('notes')
                     ->label('Notes administratives (interne)')
                     ->columnSpanFull(),
+
+                Forms\Components\Textarea::make('rejection_reason')
+                    ->label('Raison du refus (visible par l\'utilisateur)')
+                    ->columnSpanFull()
+                    ->rows(3)
+                    ->visible(fn (callable $get) => $get('status') === 'rejected'),
             ])
             ->columns(1);
     }
@@ -110,11 +119,62 @@ class AdoptionResource extends Resource
                     ]),
             ])
             ->actions([
+                Action::make('approve')
+                    ->label('Valider')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Valider cette adoption')
+                    ->modalDescription('Êtes-vous sûr de vouloir valider cette demande ? Le statut de l\'animal sera automatiquement mis à jour.')
+                    ->modalSubmitActionLabel('Valider')
+                    ->action(function (Adoption $record) {
+                        $record->update(['status' => 'approved']);
+
+                        if ($record->animal) {
+                            $record->animal->update(['status' => 'adopted']);
+                        }
+
+                        Notification::make()
+                            ->title('Adoption validée')
+                            ->body("La demande de {$record->user?->name} pour {$record->animal?->name} a été approuvée.")
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(fn (Adoption $record) => $record->status === 'pending'),
+
+                Action::make('reject')
+                    ->label('Refuser')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->form([
+                        Forms\Components\Textarea::make('rejection_reason')
+                            ->label('Raison du refus')
+                            ->placeholder('Expliquez pourquoi cette demande est refusée...')
+                            ->required()
+                            ->rows(4),
+                    ])
+                    ->modalHeading('Refuser cette adoption')
+                    ->modalDescription('La raison sera visible par l\'utilisateur dans son espace personnel.')
+                    ->modalSubmitActionLabel('Refuser')
+                    ->action(function (Adoption $record, array $data) {
+                        $record->update([
+                            'status' => 'rejected',
+                            'rejection_reason' => $data['rejection_reason'],
+                        ]);
+
+                        Notification::make()
+                            ->title('Adoption refusée')
+                            ->body("La demande de {$record->user?->name} pour {$record->animal?->name} a été refusée.")
+                            ->warning()
+                            ->send();
+                    })
+                    ->visible(fn (Adoption $record) => $record->status === 'pending'),
+
                 EditAction::make(),
             ])
             ->bulkActions([
-                \Filament\Actions\BulkActionGroup::make([
-                    \Filament\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

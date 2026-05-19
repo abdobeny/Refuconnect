@@ -10,30 +10,30 @@ class AnimalSeeder extends Seeder
     public function run(): void
     {
         $catImages = [
-            '/images/animals/cat1.jfif',
-            '/images/animals/cat2.jfif',
-            '/images/animals/cat3.jfif',
-            '/images/animals/cat4.jfif',
-            '/images/animals/cat5.jfif',
+            '/storage/animals/cat1.jfif',
+            '/storage/animals/cat2.jfif',
+            '/storage/animals/cat3.jfif',
+            '/storage/animals/cat4.jfif',
+            '/storage/animals/cat5.jfif',
         ];
 
         $dogImages = [
-            '/images/animals/dog1.jpg',
-            '/images/animals/dog2.webp',
-            '/images/animals/dog3.webp',
-            '/images/animals/dog4.webp',
-            '/images/animals/dog5.webp',
-            '/images/animals/dog6.jfif',
-            '/images/animals/dog7.webp',
-            '/images/animals/dog8.jfif',
-            '/images/animals/dog9.jfif',
-            '/images/animals/dog10.jfif',
-            '/images/animals/dog11.webp',
-            '/images/animals/dog12.webp',
-            '/images/animals/dog13.webp',
-            '/images/animals/dog14.webp',
-            '/images/animals/dog15.webp',
-            '/images/animals/dog16.webp',
+            '/storage/animals/dog1.jpg',
+            '/storage/animals/dog2.webp',
+            '/storage/animals/dog3.webp',
+            '/storage/animals/dog4.webp',
+            '/storage/animals/dog5.webp',
+            '/storage/animals/dog6.jfif',
+            '/storage/animals/dog7.webp',
+            '/storage/animals/dog8.jfif',
+            '/storage/animals/dog9.jfif',
+            '/storage/animals/dog10.jfif',
+            '/storage/animals/dog11.webp',
+            '/storage/animals/dog12.webp',
+            '/storage/animals/dog13.webp',
+            '/storage/animals/dog14.webp',
+            '/storage/animals/dog15.webp',
+            '/storage/animals/dog16.webp',
         ];
 
         $animals = [];

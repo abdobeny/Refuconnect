@@ -16,6 +16,7 @@ class AdoptionResource extends JsonResource
             'status' => $this->status,
             'requested_at' => $this->requested_at?->toIso8601String(),
             'motivation' => $this->motivation,
+            'rejection_reason' => $this->when($this->status === 'rejected', $this->rejection_reason),
             'notes' => $this->when($request->user()?->isAdmin(), $this->notes),
             'created_at' => $this->created_at->toIso8601String(),
             'updated_at' => $this->updated_at->toIso8601String(),

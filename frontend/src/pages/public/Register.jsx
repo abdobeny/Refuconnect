@@ -81,21 +81,21 @@ const Register = () => {
         <ArrowLeft size={19} />
       </Link>
 
-      <section className="mx-auto flex min-h-screen max-w-[860px] flex-col justify-center px-4 py-4">
-        <Link to="/" className="mx-auto mb-4 inline-flex items-center gap-3">
-          <Logo className="h-10 w-10" />
-          <span className="font-serif text-2xl font-bold">
+      <section className="mx-auto flex min-h-screen max-w-[700px] flex-col justify-center px-4 py-6 sm:px-6">
+        <Link to="/" className="mx-auto mb-6 inline-flex items-center gap-2">
+          <Logo className="h-9 w-9" />
+          <span className="font-serif text-xl font-bold">
             Refu<span className="text-accent">Connect</span>
           </span>
         </Link>
 
-        <div className="rounded-[24px] border border-primary/10 bg-white p-5 shadow-[0_20px_60px_rgba(31,37,35,0.10)] sm:p-6">
-          <div className="mb-4 text-center">
-            <p className="mb-2 inline-flex items-center gap-2 rounded-full bg-primary-light px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
-              <ShieldCheck size={15} />
+        <div className="rounded-[20px] border border-primary/10 bg-white p-6 shadow-[0_20px_60px_rgba(31,37,35,0.10)] sm:p-7">
+          <div className="mb-6 text-center">
+            <p className="mb-2 inline-flex items-center gap-2 rounded-full bg-primary-light px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+              <ShieldCheck size={14} />
               Nouveau membre
             </p>
-            <h1 className="font-serif text-4xl font-bold text-primary-dark">Creer votre compte</h1>
+            <h1 className="font-serif text-3xl font-bold text-primary-dark">Creer votre compte</h1>
             <p className="mt-2 text-sm leading-6 text-muted">
               Un compte pour suivre vos demandes et garder le contact avec le refuge.
             </p>

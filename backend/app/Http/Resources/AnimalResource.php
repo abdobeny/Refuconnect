@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class AnimalResource extends JsonResource
 {
@@ -27,7 +28,10 @@ class AnimalResource extends JsonResource
                     return $photo;
                 }
 
-                return asset(ltrim($photo, '/'));
+                $photo = ltrim($photo, '/');
+                $photo = preg_replace('#^storage/#', '', $photo);
+
+                return Storage::disk('public')->url($photo);
             })
             ->values()
             ->all();

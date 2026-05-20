@@ -8,7 +8,9 @@ use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\Action;
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
@@ -76,7 +78,7 @@ class TestimonialResource extends Resource
                     ->visible(fn (Forms\Get $get) => $get('status') === 'rejected'),
 
                 Forms\Components\Toggle::make('featured')
-                    ->label('Afficher sur la page d’accueil')
+                    ->label("Afficher sur la page d'accueil")
                     ->default(false),
 
                 Forms\Components\TextInput::make('sort_order')
@@ -140,9 +142,46 @@ class TestimonialResource extends Resource
                         'rejected' => 'Rejeté',
                     ]),
                 Tables\Filters\TernaryFilter::make('featured')
-                    ->label('Affiché sur l’accueil'),
+                    ->label("Affiché sur l'accueil"),
             ])
             ->actions([
+                Action::make('approve')
+                    ->label('Approuver')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Approuver ce témoignage')
+                    ->modalDescription("Ce témoignage sera affiché sur la page d'accueil s'il est marqué comme favori.")
+                    ->modalSubmitActionLabel('Approuver')
+                    ->action(function (Testimonial $record) {
+                        $record->update(['status' => 'approved']);
+
+                        Notification::make()
+                            ->title('Témoignage approuvé')
+                            ->body("Le témoignage de {$record->name} a été approuvé.")
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(fn (Testimonial $record) => $record->status === 'pending'),
+
+                Action::make('reject')
+                    ->label('Rejeter')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Rejeter ce témoignage')
+                    ->modalSubmitActionLabel('Rejeter')
+                    ->action(function (Testimonial $record) {
+                        $record->update(['status' => 'rejected']);
+
+                        Notification::make()
+                            ->title('Témoignage rejeté')
+                            ->body("Le témoignage de {$record->name} a été rejeté.")
+                            ->warning()
+                            ->send();
+                    })
+                    ->visible(fn (Testimonial $record) => $record->status === 'pending'),
+
                 EditAction::make(),
             ])
             ->bulkActions([

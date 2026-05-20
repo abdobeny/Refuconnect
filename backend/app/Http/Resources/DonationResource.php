@@ -22,6 +22,8 @@ class DonationResource extends JsonResource
             'payment_completed_at' => $this->payment_completed_at?->toIso8601String(),
             'donation_date' => $this->donation_date?->toIso8601String(),
             'message' => $this->message,
+            'admin_notes' => $this->when($request->user()?->isAdmin(), $this->admin_notes),
+            'rejection_reason' => $this->when($this->status === 'failed', $this->admin_notes),
             'created_at' => $this->created_at->toIso8601String(),
             'updated_at' => $this->updated_at->toIso8601String(),
         ];

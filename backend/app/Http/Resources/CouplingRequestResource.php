@@ -27,6 +27,7 @@ class CouplingRequestResource extends JsonResource
                 $request->user()?->isAdmin(),
                 $this->admin_notes
             ),
+            'rejection_reason' => $this->when($this->status === 'rejected', $this->admin_notes),
             'created_at' => $this->created_at->toIso8601String(),
             'updated_at' => $this->updated_at->toIso8601String(),
         ];

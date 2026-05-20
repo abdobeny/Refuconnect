@@ -12,6 +12,7 @@ use Filament\Tables\Table;
 use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Illuminate\Support\Facades\Storage;
 use BackedEnum;
 
 class AnimalResource extends Resource
@@ -100,7 +101,11 @@ class AnimalResource extends Resource
                     ->multiple()
                     ->image()
                     ->directory('animals')
-                    ->maxFiles(5),
+                    ->maxFiles(5)
+                    ->imagePreviewHeight(120)
+                    ->downloadable()
+                    ->openable()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -110,7 +115,18 @@ class AnimalResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('photos')
                     ->label('Photo')
-                    ->square(),
+                    ->square()
+                    ->getStateUsing(function (Animal $record): ?string {
+                        $photos = $record->photos;
+                        if (!is_array($photos) || empty($photos)) {
+                            return null;
+                        }
+                        $url = $photos[0];
+                        if (str_starts_with($url, 'http')) {
+                            return $url;
+                        }
+                        return Storage::disk('public')->url($url);
+                    }),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nom')
                     ->searchable(),

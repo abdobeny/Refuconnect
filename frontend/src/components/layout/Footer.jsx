@@ -7,6 +7,7 @@ import {
   Instagram,
   Mail,
   MapPin,
+  MessageSquare,
   PawPrint,
   Phone,
   Scissors,
@@ -59,7 +60,7 @@ const Footer = () => {
 
           <nav aria-label="Services" className="md:justify-self-center">
             <h3 className="font-serif text-lg font-bold text-[#202824]">Services</h3>
-            <div className="mt-2 grid gap-1.5">
+            <div className="mt-2 grid grid-cols-2 gap-x-6 gap-y-1.5">
               <Link to="/animaux" className="flex items-center gap-2 text-sm text-[#5F6863] transition-colors hover:text-[#A66449]">
                 <Home className="h-3.5 w-3.5 text-[#A66449]" />
                 Adoption
@@ -79,6 +80,10 @@ const Footer = () => {
               <Link to="/bénévolat" className="flex items-center gap-2 text-sm text-[#5F6863] transition-colors hover:text-[#A66449]">
                 <Users className="h-3.5 w-3.5 text-[#A66449]" />
                 Bénévolat
+              </Link>
+              <Link to="/temoignages" className="flex items-center gap-2 text-sm text-[#5F6863] transition-colors hover:text-[#A66449]">
+                <MessageSquare className="h-3.5 w-3.5 text-[#A66449]" />
+                Témoignages
               </Link>
             </div>
           </nav>

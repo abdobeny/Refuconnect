@@ -6,6 +6,7 @@ use App\Models\Animal;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Support\Facades\Storage;
 
 class RecentAnimalsWidget extends BaseWidget
 {
@@ -30,7 +31,18 @@ class RecentAnimalsWidget extends BaseWidget
                 Tables\Columns\ImageColumn::make('photos')
                     ->label('')
                     ->square()
-                    ->size(42),
+                    ->size(42)
+                    ->getStateUsing(function (Animal $record): ?string {
+                        $photos = $record->photos;
+                        if (!is_array($photos) || empty($photos)) {
+                            return null;
+                        }
+                        $url = $photos[0];
+                        if (str_starts_with($url, 'http')) {
+                            return $url;
+                        }
+                        return Storage::disk('public')->url($url);
+                    }),
 
                 Tables\Columns\TextColumn::make('name')
                     ->label('Animal')

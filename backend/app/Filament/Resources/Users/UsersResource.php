@@ -27,17 +27,17 @@ class UsersResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'Users';
+        return 'Utilisateurs';
     }
 
     public static function getPluralLabel(): string
     {
-        return 'Users';
+        return 'Utilisateurs';
     }
 
     public static function getLabel(): string
     {
-        return 'User';
+        return 'Utilisateur';
     }
 
     public static function form(Schema $schema): Schema

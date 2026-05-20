@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Input from '../../ui/Input';
 import Button from '../../ui/Button';
 import Alert from '../../ui/Alert';
 import axiosClient from '../../../api/axiosClient';
-import { useAuth } from '../../../context/AuthContext';
 
 const AdoptionForm = ({ animalId, onCancel, onSuccess }) => {
-  const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
@@ -21,11 +17,6 @@ const AdoptionForm = ({ animalId, onCancel, onSuccess }) => {
 
   const handleSubmit = async (ev) => {
     ev.preventDefault();
-
-    if (!isAuthenticated) {
-      navigate(`/connexion?redirect=/animaux/${animalId}`);
-      return;
-    }
 
     if (!message.trim()) {
       setErrors({ message: 'Merci de décrire votre motivation' });

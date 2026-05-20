@@ -4,7 +4,7 @@ import Badge from '../../ui/Badge';
 import { ArrowRight, PawPrint } from 'lucide-react';
 
 const AnimalCard = ({ animal = {}, onView }) => {
-  const { id, name, age, ageUnit, type, species, breed, sex, image: singleImage, photos = [], images = [], description, status, vaccinated, sterilized } = animal;
+  const { id, name, age, ageUnit, type, species, breed, sex, image: singleImage, photos = [], images = [], description, status, statusRaw, vaccinated, sterilized } = animal;
   const publicImages = ['dog1.jpg', 'dog3.webp', 'dog4.webp', 'dog44.webp', 'dog5.webp'];
   const animalHash = Math.abs(String(id || name || '').split('').reduce((sum, char) => sum + char.charCodeAt(0), 0));
   const fallbackIndex = animalHash % publicImages.length;
@@ -16,8 +16,16 @@ const AnimalCard = ({ animal = {}, onView }) => {
   if (sterilized) healthBadges.push('Sterilise');
   else if (sterilized === false) healthBadges.push('A steriliser');
 
+  const statusConfig = {
+    available: { label: 'Disponible', bg: 'bg-green-100 text-green-800' },
+    adopted: { label: 'Adopte', bg: 'bg-gray-200 text-gray-700' },
+    in_care: { label: 'En soins', bg: 'bg-amber-100 text-amber-800' },
+  };
+  const st = statusConfig[statusRaw] || statusConfig.available;
+  const isAvailable = statusRaw === 'available';
+
   return (
-    <Card className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-soft">
+    <Card className={`group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-soft ${!isAvailable ? 'opacity-80' : ''}`}>
       <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
         <img
           src={image}
@@ -25,8 +33,8 @@ const AnimalCard = ({ animal = {}, onView }) => {
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/35 to-transparent" />
-        <Badge className="absolute left-3 top-3 bg-white/95 font-bold text-primary">
-          {status || 'Disponible'}
+        <Badge className={`absolute left-3 top-3 font-bold ${st.bg}`}>
+          {st.label}
         </Badge>
         <Badge className="absolute right-3 top-3 bg-white/95 font-bold text-text-main">
           {ageLabel}
@@ -53,8 +61,12 @@ const AnimalCard = ({ animal = {}, onView }) => {
         <p className="mb-5 line-clamp-2 min-h-[3rem] text-sm leading-6 text-text-light">
           {description || 'Un compagnon du refuge pret a rencontrer une famille attentive.'}
         </p>
-        <Button variant="primary" className="h-10 w-full rounded-lg text-sm font-semibold" onClick={() => onView?.(id)}>
-          Voir le profil
+        <Button
+          variant={isAvailable ? 'primary' : 'outline'}
+          className="h-10 w-full rounded-lg text-sm font-semibold"
+          onClick={() => onView?.(id)}
+        >
+          {isAvailable ? 'Voir le profil' : 'Voir la fiche'}
           <ArrowRight className="h-4 w-4" />
         </Button>
       </div>

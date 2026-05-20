@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAnimals } from '../../context/AnimalsContext';
+import { useAuth } from '../../context/AuthContext';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import Skeleton from '../../components/ui/Skeleton';
@@ -9,6 +10,7 @@ import AdoptionForm from '../../components/features/forms/AdoptionForm';
 const AnimalDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const { getAnimalById, loading: listLoading } = useAnimals();
   const [animal, setAnimal] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -63,9 +65,25 @@ const AnimalDetail = () => {
     );
   }
 
-  const { name, images, breed, sex, age, ageUnit, vaccinated, description, veterinaryInfo } = animal;
+  const { name, images, breed, sex, age, ageUnit, vaccinated, description, statusRaw, veterinaryInfo } = animal;
   const fallbackImage = '/dog1.jpg';
   const image = images?.[0] || fallbackImage;
+
+  const statusConfig = {
+    available: { label: 'Disponible', color: 'bg-green-100 text-green-800' },
+    adopted: { label: 'Déjà adopté', color: 'bg-gray-200 text-gray-700' },
+    in_care: { label: 'En soins', color: 'bg-amber-100 text-amber-800' },
+  };
+  const st = statusConfig[statusRaw] || statusConfig.available;
+  const isAvailable = statusRaw === 'available';
+
+  const handleAdoptionClick = () => {
+    if (!isAuthenticated) {
+      navigate(`/connexion?redirect=/animaux/${id}`);
+      return;
+    }
+    setShowForm(true);
+  };
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-12">
@@ -77,6 +95,7 @@ const AnimalDetail = () => {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <h1 className="font-serif text-4xl font-bold">{name}</h1>
             <div className="flex flex-wrap gap-2">
+              <span className={`rounded-md px-3 py-1 text-sm font-semibold ${st.color}`}>{st.label}</span>
               <span className="rounded-md bg-gray-100 px-3 py-1 text-sm">{breed}</span>
               <span className="rounded-md bg-gray-100 px-3 py-1 text-sm">{sex}</span>
               <Badge className="px-3 py-1">{age} {ageUnit}</Badge>
@@ -110,10 +129,21 @@ const AnimalDetail = () => {
             </div>
           )}
 
-          <div className="flex flex-wrap gap-4 pt-4">
-            <Button variant="primary" onClick={() => setShowForm(true)}>Demande d&apos;adoption</Button>
-            <Button variant="white" onClick={() => navigate('/animaux')}>Retour</Button>
-          </div>
+          {isAvailable ? (
+            <div className="flex flex-wrap gap-4 pt-4">
+              <Button variant="primary" onClick={handleAdoptionClick}>Demande d&apos;adoption</Button>
+              <Button variant="white" onClick={() => navigate('/animaux')}>Retour</Button>
+            </div>
+          ) : (
+            <div className="rounded-xl border border-gray-200 bg-gray-50 p-5 text-center">
+              <p className="font-semibold text-gray-700">
+                {statusRaw === 'adopted' ? 'Cet animal a déjà trouvé une famille.' : 'Cet animal est actuellement en soins.'}
+              </p>
+              <Button variant="white" className="mt-3" onClick={() => navigate('/animaux')}>
+                Voir les autres animaux
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 

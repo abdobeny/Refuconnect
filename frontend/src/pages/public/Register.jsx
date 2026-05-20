@@ -81,39 +81,39 @@ const Register = () => {
         <ArrowLeft size={19} />
       </Link>
 
-      <section className="mx-auto flex min-h-screen max-w-[700px] flex-col justify-center px-4 py-6 sm:px-6">
-        <Link to="/" className="mx-auto mb-6 inline-flex items-center gap-2">
-          <Logo className="h-9 w-9" />
-          <span className="font-serif text-xl font-bold">
+      <section className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-3 py-4 sm:px-4">
+        <Link to="/" className="mx-auto mb-3 inline-flex items-center gap-1.5">
+          <Logo className="h-8 w-8" />
+          <span className="font-serif text-lg font-bold">
             Refu<span className="text-accent">Connect</span>
           </span>
         </Link>
 
-        <div className="rounded-[20px] border border-primary/10 bg-white p-6 shadow-[0_20px_60px_rgba(31,37,35,0.10)] sm:p-7">
-          <div className="mb-6 text-center">
-            <p className="mb-2 inline-flex items-center gap-2 rounded-full bg-primary-light px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-              <ShieldCheck size={14} />
+        <div className="rounded-lg border border-primary/10 bg-white p-4 shadow-[0_20px_60px_rgba(31,37,35,0.10)] sm:p-5">
+          <div className="mb-4 text-center">
+            <p className="mb-1.5 inline-flex items-center gap-1.5 rounded-full bg-primary-light px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+              <ShieldCheck size={12} />
               Nouveau membre
             </p>
-            <h1 className="font-serif text-3xl font-bold text-primary-dark">Creer votre compte</h1>
-            <p className="mt-2 text-sm leading-6 text-muted">
+            <h1 className="font-serif text-2xl font-bold text-primary-dark">Creer votre compte</h1>
+            <p className="mt-1.5 text-xs leading-5 text-muted">
               Un compte pour suivre vos demandes et garder le contact avec le refuge.
             </p>
           </div>
 
           {error && (
-            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700" role="alert">
+            <div className="mb-3 rounded-lg border border-red-200 bg-red-50 p-2 text-xs text-red-700" role="alert">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleRegister} className="grid gap-4">
+          <form onSubmit={handleRegister} className="grid gap-3">
             <div>
-              <label htmlFor="name" className="block text-sm font-semibold text-primary-dark">
+              <label htmlFor="name" className="block text-xs font-semibold text-primary-dark">
                 Nom complet
               </label>
               <div className="relative mt-1">
-                <UserRound className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted" />
+                <UserRound className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
                 <input
                   id="name"
                   type="text"
@@ -125,18 +125,18 @@ const Register = () => {
                   placeholder="Votre nom et prenom"
                   autoComplete="name"
                   disabled={isLoading}
-                  className="w-full rounded-2xl border border-primary/15 bg-background-paper pl-12 pr-4 py-3 outline-none transition placeholder:text-muted/60 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
+                  className="w-full rounded-xl border border-primary/15 bg-background-paper pl-10 pr-3 py-2 text-sm outline-none transition placeholder:text-muted/60 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
                 />
               </div>
               {fieldErrors.name && <p className="mt-1 text-xs text-red-600">{fieldErrors.name}</p>}
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-primary-dark">
+              <label htmlFor="email" className="block text-xs font-semibold text-primary-dark">
                 Adresse email
               </label>
               <div className="relative mt-1">
-                <Mail className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted" />
+                <Mail className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
                 <input
                   id="email"
                   type="email"
@@ -148,19 +148,19 @@ const Register = () => {
                   placeholder="vous@example.com"
                   autoComplete="email"
                   disabled={isLoading}
-                  className="w-full rounded-2xl border border-primary/15 bg-background-paper pl-12 pr-4 py-3 outline-none transition placeholder:text-muted/60 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
+                  className="w-full rounded-xl border border-primary/15 bg-background-paper pl-10 pr-3 py-2 text-sm outline-none transition placeholder:text-muted/60 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
                 />
               </div>
               {fieldErrors.email && <p className="mt-1 text-xs text-red-600">{fieldErrors.email}</p>}
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2">
               <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-primary-dark">
+                <label htmlFor="password" className="block text-xs font-semibold text-primary-dark">
                   Mot de passe
                 </label>
                 <div className="relative mt-1">
-                  <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted" />
+                  <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
                   <input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
@@ -172,25 +172,25 @@ const Register = () => {
                     placeholder="Minimum 8 caracteres"
                     autoComplete="new-password"
                     disabled={isLoading}
-                    className="w-full rounded-2xl border border-primary/15 bg-background-paper pl-12 pr-12 py-3 outline-none transition placeholder:text-muted/60 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
+                    className="w-full rounded-xl border border-primary/15 bg-background-paper pl-10 pr-10 py-2 text-sm outline-none transition placeholder:text-muted/60 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
                   >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
                 {fieldErrors.password && <p className="mt-1 text-xs text-red-600">{fieldErrors.password}</p>}
               </div>
 
               <div>
-                <label htmlFor="password_confirmation" className="block text-sm font-semibold text-primary-dark">
+                <label htmlFor="password_confirmation" className="block text-xs font-semibold text-primary-dark">
                   Confirmer le mot de passe
                 </label>
                 <div className="relative mt-1">
-                  <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted" />
+                  <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
                   <input
                     id="password_confirmation"
                     type={showConfirmation ? 'text' : 'password'}
@@ -202,14 +202,14 @@ const Register = () => {
                     placeholder="Retapez votre mot de passe"
                     autoComplete="new-password"
                     disabled={isLoading}
-                    className="w-full rounded-2xl border border-primary/15 bg-background-paper pl-12 pr-12 py-3 outline-none transition placeholder:text-muted/60 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
+                    className="w-full rounded-xl border border-primary/15 bg-background-paper pl-10 pr-10 py-2 text-sm outline-none transition placeholder:text-muted/60 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmation((v) => !v)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
                   >
-                    {showConfirmation ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showConfirmation ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
                 {fieldErrors.passwordConfirmation && (
@@ -218,7 +218,7 @@ const Register = () => {
               </div>
             </div>
 
-            <label className="flex items-start gap-2 text-sm text-primary-dark">
+            <label className="flex items-start gap-2 text-xs text-primary-dark">
               <input
                 type="checkbox"
                 checked={acceptTerms}
@@ -226,7 +226,7 @@ const Register = () => {
                   setAcceptTerms(e.target.checked);
                   setFieldErrors((prev) => ({ ...prev, acceptTerms: '' }));
                 }}
-                className="mt-1 h-4 w-4 rounded border-primary/30"
+                className="mt-0.5 h-4 w-4 rounded border-primary/30"
               />
               <span>
                 J'accepte les{' '}
@@ -244,14 +244,14 @@ const Register = () => {
 
             <Button
               variant="primary"
-              className="w-full py-3 font-semibold"
+              className="w-full py-2 text-sm font-semibold"
               type="submit"
               disabled={isLoading}
             >
               {isLoading ? 'Creation...' : 'Creer mon compte'}
             </Button>
 
-            <p className="text-center text-sm text-muted">
+            <p className="text-center text-xs text-muted">
               Deja inscrit ?{' '}
               <Link to="/connexion" className="font-semibold text-primary hover:underline">
                 Se connecter

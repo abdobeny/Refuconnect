@@ -81,39 +81,39 @@ const Register = () => {
         <ArrowLeft size={19} />
       </Link>
 
-      <section className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-3 py-4 sm:px-4">
-        <Link to="/" className="mx-auto mb-3 inline-flex items-center gap-1.5">
-          <Logo className="h-8 w-8" />
-          <span className="font-serif text-lg font-bold">
+      <section className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center px-4 py-8 sm:px-6">
+        <Link to="/" className="mx-auto mb-8 inline-flex items-center gap-2">
+          <Logo className="h-10 w-10" />
+          <span className="font-serif text-2xl font-bold">
             Refu<span className="text-accent">Connect</span>
           </span>
         </Link>
 
-        <div className="rounded-lg border border-primary/10 bg-white p-4 shadow-[0_20px_60px_rgba(31,37,35,0.10)] sm:p-5">
-          <div className="mb-4 text-center">
-            <p className="mb-1.5 inline-flex items-center gap-1.5 rounded-full bg-primary-light px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-              <ShieldCheck size={12} />
+        <div className="rounded-lg border border-primary/10 bg-white p-8 shadow-[0_20px_60px_rgba(31,37,35,0.10)] sm:p-10">
+          <div className="mb-8 text-center">
+            <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-primary-light px-3 py-1.5 text-sm font-semibold uppercase tracking-[0.14em] text-primary">
+              <ShieldCheck size={14} />
               Nouveau membre
             </p>
-            <h1 className="font-serif text-2xl font-bold text-primary-dark">Creer votre compte</h1>
-            <p className="mt-1.5 text-xs leading-5 text-muted">
+            <h1 className="font-serif text-4xl font-bold text-primary-dark">Creer votre compte</h1>
+            <p className="mt-2 text-sm leading-6 text-muted">
               Un compte pour suivre vos demandes et garder le contact avec le refuge.
             </p>
           </div>
 
           {error && (
-            <div className="mb-3 rounded-lg border border-red-200 bg-red-50 p-2 text-xs text-red-700" role="alert">
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700" role="alert">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleRegister} className="grid gap-3">
+          <form onSubmit={handleRegister} className="grid gap-5">
             <div>
-              <label htmlFor="name" className="block text-xs font-semibold text-primary-dark">
+              <label htmlFor="name" className="block text-sm font-semibold text-primary-dark">
                 Nom complet
               </label>
-              <div className="relative mt-1">
-                <UserRound className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
+              <div className="relative mt-2">
+                <UserRound className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted" />
                 <input
                   id="name"
                   type="text"
@@ -125,18 +125,18 @@ const Register = () => {
                   placeholder="Votre nom et prenom"
                   autoComplete="name"
                   disabled={isLoading}
-                  className="w-full rounded-xl border border-primary/15 bg-background-paper pl-10 pr-3 py-2 text-sm outline-none transition placeholder:text-muted/60 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
+                  className="w-full rounded-xl border border-primary/15 bg-background-paper pl-12 pr-4 py-3 text-base outline-none transition placeholder:text-muted/60 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
                 />
               </div>
-              {fieldErrors.name && <p className="mt-1 text-xs text-red-600">{fieldErrors.name}</p>}
+              {fieldErrors.name && <p className="mt-1.5 text-sm text-red-600">{fieldErrors.name}</p>}
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-xs font-semibold text-primary-dark">
+              <label htmlFor="email" className="block text-sm font-semibold text-primary-dark">
                 Adresse email
               </label>
-              <div className="relative mt-1">
-                <Mail className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
+              <div className="relative mt-2">
+                <Mail className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted" />
                 <input
                   id="email"
                   type="email"
@@ -148,19 +148,19 @@ const Register = () => {
                   placeholder="vous@example.com"
                   autoComplete="email"
                   disabled={isLoading}
-                  className="w-full rounded-xl border border-primary/15 bg-background-paper pl-10 pr-3 py-2 text-sm outline-none transition placeholder:text-muted/60 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
+                  className="w-full rounded-xl border border-primary/15 bg-background-paper pl-12 pr-4 py-3 text-base outline-none transition placeholder:text-muted/60 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
                 />
               </div>
-              {fieldErrors.email && <p className="mt-1 text-xs text-red-600">{fieldErrors.email}</p>}
+              {fieldErrors.email && <p className="mt-1.5 text-sm text-red-600">{fieldErrors.email}</p>}
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-5 sm:grid-cols-2">
               <div>
-                <label htmlFor="password" className="block text-xs font-semibold text-primary-dark">
+                <label htmlFor="password" className="block text-sm font-semibold text-primary-dark">
                   Mot de passe
                 </label>
-                <div className="relative mt-1">
-                  <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
+                <div className="relative mt-2">
+                  <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted" />
                   <input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
@@ -172,17 +172,17 @@ const Register = () => {
                     placeholder="Minimum 8 caracteres"
                     autoComplete="new-password"
                     disabled={isLoading}
-                    className="w-full rounded-xl border border-primary/15 bg-background-paper pl-10 pr-10 py-2 text-sm outline-none transition placeholder:text-muted/60 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
+                    className="w-full rounded-xl border border-primary/15 bg-background-paper pl-12 pr-11 py-3 text-base outline-none transition placeholder:text-muted/60 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
                   >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
-                {fieldErrors.password && <p className="mt-1 text-xs text-red-600">{fieldErrors.password}</p>}
+                {fieldErrors.password && <p className="mt-1.5 text-sm text-red-600">{fieldErrors.password}</p>}
               </div>
 
               <div>

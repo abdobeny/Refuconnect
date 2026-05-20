@@ -292,7 +292,7 @@ const Donations = () => {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="rounded-3xl border border-[#DED3C7] bg-white p-6 shadow-[0_18px_46px_rgba(38,51,46,0.08)]">
+        <form id="dossier-don" onSubmit={handleSubmit} className="rounded-3xl border border-[#DED3C7] bg-white p-6 shadow-[0_18px_46px_rgba(38,51,46,0.08]\">  
           <div className="mb-6 border-b border-[#EEE5DA] pb-5">
             <p className="text-sm font-bold uppercase tracking-wide text-[#A66449]">Votre don</p>
             <div className="mt-2 flex items-end justify-between gap-4">
@@ -367,7 +367,7 @@ const Donations = () => {
         </form>
       </section>
 
-      <section className="border-y border-[#DED3C7] bg-[#FBF7F1]">
+      <section id="transparence-don" className="border-y border-[#DED3C7] bg-[#FBF7F1]">
         <div className="mx-auto max-w-7xl px-6 py-10">
           <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>

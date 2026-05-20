@@ -87,16 +87,12 @@ class AnimalResource extends Resource
                 Forms\Components\Select::make('status')
                     ->label('Statut')
                     ->options([
-                        'disponible' => 'Disponible',
-                        'urgent' => 'Urgent',
-                        'famille_accueil' => 'Famille d\'accueil',
-                        'adoption' => 'À l\'adoption',
-                        'adopte' => 'Adopté',
-                        'en_soins' => 'En soins',
-                        'decede' => 'Décédé',
+                        'available' => 'Disponible',
+                        'adopted' => 'Adopté',
+                        'in_care' => 'En soins',
                     ])
                     ->required()
-                    ->default('disponible'),
+                    ->default('available'),
 
                 Forms\Components\FileUpload::make('photos')
                     ->label('Photos')
@@ -127,23 +123,15 @@ class AnimalResource extends Resource
                     ->label('Statut')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'disponible' => 'Disponible',
-                        'urgent' => 'Urgent',
-                        'famille_accueil' => 'Famille d\'accueil',
-                        'adoption' => 'À l\'adoption',
-                        'adopte' => 'Adopté',
-                        'en_soins' => 'En soins',
-                        'decede' => 'Décédé',
+                        'available' => 'Disponible',
+                        'adopted' => 'Adopté',
+                        'in_care' => 'En soins',
                         default => $state,
                     })
                     ->color(fn (string $state): string => match ($state) {
-                        'disponible' => 'success',
-                        'urgent' => 'danger',
-                        'famille_accueil' => 'info',
-                        'adoption' => 'warning',
-                        'adopte' => 'gray',
-                        'en_soins' => 'warning',
-                        'decede' => 'secondary',
+                        'available' => 'success',
+                        'adopted' => 'info',
+                        'in_care' => 'warning',
                         default => 'gray',
                     }),
             ])
@@ -151,13 +139,9 @@ class AnimalResource extends Resource
                 Tables\Filters\SelectFilter::make('status')
                     ->label('Statut')
                     ->options([
-                        'disponible' => 'Disponible',
-                        'urgent' => 'Urgent',
-                        'famille_accueil' => 'Famille d\'accueil',
-                        'adoption' => 'À l\'adoption',
-                        'adopte' => 'Adopté',
-                        'en_soins' => 'En soins',
-                        'decede' => 'Décédé',
+                        'available' => 'Disponible',
+                        'adopted' => 'Adopté',
+                        'in_care' => 'En soins',
                     ]),
                 Tables\Filters\SelectFilter::make('species')
                     ->label('Espèce')

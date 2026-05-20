@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
   BadgeCheck,
@@ -63,7 +63,6 @@ const helpOptions = [
 
 const Donations = () => {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
   const { isAuthenticated } = useAuth();
   const [selectedAmount, setSelectedAmount] = useState(100);
   const [customAmount, setCustomAmount] = useState('');
@@ -92,43 +91,10 @@ const Donations = () => {
   }, []);
 
   useEffect(() => {
-    const paypalStatus = searchParams.get('paypal');
-    const donationId = searchParams.get('donation_id');
-
-    if (!paypalStatus) return;
-
-    if (paypalStatus === 'cancel') {
-      setError('Paiement PayPal annulé. Votre don n’a pas été confirmé.');
-      setSearchParams({}, { replace: true });
-      return;
-    }
-
-    if (paypalStatus === 'success' && donationId) {
-      if (!isAuthenticated) {
-        navigate(`/connexion?redirect=${encodeURIComponent(`/dons?paypal=success&donation_id=${donationId}`)}`);
-        return;
-      }
-
-      setSubmitting(true);
-      setError('');
-      axiosClient.post(`/donations/${donationId}/capture-paypal`)
-        .then(() => {
-          setSuccess(true);
-          setMessage('');
-          setSearchParams({}, { replace: true });
-          return axiosClient.get('/public-stats');
-        })
-        .then(({ data }) => setPublicStats(data))
-        .catch((err) => {
-          setError(
-            err.response?.data?.message
-            || Object.values(err.response?.data?.errors || {}).flat().join(' ')
-            || 'Impossible de confirmer le paiement PayPal.'
-          );
-        })
-        .finally(() => setSubmitting(false));
-    }
-  }, [isAuthenticated, navigate, searchParams, setSearchParams]);
+    axiosClient.get('/public-stats')
+      .then(({ data }) => setPublicStats(data))
+      .catch(() => setPublicStats(null));
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -147,7 +113,8 @@ const Donations = () => {
 
     setSubmitting(true);
     try {
-      const { data } = await axiosClient.post('/donations/paypal-orders', {
+      await axiosClient.post('/donations', {
+        type: 'financial',
         amount: activeAmount,
         message: [
           donorName && `Nom: ${donorName}`,
@@ -157,12 +124,18 @@ const Donations = () => {
         ].filter(Boolean).join('\n') || undefined,
       });
 
-      window.location.href = data.approval_url;
+      setSuccess(true);
+      setDonorName('');
+      setDonorEmail('');
+      setMessage('');
+      setCustomAmount('');
+      setSelectedAmount(100);
+      return axiosClient.get('/public-stats');
     } catch (err) {
       setError(
         err.response?.data?.message
         || Object.values(err.response?.data?.errors || {}).flat().join(' ')
-        || 'Impossible d’enregistrer le don.'
+        || "Impossible d'enregistrer le don."
       );
     } finally {
       setSubmitting(false);
@@ -189,7 +162,7 @@ const Donations = () => {
 
             <div className="mt-6 grid max-w-2xl gap-3 sm:grid-cols-3">
               {[
-                { icon: ShieldCheck, label: 'Paiement', text: 'Sécurisé via PayPal' },
+                { icon: ShieldCheck, label: 'Paiement', text: 'Paiement en cours d\'intégration' },
                 { icon: BadgeCheck, label: 'Suivi', text: 'Dossier enregistré' },
                 { icon: HeartHandshake, label: 'Impact', text: 'Traçable et visible' },
               ].map((item) => {
@@ -286,7 +259,7 @@ const Donations = () => {
             <div className="flex items-start gap-3">
               <BadgeCheck className="mt-1 h-5 w-5 flex-shrink-0 text-[#A66449]" />
               <p className="text-sm leading-6 text-[#68726D]">
-                RefuConnect enregistre votre promesse de don, puis PayPal s’ouvre pour finaliser le paiement sécurisé.
+                RefuConnect enregistre votre promesse de don. Le paiement en ligne sera disponible prochainement.
               </p>
             </div>
           </div>
@@ -308,7 +281,7 @@ const Donations = () => {
 
           {success && (
             <div className="mb-5 rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800">
-              Merci. Votre paiement PayPal a été confirmé et le don est enregistré.
+              Merci. Votre promesse de don a été enregistrée. Le paiement en ligne sera activé prochainement — l'équipe du refuge vous contactera pour finaliser.
             </div>
           )}
           {error && (
@@ -356,14 +329,18 @@ const Donations = () => {
           </div>
 
           <Button variant="primary" className="mt-6 h-12 w-full rounded-xl font-extrabold" type="submit" disabled={submitting}>
-            {submitting ? 'Préparation...' : 'Payer avec PayPal'}
+            {submitting ? 'Enregistrement...' : 'Enregistrer mon don'}
             <ArrowRight className="h-4 w-4" />
           </Button>
 
           {!isAuthenticated && (
             <p className="mt-3 text-center text-xs text-[#68726D]">Connexion requise pour enregistrer le don dans RefuConnect.</p>
           )}
-          <p className="mt-3 text-center text-xs text-[#68726D]">Le paiement est finalisé sur PayPal. Le statut reste à confirmer par l’équipe du refuge.</p>
+          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3">
+            <p className="text-center text-xs text-amber-800">
+              <strong>Paiement non activé :</strong> votre don est enregistré comme promesse. Le paiement en ligne (PayPal) sera disponible prochainement. L'équipe du refuge vous contactera pour finaliser.
+            </p>
+          </div>
         </form>
       </section>
 

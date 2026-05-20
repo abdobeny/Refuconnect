@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { ADMIN_URL } from '../../config';
 import Button from '../ui/Button';
 import Logo from '../Logo';
-import { Menu, X, LogOut, ChevronDown, Heart, Home, Dog, Scissors, HandHeart, Gift, Users } from 'lucide-react';
+import { Menu, X, LogOut, ChevronDown, Heart, Home, Dog, Scissors, HandHeart, Gift, Users, MessageSquare } from 'lucide-react';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -43,6 +43,7 @@ const Navbar = () => {
     { path: '/couplage', label: 'Couplage', icon: HandHeart },
     { path: '/dons', label: 'Dons', icon: Gift },
     { path: '/bénévolat', label: 'Bénévolat', icon: Users },
+    { path: '/temoignages', label: 'Témoignages', icon: MessageSquare },
   ];
 
   return (

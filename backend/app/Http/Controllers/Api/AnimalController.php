@@ -12,7 +12,7 @@ class AnimalController extends Controller
     public function index(Request $request)
     {
         $query = Animal::query()
-            ->whereIn('status', ['disponible', 'adoption', 'urgent']);
+            ->where('status', 'available');
 
         if ($request->filled('species')) {
             $query->where('species', $request->string('species'));
@@ -47,7 +47,7 @@ class AnimalController extends Controller
     {
         $record = Animal::query()
             ->where('id', $animal)
-            ->whereIn('status', ['disponible', 'adoption', 'urgent', 'en_soins', 'famille_accueil'])
+            ->whereIn('status', ['available', 'in_care', 'adopted'])
             ->firstOrFail();
 
         return new AnimalResource($record);

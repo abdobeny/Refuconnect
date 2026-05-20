@@ -59,7 +59,8 @@
     }
 
     .fi-wi-chart {
-        @apply min-h-[360px] border border-[#E8DED2]/70 bg-[#FFFDF9] p-4 shadow-[0_12px_32px_rgba(32,42,37,0.07)];
+        @apply min-h-[360px] border border-[#E8DED2]/70 p-4 shadow-[0_12px_32px_rgba(32,42,37,0.07)];
+        background: transparent;
     }
 
     .fi-ta-ctn {

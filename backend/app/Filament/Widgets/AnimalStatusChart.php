@@ -12,9 +12,14 @@ class AnimalStatusChart extends ChartWidget
 
     protected ?string $description = "Vue d'ensemble du refuge";
 
-    protected int|string|array $columnSpan = 1;
+    protected int|string|array $columnSpan = [
+        'default' => 'full',
+        'xl' => 3,
+    ];
 
     protected static ?int $sort = 2;
+
+    protected ?string $pollingInterval = null;
 
     protected function getData(): array
     {

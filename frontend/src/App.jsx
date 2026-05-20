@@ -12,6 +12,7 @@ import Grooming from './pages/public/Grooming';
 import Couplage from './pages/public/Couplage';
 import Dons from './pages/public/Dons';
 import Volunteer from './pages/public/Bénévolat';
+import Testimonials from './pages/public/Testimonials';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminTestimonials from './pages/admin/AdminTestimonials';
 import UserDashboard from './pages/user/Dashboard';
@@ -44,6 +45,7 @@ function App() {
           <Route path="/couplage" element={<Couplage />} />
           <Route path="/dons" element={<Dons />} />
           <Route path="/bénévolat" element={<Volunteer />} />
+          <Route path="/temoignages" element={<Testimonials />} />
           <Route path="/mentions-legales" element={<MentionsLegales />} />
           <Route path="/cgu" element={<CGU />} />
           <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />

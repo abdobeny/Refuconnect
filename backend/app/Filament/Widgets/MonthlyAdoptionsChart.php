@@ -14,7 +14,7 @@ class MonthlyAdoptionsChart extends ChartWidget
 
     protected int|string|array $columnSpan = [
         'default' => 'full',
-        'xl' => 4,
+        'xl' => 3,
     ];
 
     protected static ?int $sort = 3;

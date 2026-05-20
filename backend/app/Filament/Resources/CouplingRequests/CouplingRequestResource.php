@@ -150,7 +150,13 @@ class CouplingRequestResource extends Resource
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
-                Tables\Filters\SelectFilter::make('status'),
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'pending' => 'En attente',
+                        'approved' => 'Validée',
+                        'rejected' => 'Refusée',
+                        'completed' => 'Terminée',
+                    ]),
             ])
             ->recordActions([
                 Action::make('approve')

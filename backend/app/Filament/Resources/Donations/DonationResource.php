@@ -150,8 +150,19 @@ class DonationResource extends Resource
             ])
             ->defaultSort('donation_date', 'desc')
             ->filters([
-                Tables\Filters\SelectFilter::make('status'),
-                Tables\Filters\SelectFilter::make('type'),
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'pending' => 'En attente',
+                        'completed' => 'Complété',
+                        'failed' => 'Échoué',
+                        'refunded' => 'Remboursé',
+                    ]),
+                Tables\Filters\SelectFilter::make('type')
+                    ->options([
+                        'financial' => 'Financier',
+                        'food' => 'Nourriture',
+                        'material' => 'Matériel',
+                    ]),
                 Tables\Filters\Filter::make('donation_date')
                     ->form([
                         Forms\Components\DatePicker::make('created_from'),

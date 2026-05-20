@@ -128,8 +128,21 @@ class GroomingReservationResource extends Resource
             ])
             ->defaultSort('reservation_date', 'desc')
             ->filters([
-                Tables\Filters\SelectFilter::make('status'),
-                Tables\Filters\SelectFilter::make('service_type'),
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'pending' => 'En attente',
+                        'confirmed' => 'Confirmée',
+                        'cancelled' => 'Annulée',
+                        'completed' => 'Terminée',
+                    ]),
+                Tables\Filters\SelectFilter::make('service_type')
+                    ->options([
+                        'bath' => 'Bain',
+                        'haircut' => 'Tonte',
+                        'full_grooming' => 'Nettoyage complet',
+                        'nail_trim' => 'Coupe de griffes',
+                        'other' => 'Autre',
+                    ]),
             ])
             ->actions([
                 Action::make('confirm')

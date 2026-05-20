@@ -16,7 +16,9 @@ class VolunteerApplicationResource extends JsonResource
             'phone' => $this->phone,
             'message' => $this->message,
             'status' => $this->status,
-            'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
+            'notes' => $this->when($request->user()?->isAdmin(), $this->notes),
+            'rejection_reason' => $this->when($this->status === 'rejected', $this->notes),
+            'created_at' => $this->created_at?->toIso8601String(),
         ];
     }
 }

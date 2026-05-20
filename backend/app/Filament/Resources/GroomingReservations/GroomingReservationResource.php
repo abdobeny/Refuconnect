@@ -12,6 +12,8 @@ use Filament\Tables\Table;
 use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use BackedEnum;
 
 class GroomingReservationResource extends Resource
@@ -130,11 +132,57 @@ class GroomingReservationResource extends Resource
                 Tables\Filters\SelectFilter::make('service_type'),
             ])
             ->actions([
+                Action::make('confirm')
+                    ->label('Confirmer')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Confirmer cette réservation')
+                    ->modalSubmitActionLabel('Confirmer')
+                    ->action(function (GroomingReservation $record) {
+                        $record->update(['status' => 'confirmed']);
+
+                        Notification::make()
+                            ->title('Réservation confirmée')
+                            ->body("Le toilettage de {$record->pet_name} a été confirmé.")
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(fn (GroomingReservation $record) => $record->status === 'pending'),
+
+                Action::make('cancel')
+                    ->label('Annuler')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->form([
+                        Forms\Components\Textarea::make('notes')
+                            ->label('Raison de l\'annulation')
+                            ->placeholder('Expliquez pourquoi cette réservation est annulée...')
+                            ->required()
+                            ->rows(4),
+                    ])
+                    ->modalHeading('Annuler cette réservation')
+                    ->modalDescription('La raison sera ajoutée aux notes.')
+                    ->modalSubmitActionLabel('Confirmer l\'annulation')
+                    ->action(function (GroomingReservation $record, array $data) {
+                        $record->update([
+                            'status' => 'cancelled',
+                            'notes' => $data['notes'],
+                        ]);
+
+                        Notification::make()
+                            ->title('Réservation annulée')
+                            ->body("Le toilettage de {$record->pet_name} a été annulé.")
+                            ->warning()
+                            ->send();
+                    })
+                    ->visible(fn (GroomingReservation $record) => $record->status === 'pending'),
+
                 EditAction::make(),
             ])
             ->bulkActions([
-                \Filament\Actions\BulkActionGroup::make([
-                    \Filament\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

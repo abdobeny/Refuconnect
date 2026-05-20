@@ -17,7 +17,8 @@ class GroomingResource extends JsonResource
             'pet_name' => $this->pet_name,
             'pet_type' => $this->pet_type,
             'status' => $this->status,
-            'notes' => $this->notes,
+            'notes' => $this->when($request->user()?->isAdmin(), $this->notes),
+            'rejection_reason' => $this->when($this->status === 'cancelled', $this->notes),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];

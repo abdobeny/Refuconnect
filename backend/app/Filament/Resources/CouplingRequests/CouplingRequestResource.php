@@ -8,7 +8,9 @@ use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\Action;
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
@@ -151,6 +153,52 @@ class CouplingRequestResource extends Resource
                 Tables\Filters\SelectFilter::make('status'),
             ])
             ->recordActions([
+                Action::make('approve')
+                    ->label('Valider')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Valider cette demande de couplage')
+                    ->modalSubmitActionLabel('Valider')
+                    ->action(function (CouplingRequest $record) {
+                        $record->update(['status' => 'approved']);
+
+                        Notification::make()
+                            ->title('Demande validée')
+                            ->body("La demande de couplage de {$record->user?->name} a été approuvée.")
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(fn (CouplingRequest $record) => $record->status === 'pending'),
+
+                Action::make('reject')
+                    ->label('Refuser')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->form([
+                        Forms\Components\Textarea::make('admin_notes')
+                            ->label('Raison du refus')
+                            ->placeholder('Expliquez pourquoi cette demande est refusée...')
+                            ->required()
+                            ->rows(4),
+                    ])
+                    ->modalHeading('Refuser cette demande de couplage')
+                    ->modalDescription('La raison sera ajoutée aux notes administratives.')
+                    ->modalSubmitActionLabel('Refuser')
+                    ->action(function (CouplingRequest $record, array $data) {
+                        $record->update([
+                            'status' => 'rejected',
+                            'admin_notes' => $data['admin_notes'],
+                        ]);
+
+                        Notification::make()
+                            ->title('Demande refusée')
+                            ->body("La demande de couplage de {$record->user?->name} a été refusée.")
+                            ->warning()
+                            ->send();
+                    })
+                    ->visible(fn (CouplingRequest $record) => $record->status === 'pending'),
+
                 EditAction::make(),
             ])
             ->toolbarActions([

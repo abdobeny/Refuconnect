@@ -97,6 +97,37 @@ const UserDashboard = () => {
         status: item.status,
         date: item.reservation_date || item.created_at,
         icon: Scissors,
+        rejectionReason: item.rejection_reason || null,
+      })),
+      ...data.coupling.map((item) => ({
+        id: `coupling-${item.id}`,
+        type: 'Couplage',
+        title: item.pet_breed || 'Dossier couplage',
+        subtitle: `${item.pet_species || 'Animal'} - ${item.pet_age || 'âge à confirmer'}`,
+        status: item.status,
+        date: item.created_at,
+        icon: Heart,
+        rejectionReason: item.rejection_reason || null,
+      })),
+      ...data.donations.map((item) => ({
+        id: `donation-${item.id}`,
+        type: 'Don',
+        title: item.amount ? `${Number(item.amount).toLocaleString('fr-FR')} DH` : item.item_description || 'Don matériel',
+        subtitle: item.type === 'financial' ? 'Contribution financière enregistrée' : 'Contribution matérielle enregistrée',
+        status: item.status,
+        date: item.donation_date || item.created_at,
+        icon: Gift,
+        rejectionReason: item.rejection_reason || null,
+      })),
+      ...data.volunteers.map((item) => ({
+        id: `volunteer-${item.id}`,
+        type: 'Bénévolat',
+        title: item.name || 'Candidature bénévole',
+        subtitle: item.phone ? `Contact: ${item.phone}` : 'Candidature envoyée au refuge',
+        status: item.status,
+        date: item.created_at,
+        icon: UsersRound,
+        rejectionReason: item.rejection_reason || null,
       })),
       ...data.coupling.map((item) => ({
         id: `coupling-${item.id}`,
@@ -210,9 +241,9 @@ const UserDashboard = () => {
                     <Badge variant={st.variant}>{st.label}</Badge>
                   </div>
                   <p className="mt-1 text-sm text-muted">{item.subtitle}</p>
-                  {item.status === 'rejected' && item.rejectionReason && (
+                  {(item.status === 'rejected' || item.status === 'cancelled' || item.status === 'failed') && item.rejectionReason && (
                     <div className="mt-2 rounded-lg border border-red-100 bg-red-50 px-3 py-2 text-sm text-red-700">
-                      <span className="font-semibold">Motif du refus :</span> {item.rejectionReason}
+                      <span className="font-semibold">Motif :</span> {item.rejectionReason}
                     </div>
                   )}
                   <p className="mt-2 text-xs font-semibold text-text-light">{formatDate(item.date)}</p>

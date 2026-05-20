@@ -13,6 +13,8 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use BackedEnum;
 
 class DonationResource extends Resource
@@ -57,7 +59,7 @@ class DonationResource extends Resource
                     ->minValue(1)
                     ->required(fn (callable $get) => $get('type') === 'financial')
                     ->visible(fn (callable $get) => $get('type') === 'financial'),
-                    
+
                 Forms\Components\TextInput::make('item_description')
                     ->label('Description de l\'objet')
                     ->placeholder('Ex: 5kg de croquettes, panier, etc.')
@@ -122,7 +124,7 @@ class DonationResource extends Resource
                         'material' => 'Matériel',
                         default => $state,
                     }),
-                
+
                 Tables\Columns\TextColumn::make('status')
                     ->label('Statut')
                     ->badge()
@@ -168,12 +170,57 @@ class DonationResource extends Resource
                     }),
             ])
             ->actions([
+                Action::make('complete')
+                    ->label('Marquer complété')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Marquer ce don comme complété')
+                    ->modalSubmitActionLabel('Complété')
+                    ->action(function (Donation $record) {
+                        $record->update(['status' => 'completed']);
+
+                        Notification::make()
+                            ->title('Don complété')
+                            ->body("Le don de {$record->user?->name} a été marqué comme complété.")
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(fn (Donation $record) => $record->status === 'pending'),
+
+                Action::make('fail')
+                    ->label('Marquer échoué')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->form([
+                        Forms\Components\Textarea::make('admin_notes')
+                            ->label('Raison de l\'échec')
+                            ->placeholder('Expliquez pourquoi ce don a échoué...')
+                            ->required()
+                            ->rows(4),
+                    ])
+                    ->modalHeading('Marquer ce don comme échoué')
+                    ->modalSubmitActionLabel('Échoué')
+                    ->action(function (Donation $record, array $data) {
+                        $record->update([
+                            'status' => 'failed',
+                            'admin_notes' => $data['admin_notes'],
+                        ]);
+
+                        Notification::make()
+                            ->title('Don échoué')
+                            ->body("Le don de {$record->user?->name} a été marqué comme échoué.")
+                            ->warning()
+                            ->send();
+                    })
+                    ->visible(fn (Donation $record) => $record->status === 'pending'),
+
                 EditAction::make(),
                 ViewAction::make(),
             ])
             ->bulkActions([
-                \Filament\Actions\BulkActionGroup::make([
-                    \Filament\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

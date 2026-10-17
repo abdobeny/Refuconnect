@@ -1,0 +1,70 @@
+# RefuConnect — free deployment blueprint (Render)
+#
+# Deploys the Laravel API + Filament admin panel as a Docker web service.
+# The database is external (Neon / Supabase Postgres) so it survives the
+# free instance's restarts.
+#
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: refuconnect-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: main
+    autoDeploy: true
+    healthCheckPath: /up
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    envVars:
+      - key: APP_NAME
+        value: RefuConnect
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: APP_LOCALE
+        value: fr
+      - key: APP_FALLBACK_LOCALE
+        value: fr
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: error
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SSLMODE
+        value: require
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: FILESYSTEM_DISK
+        value: public
+      - key: MAIL_MAILER
+        value: log
+      - key: RUN_MIGRATIONS
+        value: "1"
+      - key: RUN_SEEDER
+        value: "0"

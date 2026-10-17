@@ -153,3 +153,12 @@ php artisan migrate:fresh --seed
 - **Bénévolat** : Candidatures, gestion admin
 - **Témoignages** : Affichage homepage, création par les utilisateurs
 - **Admin** : Panel Filament avec statistiques, graphiques, gestion complète
+
+## Déploiement
+
+Guide complet pour un hébergement gratuit (Vercel + Render + Neon Postgres) : **[DEPLOY.md](DEPLOY.md)**.
+
+- `backend/Dockerfile` + `backend/docker/` — image de production (nginx + php-fpm, Laravel + Filament)
+- `render.yaml` — blueprint Render pour l'API
+- `frontend/vercel.json` — configuration Vercel du SPA
+- `.github/workflows/ci.yml` — CI (tests backend + build frontend)
